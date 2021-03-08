@@ -9,15 +9,15 @@ const mongoHost = '127.0.0.1';
 const userName = ''
 const userPassword = ''
 const mongoPort = 27017
-const dbName = 'test_mongo_schema_creation'
+const dbName = 'pollination'
 const collectionName = 'questions'
 
 
 // import schema
-const { Question } = require('./models/question_schema')
+// const { Question } = require('./models/question_schema')
 
 // default mongoose conn:
-const mongoDB = 'mongodb://127.0.0.1/test_mongo_schema_creation';
+const mongoDB = 'mongodb://127.0.0.1/pollination';
 mongoose.connect(mongoDB);
 
 
