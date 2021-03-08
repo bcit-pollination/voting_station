@@ -51,17 +51,34 @@ const exit_node_servers = () => {
   spawn('fuser', ['-k','4000/tcp']);
 
   return new Promise(async (resolve, reject) => {
-    exec('bash ./kill_node_processes.sh', (err, stdout, stderr) => {
-   
-      spawn('fuser', ['-k','3000/tcp']);
-      spawn('fuser', ['-k','4000/tcp']);
+    let kill_node_processes = spawn('fuser', ['-k','3000/tcp']);
+    let kill_node_processes2 = spawn('fuser', ['-k','4000/tcp']);
+    console.log('kill_node_processes')
+      
+    kill_node_processes.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
   
-      if (err) {
-        console.error(err);
-        reject('failed')
+    kill_node_processes.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+    
+    let both_done =false
+
+    // kill_node_processes.on('close', (code) => {
+        
+    //   if (code!=0) {
+    //     resolve(code)
+    //   }
+    //   resolve('exec success')
+    // });
+
+    kill_node_processes2.on('close', (code) => {
+        
+      if (code!=0) {
+        resolve(code)
       }
-      console.log(stdout);
-      resolve('success')
+      resolve('exec success')
     });
 
     
