@@ -23,8 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
   })
 
   document.getElementById('start-processes').addEventListener('click',()=>{
-    console.log('start-processes')
-    ipc.send('start-processes', 'A sync message to main');
+    console.log('kill-processes')
+    ipc.send('kill-processes', 'A sync message to main');
   })
   
 })

@@ -133,7 +133,7 @@ app.whenReady().then(() => {
     admin_express_server_process()
   })
 
-  ipc.on('start-processes',()=>{
+  ipc.on('kill-processes',()=>{
     let kill_node_processes = spawn('fuser', ['-k','3000/tcp']);
     let kill_node_processes2 = spawn('fuser', ['-k','4000/tcp']);
     console.log('kill_node_processes')
