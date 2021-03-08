@@ -21,6 +21,12 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('run-voting-server')
     ipc.send('run-voting-server', 'A sync message to main');
   })
+
+  document.getElementById('start-processes').addEventListener('click',()=>{
+    console.log('start-processes')
+    ipc.send('start-processes', 'A sync message to main');
+  })
+  
 })
 
 

@@ -47,13 +47,28 @@ const admin_express_server_process = () => {
 
 
 const exit_node_servers = () => {
-  exec('sudo bash ./kill_node_processes.sh', (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(stdout);
-  });
+  spawn('fuser', ['-k','3000/tcp']);
+  spawn('fuser', ['-k','4000/tcp']);
+
+  return new Promise(async (resolve, reject) => {
+    exec('bash ./kill_node_processes.sh', (err, stdout, stderr) => {
+   
+      spawn('fuser', ['-k','3000/tcp']);
+      spawn('fuser', ['-k','4000/tcp']);
+  
+      if (err) {
+        console.error(err);
+        reject('failed')
+      }
+      console.log(stdout);
+      resolve('success')
+    });
+
+    
+  })
+
+
+
 }
 
 // used as a global access
@@ -101,6 +116,24 @@ app.whenReady().then(() => {
     admin_express_server_process()
   })
 
+  ipc.on('start-processes',()=>{
+    let kill_node_processes = spawn('fuser', ['-k','3000/tcp']);
+    let kill_node_processes2 = spawn('fuser', ['-k','4000/tcp']);
+    console.log('kill_node_processes')
+      
+    kill_node_processes.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+  
+    kill_node_processes.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+  
+    kill_node_processes.on('close', (code) => {
+      console.log(`child process exited with code: ${code}`);
+    });
+  })
+
 
 
 
@@ -118,8 +151,20 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
-  exit_node_servers();
-  if (process.platform !== 'darwin') app.quit()
+
+  let p = new Promise(async (resolve, reject) => {
+    let res =  await exit_node_servers()
+    console.log('checkedItems in MultiChoice')
+    // console.log(choices)
+    resolve(res)
+  })
+  p.then(r => { 
+    console.log(r)
+    if (process.platform !== 'darwin') app.quit() 
+  })
+
+
+  
 
 })
 
