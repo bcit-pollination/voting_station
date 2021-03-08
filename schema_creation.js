@@ -23,17 +23,19 @@ var Schema = mongoose.Schema;
 
 // 
 var OptionsSchema = new Schema({
-    description: String,
-    option_num: Number,
-    count: Number
+    option_description: String,
+    option_id: Number,
+    //count: Number
 })
 
 var QuestionSchema = new Schema({
-    question_num: Number,
-    description: String,
-    selection_limit: Number,
+    election_id: Number,
+    question_id: Number,
+    question_description: String, 
     opts: [OptionsSchema],
-
+    ordered_choices :  Boolean,
+    max_selection_count :Number,  //How many of the given question options can the user select. Must be >= 1
+    min_selection_count: Number,  //minimum: 1
     // Things to add ...
 },{collection : 'questions'});
 
@@ -69,24 +71,23 @@ var Vote = mongoose.model('VoteSchema',VoteSchema);
 
 //--------------- Iinstances------------------------//
 var multi_question_test = new Question({
-    question_num: 1,
-    description: "Quel est votre plat préféré ?",
-    selection_limit: 1,
+    question_id: 1,
+    question_description: "Quel est votre plat préféré ?",
+    min_selection_count: 1,
+    max_selection_count: 1,
+    ordered_choices : false,
     opts: [
         {
-            option_num: 1,
-            description: "Sandwich",
-            count: 0,
+            option_id: 1,
+            option_description: "Sandwich",
         },
         {
             option_num: 2,
             description: "Pizza",
-            count: 0,
         },
         {
             option_num: 3,
             description: "SuShi",
-            count: 0,
         }
     ]
 })
