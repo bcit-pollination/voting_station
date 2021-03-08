@@ -1,0 +1,23 @@
+First you need to create a new user
+
+
+db.createUser({user:'test',pwd:'test',roles:[{role:'readWrite',db:'testDB'}]})
+Successfully added user: {
+    "user" : "root",
+    "roles" : [
+        {
+            "role" : "root",
+            "db" : "admin"
+        }
+    ]
+}  
+
+> use admin    //switching to db: admin
+switched to db admin
+> db.auth('admin'.'admin')  // use db.auth('username','password' to authenticate
+2017-03-07T23:47:06.603+0800 E QUERY    [thread1] SyntaxError: missing name after . operator @(shell):1:16
+> db.auth('admin','admin')
+2017-03-07T23:47:25.142+0800 I ACCESS   [conn1] Successfully authenticated as principal admin on admin
+1  // 1: Successful 0 :failed
+
+
