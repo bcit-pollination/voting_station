@@ -42,6 +42,10 @@ function getOrg(org_id) {
     return axiosRequest(methods.GET, urlOrg, null, { org_id: org_id });
 }
 
+function getElectionInfo() {
+    return axiosRequest(methods.GET, urlElections, null, { election_id: election_id });
+}
+
 function electionDownload(election_id) {
     return axiosRequest(methods.GET, urlElectionDownload, null, { election_id: election_id });
 }
@@ -113,5 +117,6 @@ module.exports = {
     getUserInfo,
     getUserVotingToken,
     getOrg,
-    getOrgUsers
+    getOrgUsers,
+    getElectionInfo
 }
