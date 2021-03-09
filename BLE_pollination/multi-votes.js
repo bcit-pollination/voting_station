@@ -141,31 +141,33 @@ function handleMultiVote(vote_string) {
 
 
   console.log('vote_string_trimmed: |' + vote_string.trim() + '|')
-  console.log('sliced: |' + vote_string.trim().slice(0, -4) + '|')
+  // console.log('sliced: |' + vote_string.trim().slice(0, -4) + '|')
 
   let vote_data_json = JSON.parse(vote_string.trim())
   console.log('User Voted For : \n')
-  console.log('vote_data_json.choice1')
-  console.log(vote_data_json.choice1)
-  console.log('vote_data_json.choice2')
-  console.log(vote_data_json.choice2)
-  console.log(' ')
+  
+  let xhttp = new XMLHttpRequest();
 
-  MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}`, function (err, db) {
-    if (err) throw err;
+  let response = ''
 
-    var dbo = db.db(`${dbName}`);
-    dbo.collection(`${collectionName}`).updateOne(
+  xhttp.open("POST","http://localhost:3000/postVotes", true);
+  xhttp.setRequestHeader("Content-Type", "application/json");
+ 
+  let post_obj = JSON.stringify({ 'obj': vote_data_json })
+  console.log(post_obj)
+  console.log(post_obj)
+  
+  xhttp.send(post_obj)
+  // xhttp.send(JSON.stringify(q_list));
 
-      //question id
-      { "id": 1 },
-      // increments the choice by 1.
+  xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          response = this.responseText;
+          // resolve(response)
+      }
+  }
 
-      { $inc: { "chosen": 1 }, },
-      { upsert: true }
-    );
-
-  })
+  
 }
 
 // let data_string = ''

@@ -81,16 +81,16 @@ var multi_question_test = new Question({
     ordered_choices: false,
     'options': [
         {
-            option_id: 1,
+            option_num          : 1,
             option_description: "Sandwich",
         },
         {
             option_num: 2,
-            description: "Pizza",
+            option_description: "Pizza",
         },
         {
             option_num: 3,
-            description: "SuShi",
+            option_description      : "SuShi",
         }
     ]
 })

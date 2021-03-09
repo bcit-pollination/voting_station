@@ -69,5 +69,24 @@ app.get('/getQuestions', function (req, res) {
 
 });
 
+app.post('/postVotes', function (req, res) {
+    console.log('getQuestions')
+
+    // fetch questions from DB
+    // MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}/`
+    MongoClient.connect(`mongodb://${mongoHost}:${mongoPort}/`
+        , function (err, db) {
+            if (err) throw err;
+            var dbo = db.db(`${dbName}`);
+            dbo.collection(collectionName).find({}).toArray(function (err, result) {
+                if (err) throw err;
+                console.log(result);
+                db.close();
+                res.send(result)
+            });
+        });
+
+});
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
