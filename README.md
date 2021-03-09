@@ -32,5 +32,5 @@ start it with `sudo`, since it's touching the kernel.
 
 `$ cd touchscreen_electron`
 
-`$ sudo npm start .js`
+`$ sudo npm start`
 
