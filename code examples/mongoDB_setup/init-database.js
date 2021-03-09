@@ -27,7 +27,7 @@ var collectionName = 'votes'
 
 // +dbName
 MongoClient.connect('mongodb://root:root@' + mongoHost + ':' + mongoPort + '/',
-    function (err, db) {
+    function(err, db) {
 
         if (err) {
             return console.log('Error: could not connect to mongodb')
@@ -38,19 +38,19 @@ MongoClient.connect('mongodb://root:root@' + mongoHost + ':' + mongoPort + '/',
 
         // Add the new user to the admin database
         adminDb.addUser(userName, userPassword, {
-            roles: [{
-                role: "userAdmin",
-                db: dbName
-            }]
-        },
-            function (err, result) {
+                roles: [{
+                    role: "userAdmin",
+                    db: dbName
+                }]
+            },
+            function(err, result) {
 
                 if (err) {
                     return console.log('Error: could not add new user')
                 }
 
                 // Authenticate using the newly added user
-                adminDb.authenticate(userName, userPassword, function (err, result) {
+                adminDb.authenticate(userName, userPassword, function(err, result) {
 
                     if (err) {
                         return console.log('Error: could not authenticate with created user')
@@ -59,17 +59,16 @@ MongoClient.connect('mongodb://root:root@' + mongoHost + ':' + mongoPort + '/',
                     db.close()
                 })
 
-            // Creating new collections in the db
-                MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}/`
-                    , function (err, db) {
+                // Creating new collections in the db
+                MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}/`, function(err, db) {
+                    if (err) throw err;
+                    var dbo = db.db(`${dbName}`);
+                    dbo.createCollection(`${collectionName}`, function(err, res) {
                         if (err) throw err;
-                        var dbo = db.db(`${dbName}`);
-                        dbo.createCollection(`${collectionName}`, function (err, res) {
-                            if (err) throw err;
-                            console.log("Collection created!");
-                            db.close();
-                        });
+                        console.log("Collection created!");
+                        db.close();
                     });
+                });
 
                 // //Create database
                 // MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}/${dbName}`
