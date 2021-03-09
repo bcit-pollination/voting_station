@@ -8,7 +8,9 @@ axios.defaults.headers.common['Authorization'] = '';
 const urlLogin = '/user/login';
 const urlUser = '/user';
 const urlOrg = '/org';
+const urlVotingToken = '/user/voting_token';
 const urlOrgList = '/org/list';
+const urlOrgUsers = '/org/list';
 const urlVerifierPass = '/org/verifier_password';
 const urlElections = '/org/elections';
 const urlElectionsList = '/org/elections/list';
@@ -36,6 +38,10 @@ function logout() {
     axios.defaults.headers.common['Authorization'] = '';
 }
 
+function getOrg(org_id) {
+    return axiosRequest(methods.GET, urlOrg, null, { org_id: org_id });
+}
+
 function electionDownload(election_id) {
     return axiosRequest(methods.GET, urlElectionDownload, null, { election_id: election_id });
 }
@@ -48,8 +54,20 @@ function getElectionsList(org_id) {
     return axiosRequest(methods.GET, urlElectionsList, null, { org_id: org_id });
 }
 
+function getUserInfo() {
+    return axiosRequest(methods.GET, urlUser);
+}
+
+function getUserVotingToken() {
+    return axiosRequest(methods.GET, urlVotingToken);
+}
+
 function getUserOrgs() {
     return axiosRequest(methods.GET, urlOrgList);
+}
+
+function getOrgUsers(org_id) {
+    return axiosRequest(methods.GET, urlOrgUsers, null, { org_id: org_id });
 }
 
 function axiosRequest(method, url, data = null, params = null, authorized = true) {
@@ -91,5 +109,9 @@ module.exports = {
     electionDownload,
     electionUpload,
     getUserOrgs,
-    getElectionsList
+    getElectionsList,
+    getUserInfo,
+    getUserVotingToken,
+    getOrg,
+    getOrgUsers
 }
