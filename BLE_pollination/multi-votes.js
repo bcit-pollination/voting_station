@@ -155,7 +155,7 @@ function handleMultiVote(vote_string) {
  
   let post_obj = JSON.stringify({ 'obj': vote_data_json })
   console.log(post_obj)
-  console.log(post_obj)
+
   
   xhttp.send(post_obj)
   // xhttp.send(JSON.stringify(q_list));

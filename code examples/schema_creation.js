@@ -7,7 +7,7 @@ var conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the 
 // define 'Schema' as the 'mongoose.Schema'
 var Schema = mongoose.Schema;
 
-console.log(mongoose)
+// console.log(mongoose)
 // Questions 
 // [
 //     "ObjectId",
@@ -81,16 +81,16 @@ var multi_question_test = new Question({
     ordered_choices: false,
     'options': [
         {
-            option_num          : 1,
+            option_id          : 1,
             option_description: "Sandwich",
         },
         {
-            option_num: 2,
+            option_id: 2,
             option_description: "Pizza",
         },
         {
-            option_num: 3,
-            option_description      : "SuShi",
+            option_id: 3,
+            option_description   : "SuShi",
         }
     ]
 })

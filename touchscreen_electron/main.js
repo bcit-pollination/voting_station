@@ -13,7 +13,7 @@ const voting_express_server_process = () => {
   let voting_express_server_process = spawn('node', ['./servers/voting_express_server.js']);
 
   console.log('run-voting-server')
-    
+
   voting_express_server_process.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
@@ -47,26 +47,26 @@ const admin_express_server_process = () => {
 
 
 const exit_node_servers = () => {
-  spawn('fuser', ['-k','3000/tcp']);
-  spawn('fuser', ['-k','4000/tcp']);
+  spawn('fuser', ['-k', '3000/tcp']);
+  spawn('fuser', ['-k', '4000/tcp']);
 
   return new Promise(async (resolve, reject) => {
-    let kill_node_processes = spawn('fuser', ['-k','3000/tcp']);
-    let kill_node_processes2 = spawn('fuser', ['-k','4000/tcp']);
+    let kill_node_processes = spawn('fuser', ['-k', '3000/tcp']);
+    let kill_node_processes2 = spawn('fuser', ['-k', '4000/tcp']);
     console.log('kill_node_processes')
-      
+
     kill_node_processes.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
-  
+
     kill_node_processes.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
     });
-    
-    let both_done =false
+
+    let both_done = false
 
     // kill_node_processes.on('close', (code) => {
-        
+
     //   if (code!=0) {
     //     resolve(code)
     //   }
@@ -74,14 +74,14 @@ const exit_node_servers = () => {
     // });
 
     kill_node_processes2.on('close', (code) => {
-        
-      if (code!=0) {
+
+      if (code != 0) {
         resolve(code)
       }
       resolve('exec success')
     });
 
-    
+
   })
 
 
@@ -126,29 +126,42 @@ app.whenReady().then(() => {
   //webContents sends a message to ipcRenderer
   ipc.on('run-voting-server', () => {
     voting_express_server_process()
+    mainWindow.loadFile('./pages/voting.html')
   })
 
   //webContents sends a message to ipcRenderer
   ipc.on('run-admin-server', () => {
     admin_express_server_process()
+    // load the index.html of the app.
+    mainWindow.loadFile('./pages/admin.html')
   })
 
-  ipc.on('kill-processes',()=>{
-    let kill_node_processes = spawn('fuser', ['-k','3000/tcp']);
-    let kill_node_processes2 = spawn('fuser', ['-k','4000/tcp']);
+  ipc.on('kill-processes', () => {
+
+    let kill_node_processes = spawn('fuser', ['-k', '3000/tcp']);
+    let kill_node_processes2 = spawn('fuser', ['-k', '4000/tcp']);
     console.log('kill_node_processes')
-      
+
     kill_node_processes.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
-  
+
     kill_node_processes.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
     });
-  
+
     kill_node_processes.on('close', (code) => {
       console.log(`child process exited with code: ${code}`);
     });
+
+    kill_node_processes2.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    kill_node_processes2.on('close', (code) => {
+      console.log(`child process exited with code: ${code}`);
+    });
+
   })
 
 
@@ -170,18 +183,18 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
 
   let p = new Promise(async (resolve, reject) => {
-    let res =  await exit_node_servers()
+    let res = await exit_node_servers()
     console.log('checkedItems in MultiChoice')
     // console.log(choices)
     resolve(res)
   })
-  p.then(r => { 
+  p.then(r => {
     console.log(r)
-    if (process.platform !== 'darwin') app.quit() 
+    if (process.platform !== 'darwin') app.quit()
   })
 
 
-  
+
 
 })
 

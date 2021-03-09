@@ -12,21 +12,23 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${type}-version`, process.versions[type])
   }
 
-  document.getElementById('start-process-1').addEventListener('click',()=>{
+  document.getElementById('start-process-1').addEventListener('click', () => {
     console.log('run-admin-server')
     ipc.send('run-admin-server', 'A sync message to main');
   })
-  
-  document.getElementById('start-process-2').addEventListener('click',()=>{
+
+  document.getElementById('start-process-2').addEventListener('click', () => {
     console.log('run-voting-server')
+
+
     ipc.send('run-voting-server', 'A sync message to main');
   })
 
-  document.getElementById('start-processes').addEventListener('click',()=>{
+  document.getElementById('kill-processes').addEventListener('click', () => {
     console.log('kill-processes')
     ipc.send('kill-processes', 'A sync message to main');
   })
-  
+
 })
 
 
