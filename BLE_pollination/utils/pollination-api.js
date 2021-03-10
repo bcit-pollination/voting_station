@@ -124,7 +124,7 @@ async function test() {
     resp = await electionDownload(6);
 }
 
-test();
+// test();
 
 module.exports = {
     login,
