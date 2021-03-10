@@ -23,6 +23,7 @@ function login(email, password) {
         axiosRequest(methods.POST, urlLogin, { email: email, password: password }, null, false)
             .then(resp => {
                 axios.defaults.headers.common['Authorization'] = "Bearer " + resp['jwt_token'];
+                resolve(resp);
             })
             .catch(err => {
                 reject(err);
@@ -92,17 +93,38 @@ function axiosRequest(method, url, data = null, params = null, authorized = true
             return reject();
         }
 
+        console.log('Sending request to pollination server\n', requestObject)
+
         axios(requestObject)
             .then(resp => {
-                console.log(resp.data)
+                console.log("Pollination server response\n", resp.data)
                 resolve(resp.data);
             })
             .catch(err => {
-                console.log(err.response.data)
+                console.log("Pollination API call error\n", err.response.data)
                 reject(err.response.data);
             });
     });
 }
+
+async function test() {
+    let resp;
+    resp = await login('test@test.com', 'testtest');
+    resp = await electionDownload(6);
+    resp = await getVerifierPassword(5);
+    resp = await getUserOrgs();
+    resp = await getElectionsList(5);
+    resp = await getUserInfo();
+    resp = await getUserVotingToken();
+    resp = await getOrg(5);
+    resp = await getOrgUsers(5);
+    resp = await getElectionInfo(6);
+
+    await logout()
+    resp = await electionDownload(6);
+}
+
+test();
 
 module.exports = {
     login,
