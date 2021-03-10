@@ -12,10 +12,10 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${type}-version`, process.versions[type])
   }
 
-  document.getElementById('start-process-1').addEventListener('click', () => {
-    console.log('run-admin-server')
-    ipc.send('run-admin-server', 'A sync message to main');
-  })
+  // document.getElementById('start-process-1').addEventListener('click', () => {
+  //   console.log('run-admin-server')
+  //   ipc.send('run-admin-server', 'A sync message to main');
+  // })
 
   document.getElementById('start-process-2').addEventListener('click', () => {
     console.log('run-voting-server')
@@ -28,6 +28,23 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('kill-processes')
     ipc.send('kill-processes', 'A sync message to main');
   })
+
+  document.getElementById('start-BLE-button').addEventListener('click',()=>{
+    // const ipc = require('electron').ipcRenderer;
+    ipc.send('start-BLE-server', 'A sync message to main');
+    console.log('clicked!')
+    
+})
+
+document.getElementById('load-questions-button').addEventListener('click', () => {
+  console.log('load-questions')
+  ipc.send('load-questions', 'A sync message to main');
+})
+
+document.getElementById('upload-results-button').addEventListener('click', () => {
+  console.log('load-questions')
+  ipc.send('upload-results', 'A sync message to main');
+})
 
 })
 

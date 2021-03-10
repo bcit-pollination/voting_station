@@ -8,6 +8,32 @@ const ipc = require('electron').ipcMain;
 const { webContents } = require('electron')
 
 
+const start_load_question_process = () => {
+  let load_question_process = spawn('sudo', ['node','../code examples/mongoDB_tasks/March_10.js']);
+  load_question_process.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+  load_question_process.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+  load_question_process.on('close', (code) => {
+    console.log(`child process exited with code: ${code}`);
+  });
+}
+
+const start_BLE_server_process = ()=>{
+  let BLE_server_process = spawn('sudo', ['node','../BLE_pollination/peripheral.js']);
+  BLE_server_process.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+  BLE_server_process.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+  BLE_server_process.on('close', (code) => {
+    console.log(`child process exited with code: ${code}`);
+  });
+
+}
 
 const voting_express_server_process = () => {
   let voting_express_server_process = spawn('node', ['./servers/voting_express_server.js']);
@@ -126,7 +152,13 @@ app.whenReady().then(() => {
   //webContents sends a message to ipcRenderer
   ipc.on('run-voting-server', () => {
     voting_express_server_process()
-    mainWindow.loadFile('./pages/voting.html')
+    // mainWindow.loadFile('./pages/voting.html')
+  })
+
+    //webContents sends a message to ipcRenderer
+  ipc.on('upload-results', () => {
+      console.log('uploading......')
+      console.log('upload successful!')
   })
 
   //webContents sends a message to ipcRenderer
@@ -135,6 +167,16 @@ app.whenReady().then(() => {
     // load the index.html of the app.
     mainWindow.loadFile('./pages/admin.html')
   })
+
+
+  ipc.on('start-BLE-server', () => {
+    start_BLE_server_process()
+  })
+
+  ipc.on('load-questions', () => {
+    start_load_question_process()
+  })
+ 
 
   ipc.on('kill-processes', () => {
 

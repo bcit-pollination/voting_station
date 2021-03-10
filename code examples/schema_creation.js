@@ -55,8 +55,23 @@ var VoteSchema = new Schema({
             order_position : Number,
         }
     ]
+}, {collection : 'votes'})
 
-
+// Vote Schema :
+var VoterSchema = new Schema({
+    voting_token: String,
+    location : String,
+    time_stamp: Date,
+    voter_first_name : String,
+    voter_last_name : String,
+    question_num: Number,
+    choices: [
+        {
+            question_id : Number,
+            option_id: Number,
+            order_position : Number,
+        }
+    ]
 }, {collection : 'votes'})
 
 
@@ -69,7 +84,7 @@ var Question = mongoose.model('Question', QuestionSchema);
 // what is a vote? I think the variable name can be more intuitive.
 var Vote = mongoose.model('VoteSchema', VoteSchema);
 
-
+var Voter = mongoose.model('Voter',VoterSchema);
 
 
 //--------------- Iinstances------------------------//

@@ -11,15 +11,18 @@ const userPassword = ''
 const mongoPort = 27017
 const dbName = 'pollination'
 const collectionName = 'questions'
+const bodyParser = require('body-parser')
 
 // define 'Schema' as the 'mongoose.Schema'
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const bodyParser = require('body-parser')
+let votable = false
+
 
 app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
+
 
 // import schema
 // const { Question } = require('./models/question_schema')
@@ -39,19 +42,19 @@ const db = mongoose.connection;
 // Vote Schema :
 const VoteSchema = new Schema({
     voting_token: String,
-    location : String,
+    location: String,
     time_stamp: Date,
-    voter_first_name : String,
-    voter_last_name : String,
+    voter_first_name: String,
+    voter_last_name: String,
     question_num: Number,
     choices: [
         {
-            question_id : Number,
+            question_id: Number,
             option_id: Number,
-            order_position : Number,
+            order_position: Number,
         }
     ]
-}, {collection : 'votes'})
+}, { collection: 'votes' })
 
 // what is a vote? I think the variable name can be more intuitive.
 const Vote = mongoose.model('Vote', VoteSchema);
@@ -80,6 +83,42 @@ const Vote = mongoose.model('Vote', VoteSchema);
 //     }) 
 // });
 
+async function verifyVotingToken(query_target) {
+    let collection_name = 'voting_users'
+
+    return new Promise(async (resolve, reject) => {
+        await MongoClient.connect(`mongodb://${mongoHost}:${mongoPort}/`
+            , function (err, db) {
+                if (err) throw err;
+                var dbo = db.db(`${dbName}`);
+                dbo.collection(collection_name).find({
+                    voting_token: query_target
+                }).toArray(function (err, result) {
+                    if (err) throw err;
+
+                    console.log('result=======')
+                    console.log(result)
+                    console.log('result=======')
+
+                    //FIXME: if it is not a user, the vote must not proceed.
+                    if (result.length != 0) {
+                        console.log(result);
+                        console.log('votable!!!')
+                        votable = true
+                    }
+                    else {
+                        console.log(result);
+                        console.log('not votable!!!')
+                        votable = false
+                    }
+
+                    db.close();
+                    resolve(votable)
+                });
+            });
+    })
+}
+
 app.get('/getQuestions', function (req, res) {
     console.log('getQuestions')
 
@@ -95,28 +134,61 @@ app.get('/getQuestions', function (req, res) {
                 db.close();
                 res.send(result)
             });
+
         });
 
 });
 
-app.post('/postVotes', function (req, res) {
+app.post('/postVotes', async function (req, res) {
     console.log('postVotes')
-    console.log('req.body.obj')
-    let vote = req.body.obj
-    console.log(req.body.obj)
 
-    //TODO: put the following into a function
-    // FIXME:
-    // WEIRDO: Hello?
-    let vote_to_add = new Vote(vote)
-    vote_to_add.save((err, doc) => {
-        console.log('saving vote_to_add')
-        err && console.log(err);
-        console.log(doc)
-        return
+    console.log('votable??????')
+    let p = verifyVotingToken()
+
+    p.then(votable=>{
+        console.log(votable)
+
+
+        if (votable) {
+            let vote = req.body.obj
+            console.log(req.body.obj)
+    
+            //TODO: put the following into a function
+            // FIXME:
+    
+            let vote_to_add = new Vote(vote)
+            vote_to_add.save((err, doc) => {
+                console.log('saving vote_to_add')
+                err && console.log(err);
+                console.log(doc)
+                return
+            })
+        }
+        else {
+            res.send("You Are Not Allowed To Vote!")
+        }
     })
+ 
 
 });
+
+app.post('/allowVote', function (req, res) {
+    console.log('allow vote?')
+
+    let query_target = req.body.voting_token
+    votable = verifyVotingToken(query_target)
+    // votable = true
+    console.log(votable)
+});
+
+app.post('/disableVote', function (req, res) {
+    console.log('allow vote?')
+
+    votable = false
+    console.log(votable)
+    // votable = true
+});
+
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
