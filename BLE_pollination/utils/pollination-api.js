@@ -43,7 +43,7 @@ function getOrg(org_id) {
     return axiosRequest(methods.GET, urlOrg, null, { org_id: org_id });
 }
 
-function getElectionInfo() {
+function getElectionInfo(election_id) {
     return axiosRequest(methods.GET, urlElections, null, { election_id: election_id });
 }
 
@@ -124,7 +124,7 @@ async function test() {
     resp = await electionDownload(6);
 }
 
-// test();
+test();
 
 module.exports = {
     login,
