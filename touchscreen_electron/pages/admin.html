@@ -8,12 +8,20 @@
 </head>
 
 <body>
-    <div>
+    <!-- step 1: login -->
+    <div id='step-1' className ='steps'>
+        <input id='login-username-input' placeholder="username" />
+        <input id='login-password-input' placeholder="password" />
+    </div>
 
-
+    <div id='step-2' className ='steps'>
         <input id='voting-token-input' placeholder="enter voting token here:" />
         <button id='voting-token-button'>Grant Permission to Vote</button>
+    </div>
 
+    <div id='step-3' className ='steps'>
+        <input id='voting-token-input' placeholder="enter voting token here:" />
+        <button id='voting-token-button'>Grant Permission to Vote</button>
     </div>
 
     <script src='./js/admin.js'> </script>
