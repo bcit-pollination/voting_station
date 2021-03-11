@@ -21,18 +21,20 @@ var Schema = mongoose.Schema;
 //     ]
 // ]
 
+
+
 // TODO-Amber: Election Package Schema
 
 
 // Options
-var OptionsSchema = new Schema({
+const OptionsSchema = new Schema({
     option_description: String,
     option_id: Number,
     //count: Number
 })
 
 // Questions
-var QuestionSchema = new Schema({
+const QuestionSchema = new Schema({
     election_id: Number,
     question_id: Number,
     question_description: String,
@@ -45,7 +47,7 @@ var QuestionSchema = new Schema({
 
 
 // Vote Schema :
-var VoteSchema = new Schema({
+const VoteSchema = new Schema({
     voting_token: String,
     location: String,
     time_stamp: Date,
@@ -62,7 +64,7 @@ var VoteSchema = new Schema({
 }, { collection: 'votes' })
 
 // Vote Schema :
-var VoterSchema = new Schema({
+const VoterSchema = new Schema({
     voting_token: String,
     location: String,
     time_stamp: Date,
@@ -78,6 +80,29 @@ var VoterSchema = new Schema({
     ]
 }, { collection: 'votes' })
 
+
+// 
+const ElectionPackageSchema = new Schema({
+    // the two primary fields
+    voter_list: [VoterSchema],
+    verifier_password: String,
+    // nested fields
+    election_info: {
+        election_id: Number,         // used for getting the package
+        org_id: String,              // used for rendering
+        anonymous: Boolean,
+
+        public_results: String,
+
+        election_description: String, // 
+        // deals with time peroid
+        start_time: String,
+        end_time: String,
+        // most important   
+        questions: [QuestionSchema], // question objects
+        verified: Boolean,           // type of votes
+    }
+})
 
 
 //-------------------- Models ---------------------------//
