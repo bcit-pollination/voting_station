@@ -9,7 +9,7 @@ const ipc = require('electron').ipcMain;
 // this sends
 const { webContents } = require('electron')
 
-const { admin_express_server_process } = require('./utils/central_pi')
+const { admin_express_server_process,storeQuestionsIntoDB } = require('./utils/central_pi')
 
 const { start_load_question_process,
   start_BLE_server_process,
@@ -84,6 +84,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      //Important:
+      contextIsolation: false,
       preload: path.join(__dirname, 'preload.js'),
       // nodeIntegration : true
     }
@@ -100,6 +102,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  storeQuestionsIntoDB('test@test.com','testtest',16)
   createWindow()
 
   app.on('activate', function () {

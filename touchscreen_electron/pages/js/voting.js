@@ -1,5 +1,6 @@
 console.log('voting.js')
 // const ipc = import('electron').ipcRenderer;
+const ipc = require('electron').ipcRenderer;
 
 document.getElementById('voting-token-button').addEventListener('click',()=>{
     console.log('clicked "voting-token-input"')
