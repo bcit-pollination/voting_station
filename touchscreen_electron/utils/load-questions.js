@@ -1,10 +1,11 @@
 // import Mongoose module
+// const bson = require('./node_modules/bson/browser_build/bson');
 const mongoose = require('mongoose');
-// set up connections
-const conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the db
+
+var conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the db
 
 // define 'Schema' as the 'mongoose.Schema'
-const Schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 // console.log(mongoose)
 // Questions 
@@ -20,18 +21,24 @@ const Schema = mongoose.Schema;
 //     ]
 // ]
 
-// TODO: find out why it is not working
-var OptionsSchema = new Schema({
+
+
+// TODO-Amber: Election Package Schema
+
+
+// Options
+const OptionsSchema = new Schema({
     option_description: String,
     option_id: Number,
     //count: Number
 })
 
-var QuestionSchema = new Schema({
+// Questions
+const QuestionSchema = new Schema({
     election_id: Number,
     question_id: Number,
     question_description: String,
-    'options': [OptionsSchema],
+    'options': [OptionsSchema],   //Array
     ordered_choices: Boolean,
     max_selection_count: Number,  //How many of the given question options can the user select. Must be >= 1
     min_selection_count: Number,  //minimum: 1
@@ -40,7 +47,7 @@ var QuestionSchema = new Schema({
 
 
 // Vote Schema :
-var VoteSchema = new Schema({
+const VoteSchema = new Schema({
     voting_token: String,
     location: String,
     time_stamp: Date,
@@ -57,7 +64,7 @@ var VoteSchema = new Schema({
 }, { collection: 'votes' })
 
 // Vote Schema :
-var VoterSchema = new Schema({
+const VoterSchema = new Schema({
     voting_token: String,
     location: String,
     time_stamp: Date,
@@ -73,6 +80,29 @@ var VoterSchema = new Schema({
     ]
 }, { collection: 'votes' })
 
+
+// 
+const ElectionPackageSchema = new Schema({
+    // the two primary fields
+    voter_list: [VoterSchema],
+    verifier_password: String,
+    // nested fields
+    election_info: {
+        election_id: Number,         // used for getting the package
+        org_id: String,              // used for rendering
+        anonymous: Boolean,
+
+        public_results: String,
+
+        election_description: String, // 
+        // deals with time peroid
+        start_time: String,
+        end_time: String,
+        // most important   
+        questions: [QuestionSchema], // question objects
+        verified: Boolean,           // type of votes
+    }
+})
 
 
 //-------------------- Models ---------------------------//
@@ -85,9 +115,9 @@ var Vote = mongoose.model('VoteSchema', VoteSchema);
 
 var Voter = mongoose.model('Voter', VoterSchema);
 
+var ElectionPackage = mongoose.model('ElectionPackage', ElectionPackageSchema)
 
-//--------------- Instances------------------------//
-
+//--------------- Iinstances------------------------//
 var multi_question_test = new Question({
     question_id: 1,
     question_description: "Quel est votre plat préféré ?",
@@ -111,7 +141,6 @@ var multi_question_test = new Question({
 })
 // console.log(multi_question_test)
 
-// TODO: save question
 multi_question_test.save((err, doc) => {
     console.log('saving')
     err && console.log(err);
