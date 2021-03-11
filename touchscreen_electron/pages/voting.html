@@ -5,23 +5,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href='./css/voting.css' />
+    <link rel="stylesheet" href='./css/buttons.css' />
+    <link rel="stylesheet" href='./css/forms.css' />
 </head>
 
 <body>
     <div>
 
+        <!-- TODO:step I: login -->
+        <div id='step-I' className='steps'>
+            <form>
 
+                <div>
+                    <label for="login-username-input">username</label>
+                    <br />
+                    <input id='login-username-input' placeholder="username" />
+                </div>
 
-        <div>
+                <div>
+                    <label for="login-password-input">password</label>
+                    <br />
+                    <input id='login-password-input' placeholder="password" />
+                </div>
+
+                <button id='voting-login-button'>Login(as Voting Pi)</button>
+            </form>
+        </div>
+
+        <!-- step II Setup local environment(BLE and mongoDB) -->
+        <div id='step-II'>
+
+            <!-- TODO:step II-1:  -->
+            <div id='step-II-1'>
+                <div>
+                    <button id='load-questions-button'>Load Questions</button>
+                </div>
+            </div>
+
+            <!-- TODO:step II-2 Start Server Buttons -->
+            <div id='step-II-2'>
+                <div>
+                    <button id='start-BLE-button'>Start BLE server</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- step III Setup Voting Token -->
+        <div id='step-III'>
             <input id='voting-token-input' placeholder="enter voting token here:" />
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
 
 
+
+
     </div>
 
-    
-    <script src='../preload.js'> </script>
+
     <script src='./js/voting.js'> </script>
 </body>
 

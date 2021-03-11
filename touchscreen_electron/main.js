@@ -9,19 +9,20 @@ const ipc = require('electron').ipcMain;
 // this sends
 const { webContents } = require('electron')
 
-const { admin_express_server_process,storeQuestionsIntoDB } = require('./utils/central_pi')
+const { admin_express_server_process, storeQuestionsIntoDB, } = require('./utils/central_pi')
+
+const { getElectionsList, login } = require('./utils/pollination-api')
 
 const { start_load_question_process,
   start_BLE_server_process,
   voting_express_server_process,
+
 } = require('./utils/voting_pi')
 
 const bluetooth_off_and_on = async () => {
   await spawn('rfkill', ['block', 'bluetooth']);
   return await spawn('rfkill', ['unblock', 'bluetooth']);
 }
-
-
 
 
 
@@ -102,7 +103,13 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  storeQuestionsIntoDB('test@test.com','testtest',16)
+  storeQuestionsIntoDB('test@test.com', 'testtest', 16)
+  // login('test@test.com', 'testtest').then(() => {
+  //   getElectionsList(16).then(r => {
+  //     console.log(r)
+  //   })
+  // })
+
   createWindow()
 
   app.on('activate', function () {
@@ -115,7 +122,7 @@ app.whenReady().then(() => {
   //webContents sends a message to ipcRenderer
   ipc.on('run-voting-server', () => {
     voting_express_server_process()
-    // mainWindow.loadFile('./pages/voting.html')
+    mainWindow.loadFile('./pages/voting.html')
   })
 
   //webContents sends a message to ipcRenderer

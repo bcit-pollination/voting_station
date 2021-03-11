@@ -1,11 +1,10 @@
 // import Mongoose module
-// const bson = require('./node_modules/bson/browser_build/bson');
 const mongoose = require('mongoose');
-
-var conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the db
+// set up connections
+const conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the db
 
 // define 'Schema' as the 'mongoose.Schema'
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 // console.log(mongoose)
 // Questions 
@@ -21,22 +20,18 @@ var Schema = mongoose.Schema;
 //     ]
 // ]
 
-// TODO-Amber: Election Package Schema
-
-
-// Options
+// TODO: find out why it is not working
 var OptionsSchema = new Schema({
     option_description: String,
     option_id: Number,
     //count: Number
 })
 
-// Questions
 var QuestionSchema = new Schema({
     election_id: Number,
     question_id: Number,
     question_description: String,
-    'options': [OptionsSchema],   //Array
+    'options': [OptionsSchema],
     ordered_choices: Boolean,
     max_selection_count: Number,  //How many of the given question options can the user select. Must be >= 1
     min_selection_count: Number,  //minimum: 1
@@ -91,7 +86,8 @@ var Vote = mongoose.model('VoteSchema', VoteSchema);
 var Voter = mongoose.model('Voter', VoterSchema);
 
 
-//--------------- Iinstances------------------------//
+//--------------- Instances------------------------//
+
 var multi_question_test = new Question({
     question_id: 1,
     question_description: "Quel est votre plat préféré ?",
@@ -115,6 +111,7 @@ var multi_question_test = new Question({
 })
 // console.log(multi_question_test)
 
+// TODO: save question
 multi_question_test.save((err, doc) => {
     console.log('saving')
     err && console.log(err);

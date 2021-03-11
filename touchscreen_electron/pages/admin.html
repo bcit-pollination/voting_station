@@ -5,23 +5,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href='./css/admin.css' />
+    <link rel="stylesheet" href='./css/buttons.css' />
+    <link rel="stylesheet" href='./css/forms.css' />
 </head>
 
 <body>
-    <!-- step 1: login -->
-    <div id='step-1' className ='steps'>
-        <input id='login-username-input' placeholder="username" />
-        <input id='login-password-input' placeholder="password" />
+    <!-- step I: login -->
+    <div id='step-I' className='steps'>
+        <div>
+            <label for="login-username-input">username</label>
+            <br />
+            <input id='login-username-input' placeholder="username" />
+        </div>
+
+        <div>
+            <label for="login-password-input">password</label>
+            <br />
+            <input id='login-password-input' placeholder="password" />
+        </div>
+
+        <button id='central-login-button'>Login(as Central Pi)</button>
     </div>
 
-    <div id='step-2' className ='steps'>
-        <input id='voting-token-input' placeholder="enter voting token here:" />
-        <button id='voting-token-button'>Grant Permission to Vote</button>
+    <!-- FIXME: delete all these after implementing hide() -->
+    <br>
+    <br>
+    <br>
+
+    <!-- step II: display the election list  -->
+    <div id='step-II' className='steps'>
+
+        <div id='election-list-display'>
+            <!-- for(let item of ) -->
+        </div>
+
+        <button id='get-election-list-button'>Get Election List</button>
     </div>
 
-    <div id='step-3' className ='steps'>
-        <input id='voting-token-input' placeholder="enter voting token here:" />
-        <button id='voting-token-button'>Grant Permission to Vote</button>
+
+    <!-- step II: display the election list  -->
+    <div id='step-III' className='steps'>
+
+        <div id='election-list-display'>
+            <!-- for(let item of ) -->
+        </div>
+
+        <button id='get-organization-list-button'>Get Organization List</button>
+    </div>
+
+    <!-- FIXME: delete all these after implementing hide() -->
+    <br>
+    <br>
+    <br>
+
+
+    <div id='step-IV' className='steps'>
+        <button id='download-electron-package-button'>Download Election Package</button>
+    </div>
+
+    <!-- FIXME: delete all these after implementing hide() -->
+    <br>
+    <br>
+    <br>
+
+    <div id='bottom'>
+
     </div>
 
     <script src='./js/admin.js'> </script>
