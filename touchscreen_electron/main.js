@@ -3,83 +3,42 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const { exec, spawn } = require('child_process');
 
-//import ipc utils
+// import ipc utils
 const ipc = require('electron').ipcMain;
+
+// this sends
 const { webContents } = require('electron')
 
+const { admin_express_server_process } = require('./utils/central_pi')
 
-const start_load_question_process = () => {
-  let load_question_process = spawn('sudo', ['node','../code examples/mongoDB_tasks/March_10.js']);
-  load_question_process.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-  load_question_process.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-  load_question_process.on('close', (code) => {
-    console.log(`child process exited with code: ${code}`);
-  });
+const { start_load_question_process,
+  start_BLE_server_process,
+  voting_express_server_process,
+} = require('./utils/voting_pi')
+
+const bluetooth_off_and_on = async () => {
+  await spawn('rfkill', ['block', 'bluetooth']);
+  return await spawn('rfkill', ['unblock', 'bluetooth']);
 }
 
-const start_BLE_server_process = ()=>{
-  let BLE_server_process = spawn('sudo', ['node','../BLE_pollination/peripheral.js']);
-  BLE_server_process.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-  BLE_server_process.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-  BLE_server_process.on('close', (code) => {
-    console.log(`child process exited with code: ${code}`);
-  });
 
-}
 
-const voting_express_server_process = () => {
-  let voting_express_server_process = spawn('node', ['./servers/voting_express_server.js']);
 
-  console.log('run-voting-server')
 
-  voting_express_server_process.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  voting_express_server_process.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  voting_express_server_process.on('close', (code) => {
-    console.log(`child process exited with code: ${code}`);
-  });
-
-}
-
-const admin_express_server_process = () => {
-  let admin_express_server_process = spawn('node', ['./servers/admin_express_server.js']);
-
-  console.log('run-admin-server')
-  admin_express_server_process.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  admin_express_server_process.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  admin_express_server_process.on('close', (code) => {
-    console.log(`child process exited with code: ${code}`);
-  });
-}
 
 
 const exit_node_servers = () => {
   spawn('fuser', ['-k', '3000/tcp']);
   spawn('fuser', ['-k', '4000/tcp']);
 
+  bluetooth_off_and_on();
+
   return new Promise(async (resolve, reject) => {
-    let kill_node_processes = spawn('fuser', ['-k', '3000/tcp']);
-    let kill_node_processes2 = spawn('fuser', ['-k', '4000/tcp']);
+    // kill possible express servers
+    let kill_node_processes = await spawn('fuser', ['-k', '3000/tcp']);
+    let kill_node_processes2 = await spawn('fuser', ['-k', '4000/tcp']);
     console.log('kill_node_processes')
+
 
     kill_node_processes.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -89,7 +48,7 @@ const exit_node_servers = () => {
       console.error(`stderr: ${data}`);
     });
 
-    let both_done = false
+    // let both_done = false
 
     // kill_node_processes.on('close', (code) => {
 
@@ -104,6 +63,7 @@ const exit_node_servers = () => {
       if (code != 0) {
         resolve(code)
       }
+
       resolve('exec success')
     });
 
@@ -155,10 +115,10 @@ app.whenReady().then(() => {
     // mainWindow.loadFile('./pages/voting.html')
   })
 
-    //webContents sends a message to ipcRenderer
+  //webContents sends a message to ipcRenderer
   ipc.on('upload-results', () => {
-      console.log('uploading......')
-      console.log('upload successful!')
+    console.log('uploading......')
+    console.log('upload successful!')
   })
 
   //webContents sends a message to ipcRenderer
@@ -176,7 +136,7 @@ app.whenReady().then(() => {
   ipc.on('load-questions', () => {
     start_load_question_process()
   })
- 
+
 
   ipc.on('kill-processes', () => {
 
