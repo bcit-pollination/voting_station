@@ -39,7 +39,7 @@ document.getElementById().addEventListener('click', () => {
     console.log('clicked: ')
 })
 
-// step-III: get election list, render it to a div
+// TODO:step-III: get election list, render it to a div
 document.getElementById('get-election-list-button').addEventListener('click', () => {
     console.log('clicked: get-election-list-button')
 
@@ -50,12 +50,12 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
         console.log(r)
     })
     // TODO-2: allow the user to choose one election and start downloading
-    // TODO-3: hide step-2 items????
+    // TODO-3: hide step-2 items
 
 })
 
-// step-IV: download
-document.getElementById(' ').addEventListener('click', () => {
+// TODO step-IV: download
+document.getElementById('// TODO: create a button ').addEventListener('click', () => {
     console.log('clicked: download-election-package-button')
     // TODO: download package
 

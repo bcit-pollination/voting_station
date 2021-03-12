@@ -32,12 +32,12 @@ const storeQuestionsIntoDB = async (email, password, election_id) => {
   await login(email, password)
 
   let election_package = electionDownload(election_id).then((p) => {
-    console.log('=========== election_package ==========')
+
     console.log(p)
     console.log(p.election_info.questions)
   })
-
-
+  console.log('=========== election_package ==========')
+  console.log(election_package);
 
 }
 

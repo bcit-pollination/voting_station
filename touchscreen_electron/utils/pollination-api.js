@@ -25,6 +25,7 @@ function login(email, password) {
         axiosRequest(methods.POST, urlLogin, { email: email, password: password }, null, false)
             .then(resp => {
                 axios.defaults.headers.common['Authorization'] = "Bearer " + resp['jwt_token'];
+                // axios.defaults.headers.common['Authorization'] = "Bearer " + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb2xsaW5hdGlvbi5saXZlIiwiaWF0IjoxNjE1NTA0OTY4LCJleHAiOjE2MjE1MDQ5NjgsInVpZCI6IjExIn0.UGXESPRk9QN49mZr-SP0L5GQsRq2HGmSbWTjZ4g6znA';
                 resolve(resp);
             })
             .catch(err => {
