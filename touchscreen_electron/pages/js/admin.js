@@ -19,7 +19,6 @@ const {
     getElectionsList,
 } = require('../utils/pollination-api.js')
 
-
 // step-I: login
 document.getElementById('central-login-button').addEventListener('click', () => {
     console.log('clicked: central-login-button')
@@ -34,7 +33,7 @@ document.getElementById('central-login-button').addEventListener('click', () => 
     });
     
 
-    // TODO: hide step-1 items
+    // hides step-1 items
     document.getElementById('step-I').style.display = "none";
 })
 
@@ -59,7 +58,8 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 })
 
 // TODO step-IV: download
-document.getElementById('// TODO: create a button ').addEventListener('click', () => {
+//Added the download-electron-package id to the getelementbyid statement.
+document.getElementById('download-electron-package-button').addEventListener('click', () => {
     console.log('clicked: download-election-package-button')
     // TODO: download package
 
