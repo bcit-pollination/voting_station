@@ -13,10 +13,12 @@ const {
     // voting_express_server_process,
 } = require('../utils/voting_pi')
 
+
 const {
     login,
     getElectionsList,
 } = require('../utils/pollination-api.js')
+
 
 // step-I: login
 document.getElementById('central-login-button').addEventListener('click', () => {
@@ -30,8 +32,10 @@ document.getElementById('central-login-button').addEventListener('click', () => 
         session_jwt = jwt;
         console.log(jwt)
     });
+    
 
     // TODO: hide step-1 items
+    document.getElementById('step-I').style.display = "none";
 })
 
 // step-II: getUserOrgs()
@@ -71,3 +75,4 @@ document.getElementById('// TODO: create a button ').addEventListener('click', (
 })
 
 // TODO: think of a way to do step-III: export json to usb
+ 

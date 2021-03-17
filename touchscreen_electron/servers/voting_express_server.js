@@ -83,6 +83,18 @@ const Vote = mongoose.model('Vote', VoteSchema);
 //     }) 
 // });
 
+async function addVote(voteVal){
+
+    let vote_to_add = new Vote(voteVal)
+    vote_to_add.save((err, doc) => {
+        console.log('saving vote_to_add')
+        err && console.log(err);
+        console.log(doc)
+        return;
+    });
+
+};
+
 async function verifyVotingToken(query_target) {
     let collection_name = 'voting_users'
 
@@ -153,16 +165,8 @@ app.post('/postVotes', async function (req, res) {
             let vote = req.body.obj
             console.log(req.body.obj)
     
-            //TODO: put the following into a function
-            // FIXME:
-    
-            let vote_to_add = new Vote(vote)
-            vote_to_add.save((err, doc) => {
-                console.log('saving vote_to_add')
-                err && console.log(err);
-                console.log(doc)
-                return
-            })
+            //Placed vote adding in an async function at the top.
+            addVote(vote);
         }
         else {
             res.send("You Are Not Allowed To Vote!")
