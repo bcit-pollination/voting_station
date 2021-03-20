@@ -1,5 +1,6 @@
 console.log('admin.js')
 
+
 const ipc = window.require('electron').ipcRenderer;
 
 // stores the jwt returned by login globally
@@ -18,6 +19,12 @@ const {
     login,
     getElectionsList,
 } = require('../utils/pollination-api.js')
+
+// go Back
+document.getElementById('go-back').addEventListener('click', () => {
+    console.log('clicked: go-back');
+    ipc.send("go-back", "cat");
+});
 
 // step-I: login
 document.getElementById('central-login-button').addEventListener('click', () => {
@@ -38,7 +45,7 @@ document.getElementById('central-login-button').addEventListener('click', () => 
 })
 
 // step-II: getUserOrgs()
-document.getElementById().addEventListener('click', () => {
+document.getElementById('get-organization-list-button').addEventListener('click', () => {
     console.log('clicked: ')
 })
 
@@ -75,4 +82,9 @@ document.getElementById('download-electron-package-button').addEventListener('cl
 })
 
 // TODO: think of a way to do step-III: export json to usb
- 
+
+
+function goBack() {
+    window.history.back();
+  }
+  

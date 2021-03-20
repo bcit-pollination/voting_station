@@ -2,7 +2,11 @@ console.log('voting.js')
 // const ipc = import('electron').ipcRenderer;
 const ipc = require('electron').ipcRenderer;
 
-
+// go Back
+document.getElementById('go-back').addEventListener('click', () => {
+    console.log('clicked: go-back');
+    ipc.send("go-back", "cat");
+});
 
 //  
 document.getElementById('voting-token-button').addEventListener('click', () => {
@@ -33,3 +37,7 @@ document.getElementById('start-BLE-button').addEventListener('click', () => {
 })
 
 
+function goBack() {
+    window.history.back();
+  }
+  
