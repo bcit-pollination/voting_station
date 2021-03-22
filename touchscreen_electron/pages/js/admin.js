@@ -53,8 +53,12 @@ document.getElementById('get-organization-list-button').addEventListener('click'
 document.getElementById('get-election-list-button').addEventListener('click', () => {
     console.log('clicked: get-election-list-button')
 
+    let electionDisplay = document.getElementById("election-list-display");
 
-    // TODO-1: get election list & render election list 
+    let electionListHeader = document.createElement("h2");
+    electionDisplay.appendChild(electionListHeader);
+    electionListHeader.innerHTML = "List of Elections:";
+
     let org_id = 16 //FIXME: change it to the value entered by the user
     let list = getElectionsList(org_id).then(list => {
         for (let item of list.elections) {
@@ -69,9 +73,12 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
             let electionTitleHeader = document.createElement("td");
             electionTitleRow.appendChild(electionTitleHeader);
             electionTitleHeader.colSpan = 2;
-            electionTitleHeader.innerHTML = item.election_description;
-            electionTitleHeader.style.fontWeight = "bold";
             electionTitleHeader.style.textAlign = "center";
+            let electionTitleHeaderButton = document.createElement("button");
+            electionTitleHeader.appendChild(electionTitleHeaderButton);
+            electionTitleHeaderButton.innerHTML = item.election_description;
+            electionTitleHeaderButton.style.fontWeight = "bold";
+            electionTitleHeaderButton.style.borderRadius = "3px";
 
             let startRow = document.createElement("tr");
             electionItem.appendChild(startRow);
@@ -93,9 +100,12 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
             let br = document.createElement("br");
 
-            let electionDisplay = document.getElementById("election-list-display");
             electionDisplay.appendChild(electionItem);
             electionDisplay.appendChild(br);
+
+            electionTitleHeaderButton.onclick = function() {
+                console.log(item);
+            }
         };
     });
 
