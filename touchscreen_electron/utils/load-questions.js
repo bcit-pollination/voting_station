@@ -150,6 +150,14 @@ multi_question_test.save((err, doc) => {
 
 
 module.exports = {
+    ElectionPackage,
+    ElectionPackageSchema,
+    OptionsSchema,
     Question,
-    Vote
+    QuestionSchema,
+    Schema,
+    Vote,
+    Voter,
+    VoteSchema,
+    VoterSchema,
 }
