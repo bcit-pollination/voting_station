@@ -56,9 +56,49 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
     // TODO-1: get election list & render election list 
     let org_id = 16 //FIXME: change it to the value entered by the user
-    getElectionsList(org_id).then(r => {
-        console.log(r)
-    })
+    let list = getElectionsList(org_id).then(list => {
+        for (let item of list.elections) {
+            let electionItem = document.createElement("table");
+            electionItem.style.border = "thin solid black";
+            electionItem.style.width = "66%";
+            electionItem.style.alignItems = "center";
+            electionItem.style.textAlign = "center";
+
+            let electionTitleRow = document.createElement("tr");
+            electionItem.appendChild(electionTitleRow);
+            let electionTitleHeader = document.createElement("td");
+            electionTitleRow.appendChild(electionTitleHeader);
+            electionTitleHeader.colSpan = 2;
+            electionTitleHeader.innerHTML = item.election_description;
+            electionTitleHeader.style.fontWeight = "bold";
+            electionTitleHeader.style.textAlign = "center";
+
+            let startRow = document.createElement("tr");
+            electionItem.appendChild(startRow);
+            let startTitle = document.createElement("td");
+            startRow.appendChild(startTitle);
+            startTitle.innerHTML = "Start Time";
+            let startData = document.createElement("td");
+            startRow.appendChild(startData);
+            startData.innerHTML = item.start_time;
+
+            let endRow = document.createElement("tr");
+            electionItem.appendChild(endRow);
+            let endTitle = document.createElement("td");
+            endRow.appendChild(endTitle);
+            endTitle.innerHTML = "End Time";
+            let endData = document.createElement("td");
+            endRow.appendChild(endData);
+            endData.innerHTML = item.start_time;
+
+            let br = document.createElement("br");
+
+            let electionDisplay = document.getElementById("election-list-display");
+            electionDisplay.appendChild(electionItem);
+            electionDisplay.appendChild(br);
+        };
+    });
+
     // TODO-2: allow the user to choose one election and start downloading
     // TODO-3: hide step-2 items
 
