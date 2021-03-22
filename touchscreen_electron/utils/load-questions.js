@@ -21,11 +21,6 @@ var Schema = mongoose.Schema;
 //     ]
 // ]
 
-
-
-// TODO-Amber: Election Package Schema
-
-
 // Options
 const OptionsSchema = new Schema({
     option_description: String,

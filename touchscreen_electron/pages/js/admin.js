@@ -1,6 +1,5 @@
 console.log('admin.js')
 
-
 const ipc = window.require('electron').ipcRenderer;
 
 // stores the jwt returned by login globally
@@ -28,6 +27,12 @@ const {
     Schema,
 } = require ('../utils/load-questions.js')
 
+let button1 = document.getElementById('get-organization-list-button');
+let button2 = document.getElementById('download-electron-package-button');
+let button3 = document.getElementById('import-election-button');
+let button4 = document.getElementById('export-election-button');
+let button5 = document.getElementById('get-election-list-button');
+
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
     console.log('clicked: go-back');
@@ -47,9 +52,9 @@ document.getElementById('central-login-button').addEventListener('click', () => 
         console.log(jwt)
     });
     
-
     // hides step-1 items
     document.getElementById('step-I').style.display = "none";
+    button5.style.visibility = 'visible';
 })
 
 // step-II: getUserOrgs()
@@ -111,7 +116,9 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
             // FIXME: Check if the .save() saves to the MongoDB
             electionTitleHeaderButton.onclick = function() {
                 let id = item.election_id;
-                electionDownload(18).then(result => {
+                button2.style.visibility = 'visible';
+
+                electionDownload(id).then(result => {
                     result.save((err, doc) => {
                         console.log('saving')
                         err && console.log(err);
@@ -128,30 +135,11 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
     // This part of the function, handles hiding the buttons when the table is generated, 
     // and creates a return button to bring it all back.
 
-    let button1 = document.getElementById('get-organization-list-button');
-    let button2 = document.getElementById('download-electron-package-button');
-    let button3 = document.getElementById('import-election-button');
-    let button4 = document.getElementById('export-election-button');
-    let button5 = document.getElementById('get-election-list-button');
-
     button1.style.visibility = 'hidden';
     button2.style.visibility = 'hidden';
     button3.style.visibility = 'hidden';
     button4.style.visibility = 'hidden';
     button5.style.visibility = 'hidden';
-
-    let returnButton = document.createElement('button');
-    returnButton.innerHTML = "Return";
-    returnButton.onclick = function() {
-        button1.style.visibility = 'visible';
-        button2.style.visibility = 'visible';
-        button3.style.visibility = 'visible';
-        button4.style.visibility = 'visible';
-        button5.style.visibility = 'visible';
-        electionDisplay.innerHTML = "<h2>List of Elections:</h2>";
-    }
-    electionDisplay.appendChild(returnButton);
-
 })
 
 // TODO step-IV: download
@@ -161,14 +149,13 @@ document.getElementById('download-electron-package-button').addEventListener('cl
     // TODO: download package
 
     let election_id = 15
+    button3.style.visibility = 'visible';
+    button4.style.visibility = 'visible';
 
-    let list_display_div = getElementById('election-list-display')
 
     document.getElementById('download-electron-package-button')
         .addEventListener('click', () => {
-
         })
-
 })
 
 // TODO: think of a way to do step-III: export json to usb
