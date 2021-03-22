@@ -1,5 +1,5 @@
 console.log('admin.js')
-
+const export_controller = require('../utils/export_tool/export_controller.js');
 const ipc = window.require('electron').ipcRenderer;
 
 // stores the jwt returned by login globally
@@ -16,7 +16,8 @@ const {
 const {
     login,
     getElectionsList,
-} = require('../utils/pollination-api.js')
+} = require('../utils/pollination-api.js');
+const { ipcRenderer } = require('electron');
 
 // step-I: login
 document.getElementById('central-login-button').addEventListener('click', () => {
@@ -71,3 +72,70 @@ document.getElementById('// TODO: create a button ').addEventListener('click', (
 })
 
 // TODO: think of a way to do step-III: export json to usb
+
+
+function exportData() {
+    const checkedRadio = document.querySelector('input[name="usb"]:checked');
+    if(!checkedRadio) return;
+
+     const path = checkedRadio.value;
+        
+    
+    const url = new URL("http://localhost:4000/dataExport");
+    const params = {pathName: path};
+    
+    url.search = new URLSearchParams(params).toString();
+    fetch(url).then(response => response.json())
+            .then((body) => {
+                    console.log(body);
+                 
+                    
+            }); 
+}
+
+function importData() {
+    const checkedRadio = document.querySelector('input[name="usb"]:checked');
+    if(!checkedRadio) return;
+
+     const path = checkedRadio.value;
+        
+    
+    const url = new URL("http://localhost:4000/dataImport");
+    const params = {pathName: path};
+    
+    url.search = new URLSearchParams(params).toString();
+    fetch(url).then(response => response.json())
+        .then((body) => {
+            console.log(body);
+            // TODO: Store imported data accordingly
+        }); 
+}
+
+function showUsbs() {
+    fetch('http://localhost:4000/usbs')
+  .then(response => response.json())
+  .then(data => {
+    data = JSON.parse(data);
+    console.log(data);
+    let usbsDiv = document.getElementById("usbs");
+    usbsDiv.innerHTML = "";
+        for(const usb of data.usbs){
+        if(usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
+        let div = document.createElement("div");
+        let input = document.createElement("input");
+        let label = document.createElement("label");
+        input.setAttribute("type", "radio");
+        input.setAttribute("id", usb.path);
+        input.setAttribute("name", "usb");
+        input.setAttribute("value", usb.path);
+        input.setAttribute("class", "radio");
+        input.checked = false;
+        label.innerText = usb.path;
+        div.appendChild(input);
+        div.appendChild(label);
+        usbsDiv.appendChild(div);
+    }
+
+  })
+}
+showUsbs()
