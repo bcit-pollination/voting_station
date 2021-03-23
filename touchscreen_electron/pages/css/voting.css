@@ -1,0 +1,6 @@
+#load-questions-button,
+#start-BLE-button,
+#voting-token-button,
+#voting-token-input {
+  visibility: hidden;
+}

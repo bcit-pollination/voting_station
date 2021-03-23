@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const { exec, spawn } = require('child_process');
 
+
 // import ipc utils
 const ipc = require('electron').ipcMain;
 
@@ -103,12 +104,12 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  storeQuestionsIntoDB('test@test.com', 'testtest', 19)
-  // login('test@test.com', 'testtest').then(() => {
-  //   getElectionsList(16).then(r => {
-  //     console.log(r)
-  //   })
-  // })
+  // storeQuestionsIntoDB('test@test.com', 'testtest', 19)
+  login('test@test.com', 'testtest').then(() => {
+    getElectionsList(16).then(r => {
+      console.log(r)
+    })
+  })
 
   createWindow()
 
@@ -176,15 +177,11 @@ app.whenReady().then(() => {
 
   })
 
-
-
-
-
-
-
-
-
-
+  // Go Back
+  ipc.on('go-back', () => {
+    mainWindow.webContents.goBack();
+    console.log('IPC clicked: go-back');
+  })
 
 
 })

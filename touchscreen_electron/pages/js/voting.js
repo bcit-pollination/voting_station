@@ -2,6 +2,36 @@ console.log('voting.js')
 // const ipc = import('electron').ipcRenderer;
 const ipc = require('electron').ipcRenderer;
 
+const {
+    login,
+    getElectionsList,
+    electionDownload,
+} = require('../utils/pollination-api.js');
+
+
+// go Back
+document.getElementById('go-back').addEventListener('click', () => {
+    console.log('clicked: go-back');
+    ipc.send("go-back", "cat");
+});
+
+// step-I: login
+document.getElementById('voting-login-button').addEventListener('click', () => {
+    console.log('clicked: voting-login-button')
+    let email = document.getElementById('login-username-input').value
+    let password = document.getElementById('login-password-input').value
+    console.log(email, password);
+
+    // stores the jwt in the global variable
+    login(email, password).then((jwt) => {
+        session_jwt = jwt;
+        console.log(jwt);
+        let loginForm = document.getElementById('step-I');
+        loginForm.style.visibility = 'hidden';
+    });
+
+    // TODO: Set appropriate buttons visible, once we figure out functionality of this step.
+})
 
 
 //  
@@ -23,9 +53,6 @@ document.getElementById('voting-token-button').addEventListener('click', () => {
     xhttp.send(JSON.stringify(post_obj))
 })
 
-
-
-
 // Start BLE server:
 document.getElementById('start-BLE-button').addEventListener('click', () => {
     console.log('clicked: start-BLE-button')
@@ -33,3 +60,7 @@ document.getElementById('start-BLE-button').addEventListener('click', () => {
 })
 
 
+function goBack() {
+    window.history.back();
+  }
+  

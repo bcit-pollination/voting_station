@@ -17,5 +17,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "modules": "^0.4.0"
+  }
 }

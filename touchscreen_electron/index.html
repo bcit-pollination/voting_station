@@ -1,62 +1,46 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Hello World!</title>
+    <link href="./pages/css/buttons.css" rel="stylesheet">
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <title>Hello World!</title>
-  <link href="./pages/css/buttons.css" rel="stylesheet">
+  <body>
+    <h1>Pollination RPI </h1>
+    <div>
+      <button id='start-process-1'>Run Control Server</button>
+    </div>
+    <br><br><br>
+    <div>
+      <button id='start-process-2'>Run Voting Server</button>
+    </div>
+    <br><br><br>
 
-</head>
+    <!-- <br>
+    <div>
+      <button id='start-BLE-button'>Start BLE server</button>
+    </div>
+    <div>
+      <button id='load-questions-button'>Load Questions</button>
+    </div>
+    <div>
+      <button id='vote-permitted-button'>Give permission to vote</button>
+    </div>
+    <div>
+      <button id='upload-results-button'>Upload the results to Pollination Server</button>
+    </div>
+    <br> -->
 
-<body>
-  <h1>Pollination RPI </h1>
-  <!-- We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>. -->
-
-  <div>
-    <button id='start-process-1'>Run Control Server</button>
-  </div>
-
-  <br>
-
-  <div>
-    <button id='start-process-2'>Run Voting Server</button>
-  </div>
-
-  <br>
-
-  <div>
-    <button id='start-BLE-button'>Start BLE server</button>
-  </div>
-
-  <div>
-    <button id='load-questions-button'>Load Questions</button>
-  </div>
-
-  <div>
-    <button id='vote-permitted-button'>Give permission to vote</button>
-  </div>
-
-  <div>
-    <button id='upload-results-button'>Upload the results to Pollination Server</button>
-  </div>
+    <div>
+      <button id='kill-processes'>Kill Server Processes</button>
+    </div>
 
 
-  <br>
-
-  <div>
-    <button id='kill-processes'>Kill Server Processes</button>
-  </div>
-
-
-  <!-- You can also require other files to run in this process -->
-  <script src="./renderer.js"></script>
-
-
-</body>
-
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+  </body>
 </html>
