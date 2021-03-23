@@ -9,9 +9,11 @@ app.get('/dataImport', function(req, res) {
   
     const pathname = req.query.pathName + "/";
     console.log(pathname );
+    //TODO: Decide if key file should be env variable
     controller.runImport("./testing.key", pathname).then((data) => {
         console.log(data);
         res.json(data);
+        // TODO: Store data in proper table
     }).catch((e) => console.log(e));
 
 });
