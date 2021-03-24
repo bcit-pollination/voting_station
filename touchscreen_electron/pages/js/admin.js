@@ -29,7 +29,7 @@ const {
 } = require ('../utils/load-questions.js')
 
 let button1 = document.getElementById('get-organization-list-button');
-let button2 = document.getElementById('download-electron-package-button');
+let button2 = document.getElementById('download-election-package-button');
 let button3 = document.getElementById('import-election-button');
 let button4 = document.getElementById('export-election-button');
 let button5 = document.getElementById('get-election-list-button');
@@ -139,7 +139,7 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
 // TODO step-IV: download
 //Added the download-electron-package id to the getelementbyid statement.
-document.getElementById('download-electron-package-button').addEventListener('click', () => {
+document.getElementById('download-election-package-button').addEventListener('click', () => {
     console.log('clicked: download-election-package-button')
     // TODO: download package
 
@@ -148,7 +148,7 @@ document.getElementById('download-electron-package-button').addEventListener('cl
     button4.style.visibility = 'visible';
 
 
-    document.getElementById('download-electron-package-button')
+    document.getElementById('download-election-package-button')
         .addEventListener('click', () => {
         })
 })
