@@ -12,6 +12,12 @@ const {
     ElectionPackage,
 } = require ('../utils/load-questions.js')
 
+const {
+    // start_load_question_process,
+    start_BLE_server_process,
+    // voting_express_server_process,
+} = require('../utils/voting_pi')
+
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
     console.log('clicked: go-back');
