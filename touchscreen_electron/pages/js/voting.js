@@ -112,7 +112,64 @@ function importData() {
     url.search = new URLSearchParams(params).toString();
     fetch(url).then(response => response.json())
         .then((body) => {
-            console.log(body);
+            //console.log(body);
+            let questJSON = JSON.parse(body);
+            console.log(questJSON);
+            /** 
+            let questArray = questJSON.election_info.questions;
+            for(let i = 0; i < questArray.length; i++){
+                let number = i + 1;
+                let name = "q" + number;
+                let questOps = questArray[i].options;
+                let questDiv = document.createElement("div");
+                let title = document.createElement("h2");
+                title.appendChild(document.createTextNode("Question " + number));
+                questDiv.appendChild(title);
+                questDiv.appendChild(document.createTextNode(questArray[i].question_description));
+                for(let j = 0; j < questOps.length; j++){
+                    let number2 = j + 1;
+                    let inpt = document.createElement("input");
+                    let label = document.createElement("label");
+                    questDiv.appendChild(document.createElement("br"));
+                    if(number2 == 1){
+                        inpt.checked = true;
+                    }
+                    label.style.fontSize = "1em";
+                    label.appendChild(document.createTextNode(questOps[j].option_description));
+                    questDiv.appendChild(label);
+                    inpt.type = "radio";
+                    inpt.name = name;
+                    inpt.id = name + number2;
+                    inpt.value = questOps[j].option_id;
+                    inpt.style.height = "2vw";
+                    inpt.style.width = "2vh";
+                    questDiv.appendChild(inpt);
+                    questDiv.appendChild(document.createElement("br"));
+                }
+                
+                document.getElementById("step-IV").appendChild(questDiv);
+                console.log(questArray[i]);
+            }
+            let votingSelection = [];
+            let butt = document.createElement("button");
+            butt.style.width = "10%";
+            butt.style.height = "10%";
+            butt.appendChild(document.createTextNode("Submit Votes"));
+            butt.onclick = function(){
+                votingSelection = [];
+                for(let j = 0; j < questArray.length; j++){
+                    let num = j + 1;
+                    let values = document.getElementsByName("q" + num);
+                    for(let k = 0; k < values.length; k++){
+                        if(values[k].checked){
+                            votingSelection.push(values[k].value);
+                        }
+                    }
+                }
+                console.log(votingSelection);
+            }
+            document.getElementById("step-IV").appendChild(butt);
+            */
             const electionPackage = new ElectionPackage(body);
             electionPackage.save(() => {
                 console.log('saving')
