@@ -2,6 +2,8 @@
 #download-electron-package-button,
 #import-election-button,
 #export-election-button,
-#get-election-list-button {
+#get-election-list-button,
+#step-V
+ {
   visibility: hidden;
 }

@@ -1,6 +1,7 @@
 console.log('admin.js')
 const export_controller = require('../utils/export_tool/export_controller.js');
 const ipc = window.require('electron').ipcRenderer;
+const mongoose = require('mongoose');
 
 // stores the jwt returned by login globally
 let session_jwt = {}
@@ -32,6 +33,8 @@ let button2 = document.getElementById('download-electron-package-button');
 let button3 = document.getElementById('import-election-button');
 let button4 = document.getElementById('export-election-button');
 let button5 = document.getElementById('get-election-list-button');
+
+let electionID; 
 
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
@@ -89,6 +92,7 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
             electionTitleHeaderButton.innerHTML = item.election_description;
             electionTitleHeaderButton.style.fontWeight = "bold";
             electionTitleHeaderButton.style.borderRadius = "3px";
+        
 
             let startRow = document.createElement("tr");
             electionItem.appendChild(startRow);
@@ -115,17 +119,8 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
             // FIXME: Check if the .save() saves to the MongoDB
             electionTitleHeaderButton.onclick = function() {
-                let id = item.election_id;
+                electionID = item.election_id;
                 button2.style.visibility = 'visible';
-
-                electionDownload(id).then(result => {
-                    result.save((err, doc) => {
-                        console.log('saving')
-                        err && console.log(err);
-                        console.log(doc)
-                        return
-                    })
-                });
             }
         };
     });
@@ -158,8 +153,28 @@ document.getElementById('download-electron-package-button').addEventListener('cl
         })
 })
 
+function downloadElectionPackage() {
+    electionDownload(electionID).then(result => {
+        console.log(result)
+        let electionPackage = new ElectionPackage(result)
+        electionPackage.save((err, doc) => {
+            console.log('saving')
+            err && console.log(err);
+            console.log(doc)
+            showExportSection();
+            return
+        })
+    });
+    //Once election package is downloaded
+    
+}
+
 // TODO: think of a way to do step-III: export json to usb
 
+function showExportSection () {
+    const exportSection = document.getElementById('step-V');
+    exportSection.style.visibility = 'visible';
+}
 
 function exportData() {
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
@@ -225,7 +240,7 @@ function showUsbs() {
 
   })
 }
-showUsbs()
+
 function goBack() {
     window.history.back();
   }

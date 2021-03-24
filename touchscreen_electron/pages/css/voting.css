@@ -1,6 +1,7 @@
 #load-questions-button,
 #start-BLE-button,
 #voting-token-button,
-#voting-token-input {
+#voting-token-input,
+#step-V {
   visibility: hidden;
 }
