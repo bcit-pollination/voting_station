@@ -114,9 +114,10 @@ function importData() {
         .then((body) => {
             //console.log(body);
             let questJSON = JSON.parse(body);
+            console.log('questJSON');
             console.log(questJSON);
             
-            
+                    
             let questArray = questJSON.election_info.questions;
             for(let i = 0; i < questArray.length; i++){
                 let number = i + 1;
