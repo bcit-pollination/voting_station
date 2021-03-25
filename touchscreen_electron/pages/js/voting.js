@@ -149,7 +149,7 @@ function importData() {
                     questDiv.appendChild(document.createElement("br"));
                 }
                 
-                document.getElementById("step-IV").appendChild(questDiv);
+                document.getElementById("stepIV").appendChild(questDiv);
                 console.log(questArray[i]);
             }
             let votingSelection = [];
@@ -170,7 +170,7 @@ function importData() {
                 }
                 console.log(votingSelection);
             }
-            document.getElementById("step-IV").appendChild(butt);
+            document.getElementById("stepIV").appendChild(butt);
            
 
 
