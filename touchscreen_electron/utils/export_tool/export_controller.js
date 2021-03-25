@@ -59,8 +59,11 @@ const runImport = async (key, input_data_path) => {
     args.unshift(pyFile);
     const python = spawn('python3', args);
     python.stdout.on('data', function (data) {
+      
     console.log('Received output from decode.py');
+    
     spawnOutput = data.toString();
+    console.log(spawnOutput);
     });
     
 
