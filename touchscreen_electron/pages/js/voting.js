@@ -115,7 +115,8 @@ function importData() {
             //console.log(body);
             let questJSON = JSON.parse(body);
             console.log(questJSON);
-            /** 
+            
+            
             let questArray = questJSON.election_info.questions;
             for(let i = 0; i < questArray.length; i++){
                 let number = i + 1;
@@ -169,7 +170,9 @@ function importData() {
                 console.log(votingSelection);
             }
             document.getElementById("step-IV").appendChild(butt);
-            */
+           
+
+
             const electionPackage = new ElectionPackage(body);
             electionPackage.save(() => {
                 console.log('saving')
