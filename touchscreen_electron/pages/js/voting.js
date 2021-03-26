@@ -133,9 +133,6 @@ function importData() {
                     let inpt = document.createElement("input");
                     let label = document.createElement("label");
                     questDiv.appendChild(document.createElement("br"));
-                    if(number2 == 1){
-                        inpt.checked = true;
-                    }
                     label.style.fontSize = "1em";
                     label.appendChild(document.createTextNode(questOps[j].option_description));
                     questDiv.appendChild(label);
@@ -162,11 +159,13 @@ function importData() {
                 for(let j = 0; j < questArray.length; j++){
                     let num = j + 1;
                     let values = document.getElementsByName("q" + num);
+                    let checkVal = null;
                     for(let k = 0; k < values.length; k++){
                         if(values[k].checked){
-                            votingSelection.push(values[k].value);
+                           checkVal = values[k].value;
                         }
                     }
+                    votingSelection.push(checkVal);
                 }
                 console.log(votingSelection);
             }
