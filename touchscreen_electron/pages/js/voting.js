@@ -367,6 +367,7 @@ function importDataTest() {
         }
         console.log(votingSelection);
 
+        // TODO: Finish building this vote once Karel finalizes vote schema.
         let vote = {
             voting_token: this_voting_token,
             loation: rpi_location,
