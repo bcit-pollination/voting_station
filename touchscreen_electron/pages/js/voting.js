@@ -21,9 +21,14 @@ const {
     // voting_express_server_process,
 } = require('../utils/voting_pi')  
 
+const axios = require('axios');
+
 let rpi_location = "";
 let voting_token_check = [];
 let this_voting_token = "";
+let questJSON = null;
+let votes_cast = [];
+let election_id = null;
 
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
@@ -68,7 +73,22 @@ function submitLocation() {
 function promptVotingToken() {
     let loginForm = document.getElementById('step-I');
     loginForm.innerHTML = "";
-    loginForm.innerHTML = "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button></center>";
+    loginForm.innerHTML = "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
+}
+
+
+
+async function axiosPOST() {
+  let data = {
+    "election_id": election_id,
+    "votes_cast": votes_cast,
+  }
+  let axiosResult = await axios.post('http://pollination.live/api/org/election/votes', data);
+  console.log(axiosResult);
+  console.log(axiosResult.data);
+  let axiosResultData = axiosResult.data;
+  alert(axiosResultData);
+  window.history.back();
 }
 
 function submitVotingToken() {
@@ -79,10 +99,95 @@ function submitVotingToken() {
     console.log(voting_token_check);
 
     if (voting_token_check.includes(this_voting_token)) {
-        console.log("We are proceeding with the vote!");
+        loadPoll(questJSON);
     } else {
         promptVotingToken();
     }
+}
+
+function loadPoll(questJSON) {
+  let loginForm = document.getElementById('step-I');
+  loginForm.innerHTML = "";  
+
+  let questArray = questJSON.election_info.questions;
+  let questIdArray = [];
+
+  for(let i = 0; i < questArray.length; i++){
+      questIdArray.push(questArray[i].question_id);
+      let number = i + 1;
+      let name = "q" + number;
+      let questOps = questArray[i].options;
+      let questDiv = document.createElement("div");
+      let title = document.createElement("h2");
+      title.appendChild(document.createTextNode("Question " + number));
+      questDiv.appendChild(title);
+      questDiv.appendChild(document.createTextNode(questArray[i].question_description));
+      for(let j = 0; j < questOps.length; j++){
+          let number2 = j + 1;
+          let inpt = document.createElement("input");
+          let label = document.createElement("label");
+          questDiv.appendChild(document.createElement("br"));
+          label.style.fontSize = "1em";
+          label.appendChild(document.createTextNode(questOps[j].option_description));
+          questDiv.appendChild(label);
+          inpt.type = "radio";
+          inpt.name = name;
+          inpt.id = name + number2;
+          inpt.value = questOps[j].option_id;
+          inpt.style.height = "2vw";
+          inpt.style.width = "2vh";
+          questDiv.appendChild(inpt);
+          questDiv.appendChild(document.createElement("br"));
+      }
+      
+      document.getElementById("step-I").appendChild(questDiv);
+      console.log(questArray[i]);
+  }
+  let votingSelection = [];
+  let submitButton = document.createElement("button");
+  submitButton.style.width = "10%";
+  submitButton.style.height = "10%";
+  submitButton.appendChild(document.createTextNode("Submit Votes"));
+  
+  // Submit the Vote.
+  // TODO: Add the fields for FirstName, LastName, questions.
+  submitButton.onclick = function(){
+      for(let j = 0; j < questArray.length; j++){
+          let num = j + 1;
+          let values = document.getElementsByName("q" + num);
+          let checkVal = null;
+          for(let k = 0; k < values.length; k++){
+              if(values[k].checked){
+                  checkVal = values[k].value;
+              }
+          }
+          let choiceObject = {
+            "option_id": parseInt(checkVal),
+            // FIXME:  Leaving as 0 for now.
+            "order_position": 0,
+            "question_id": questIdArray[j],
+          }
+          votingSelection.push(choiceObject);
+      }
+      console.log(votingSelection);
+
+      // TODO: Finish building this vote once Karel finalizes vote schema.
+      let vote = {
+        "choices": votingSelection,
+        "location": rpi_location,
+        "time_stamp": get_current_date_formatted(),
+        // FIXME: Add fields for names.
+        "voter_first_name": "MARK",
+        "voter_last_name": "KIM",
+        "voting_token": this_voting_token,
+      }
+      console.log(vote);
+      votes_cast.push(vote);
+      console.log(votes_cast);
+
+      promptVotingToken()
+  }
+  document.getElementById("step-I").appendChild(submitButton);
 }
 
 
@@ -227,6 +332,9 @@ function importData() {
 
 // Testing because no RPI during development.
 function importDataTest() {
+  let importStep = document.getElementById('step-II-1');
+  importStep.style.visibility = 'hidden';
+
     // Test election for when I'm not developing on RPI.
     let test_election = {
     "election_info": {
@@ -302,87 +410,18 @@ function importDataTest() {
       }
     ]
     }
-    let questJSON = test_election;
+    questJSON = test_election;
 
-    let questArray = questJSON.election_info.questions;
-
+    // Imports the array of valid Voting Tokens.
     for (let item of questJSON.voter_list) {
         console.log(item);
         console.log(item.voting_token);
         voting_token_check = voting_token_check.concat(item.voting_token);
     }
-
     console.log(voting_token_check);
 
-    for(let i = 0; i < questArray.length; i++){
-        let number = i + 1;
-        let name = "q" + number;
-        let questOps = questArray[i].options;
-        let questDiv = document.createElement("div");
-        let title = document.createElement("h2");
-        title.appendChild(document.createTextNode("Question " + number));
-        questDiv.appendChild(title);
-        questDiv.appendChild(document.createTextNode(questArray[i].question_description));
-        for(let j = 0; j < questOps.length; j++){
-            let number2 = j + 1;
-            let inpt = document.createElement("input");
-            let label = document.createElement("label");
-            questDiv.appendChild(document.createElement("br"));
-            label.style.fontSize = "1em";
-            label.appendChild(document.createTextNode(questOps[j].option_description));
-            questDiv.appendChild(label);
-            inpt.type = "radio";
-            inpt.name = name;
-            inpt.id = name + number2;
-            inpt.value = questOps[j].option_id;
-            inpt.style.height = "2vw";
-            inpt.style.width = "2vh";
-            questDiv.appendChild(inpt);
-            questDiv.appendChild(document.createElement("br"));
-        }
-        
-        document.getElementById("stepIV").appendChild(questDiv);
-        console.log(questArray[i]);
-    }
-    let votingSelection = [];
-    let submitButton = document.createElement("button");
-    submitButton.style.width = "10%";
-    submitButton.style.height = "10%";
-    submitButton.appendChild(document.createTextNode("Submit Votes"));
-    
-    // Submit the Vote.
-    // TODO: Add the fields for FirstName, LastName, questions.
-    submitButton.onclick = function(){
-        votingSelection = [];
-        for(let j = 0; j < questArray.length; j++){
-            let num = j + 1;
-            let values = document.getElementsByName("q" + num);
-            let checkVal = null;
-            for(let k = 0; k < values.length; k++){
-                if(values[k].checked){
-                    checkVal = values[k].value;
-                }
-            }
-            votingSelection.push(checkVal);
-        }
-        console.log(votingSelection);
-
-        // TODO: Finish building this vote once Karel finalizes vote schema.
-        let vote = {
-            voting_token: this_voting_token,
-            loation: rpi_location,
-            time_stamp: get_current_date_formatted(),
-            // FIXME: Add fields for names.
-            voter_first_name: "MARK",
-            voter_last_name: "KIM",
-            question_num: "5",
-            choices: []
-        }
-    }
-    document.getElementById("stepIV").appendChild(submitButton);
-    
-
-
+    election_id = questJSON.election_info.election_id;
+  
     const electionPackage = new ElectionPackage(body);
     electionPackage.save(() => {
         console.log('saving')
@@ -390,7 +429,6 @@ function importDataTest() {
         console.log(doc)
         document.getElementById("start-BLE-button").style.visibility = "visible";
     })
-    document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line   
 }
 
 
