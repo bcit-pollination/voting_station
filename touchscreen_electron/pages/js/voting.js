@@ -13,6 +13,7 @@ const {
 } = require('../utils/pollination-api.js');
 const {
     ElectionPackage,
+    Question
 } = require ('../utils/load-questions.js')
 
 const {
@@ -22,6 +23,7 @@ const {
 } = require('../utils/voting_pi')  
 
 const axios = require('axios');
+// const { Question } = require('../../utils/load-questions.js');
 
 let rpi_location = "";
 let voting_token_check = [];
@@ -83,7 +85,7 @@ async function axiosPOST() {
     "election_id": election_id,
     "votes_cast": votes_cast,
   }
-  let axiosResult = await axios.post('http://pollination.live/api/org/election/votes', data);
+  let axiosResult = await axios.post('https://pollination.live/api/org/election/votes', data);
   console.log(axiosResult);
   console.log(axiosResult.data);
   let axiosResultData = axiosResult.data;
@@ -182,8 +184,13 @@ function loadPoll(questJSON) {
         "voting_token": this_voting_token,
       }
       console.log(vote);
-      votes_cast.push(vote);
-      console.log(votes_cast);
+
+      let axiosResult =  axios.post('http://localhost:3000/postVotes', vote);
+
+      // votes_cast.push(vote);
+      // console.log(votes_cast);
+
+
 
       promptVotingToken()
   }
@@ -422,13 +429,27 @@ function importDataTest() {
 
     election_id = questJSON.election_info.election_id;
   
-    const electionPackage = new ElectionPackage(body);
+    const electionPackage = new ElectionPackage(test_election);
     electionPackage.save(() => {
         console.log('saving')
         err && console.log(err);
         console.log(doc)
-        document.getElementById("start-BLE-button").style.visibility = "visible";
+        // document.getElementById("start-BLE-button").style.visibility = "visible";
     })
+
+    for(let question of electionPackage.election_info.questions){
+      const question_obj_to_save = new Question(question)
+     
+      question_obj_to_save.save(() => {
+        console.log('saving')
+        err && console.log(err);
+        console.log(doc)
+    })
+  }
+
+    console.log('document.getElementById("start-BLE-button")')
+    console.log(document.getElementById("start-BLE-button"))
+    document.getElementById("start-BLE-button").style.visibility = "visible";
 }
 
 

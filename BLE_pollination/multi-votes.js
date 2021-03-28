@@ -3,7 +3,6 @@ var bleno = require('bleno');
 var pizza = require('./polling');
 // questions got from mongo
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-// const xhr = new XMLHttpRequest();
 
 const {fetchQuestionViaAPI, checkVotabliy} =require('./fetch-questions')
 
@@ -24,9 +23,7 @@ var { stringToBytes } = require('convert-string')
 
 var MongoClient = require('mongodb').MongoClient
 
-//
 //  config
-//
 
 var mongoPort = '27017'
 var mongoHost = 'localhost'
@@ -53,7 +50,7 @@ function MultiVoteCharacteristic(pizza) {
     descriptors: [
       new bleno.Descriptor({
         uuid: '2901',
-        value: 'Bakes the pizza and notifies when done baking.'
+        value: 'Notify service;Read poll questions;Send poll results;'
       })
     ]
   });
@@ -192,14 +189,8 @@ MultiVoteCharacteristic.prototype.onReadRequest = function (offset, callback) {
     callback(this.RESULT_ATTR_NOT_LONG, null);
   }
   else {
-    // var data = new Buffer(20);
-    // data.writeUInt16BE('helloworld', 0);
-
-
     // Sends the length to send on the first readRequest.
     if (json_sent_len == 0 && length_sent == false) {
-
-
 
       json_string_len = json_string.length
 
