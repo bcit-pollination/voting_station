@@ -144,10 +144,23 @@ app.whenReady().then(() => {
 
 
   ipc.on('kill-processes', () => {
-
+    let kill_node_processes_BLE = spawn('fuser', ['-k', '5000/tcp']);
     let kill_node_processes = spawn('fuser', ['-k', '3000/tcp']);
     let kill_node_processes2 = spawn('fuser', ['-k', '4000/tcp']);
+    
     console.log('kill_node_processes')
+
+    kill_node_processes_BLE.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    kill_node_processes_BLE.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    kill_node_processes_BLE.on('close', (code) => {
+      console.log(`child process exited with code: ${code}`);
+    });
 
     kill_node_processes.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
