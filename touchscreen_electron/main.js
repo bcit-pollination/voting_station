@@ -4,23 +4,20 @@ const path = require("path");
 const { exec, spawn } = require("child_process");
 
 const { connectMongoose } = require("../utils/mongo/mongoHandler");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-setInterval(() => {
-    console.log('main', mongoose.connection.readyState);
-}, 1000)
-
-// import ipc utils
+// Electron main process event emitter
 const ipc = require("electron").ipcMain;
 
-// this sends
 const { webContents } = require("electron");
-
-const { startAdminExpressServerProcess } = require("../utils/startProcess");
-
 const { getElectionsList, login } = require("../utils/pollinationAPI");
 
-const { startBLEServerProcess, startVotingExpressServerProcess } = require("../utils/startProcess");
+const {
+    startBLEServerProcess,
+    startVotingExpressServerProcess,
+    startAdminExpressServerProcess,
+    killProcesses
+} = require("../utils/process");
 
 // Connect to local mongoose, if and error occurs not much else will work
 connectMongoose();
@@ -133,51 +130,13 @@ app.whenReady().then(() => {
     //   start_load_question_process()
     // })
 
-    ipc.on("kill-processes", () => {
-        let kill_node_processes_BLE = spawn("fuser", ["-k", "5000/tcp"]);
-        let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
-        let kill_node_processes2 = spawn("fuser", ["-k", "4000/tcp"]);
-
-        console.log("kill_node_processes");
-
-        kill_node_processes_BLE.on("data", (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        kill_node_processes_BLE.stderr.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes_BLE.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-
-        kill_node_processes.stdout.on("data", (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        kill_node_processes.stderr.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-
-        kill_node_processes2.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes2.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-    });
+    ipc.on("kill-processes", () => killProcesses);
 
     // Go Back
-    // ipc.on("go-back", () => {
-    //     mainWindow.webContents.goBack();
-    //     console.log("IPC clicked: go-back");
-    // });
+    ipc.on("go-back", () => {
+        mainWindow.webContents.goBack();
+        console.log("IPC clicked: go-back");
+    });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

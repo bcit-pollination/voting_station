@@ -74,8 +74,56 @@ function startAdminExpressServerProcess() {
     });
 };
 
+
+/**
+ * Attempts to kill the admin, ble, and voting servers using the binded ports.
+ * 
+ * Sets standard out and err of the new process to the current process's standard descriptors. Also
+ * maps on 'close' event to log exit code.
+ */
+function killProcesses() {
+    let kill_node_processes_BLE = spawn("fuser", ["-k", "5000/tcp"]);
+    let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
+    let kill_node_processes2 = spawn("fuser", ["-k", "4000/tcp"]);
+
+    console.log("kill_node_processes");
+
+    kill_node_processes_BLE.on("data", (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    kill_node_processes_BLE.stderr.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    kill_node_processes_BLE.on("close", (code) => {
+        console.log(`child process exited with code: ${code}`);
+    });
+
+    kill_node_processes.stdout.on("data", (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    kill_node_processes.stderr.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    kill_node_processes.on("close", (code) => {
+        console.log(`child process exited with code: ${code}`);
+    });
+
+    kill_node_processes2.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    kill_node_processes2.on("close", (code) => {
+        console.log(`child process exited with code: ${code}`);
+    });
+}
+
 module.exports = {
     startBLEServerProcess,
     startVotingExpressServerProcess,
-    startAdminExpressServerProcess
+    startAdminExpressServerProcess,
+    killProcesses
 };

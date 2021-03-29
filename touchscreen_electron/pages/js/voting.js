@@ -1,20 +1,19 @@
 // FIXME: DELETE THESE:
-let importStep = document.getElementById('step-II-1');
-importStep.style.visibility = 'visible';
+let importStep = document.getElementById("step-II-1");
+importStep.style.visibility = "visible";
 
 // let global_JSON = {}
 
-const { getCurrentDateFormatted } = require('../../../utils/dateFormat');
-const { login, } = require('../../../utils/pollinationAPI');
+const { getCurrentDateFormatted } = require("../../../utils/dateFormat");
+const { login } = require("../../../utils/pollinationAPI");
 
-const ElectionPackageModel = require('../../../utils/mongo/models/electionPackage');
-const QuestionModel = require('../../../utils/mongo/models/question');
-const Vote = require('../../../utils/mongo/models/vote');
+const { startBLEServerProcess } = require("../../../utils/process");
+const { checkPassword, decodeBase64 } = require("../../../utils/passwordHash");
 
-const { startBLEServerProcess } = require('../../../utils/startProcess')
-const { checkPassword, decodeBase64 } = require('../../../utils/passwordHash')
+const ElectionPackageModel = require("../../../utils/mongo/models/electionPackage");
+const QuestionModel = require("../../../utils/mongo/models/question");
 
-const axios = require('axios');
+const axios = require("axios");
 
 let rpi_location = "";
 let voting_token_check = [];
@@ -27,18 +26,43 @@ let election_id = null;
 // let submit_password_button = document.getElementById('submit-verifier-password')
 // submit_password_button.onclick = checkVerifierPassword
 
+function votingLoginButtonHandler() {
+    console.log('clicked: voting-login-button')
+    let email = document.getElementById('login-username-input').value
+    let password = document.getElementById('login-password-input').value
+    console.log(email, password);
+
+    // stores the jwt in the global variable
+    login(email, password).then((jwt) => {
+        session_jwt = jwt;
+        console.log(jwt);
+        let loginForm = document.getElementById('step-I');
+        // loginForm.style.visibility = 'hidden';
+
+        // Let the Verifier add the location. Submit button uses submitLocation.
+        loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
+
+        let verifierPasswordStep = document.getElementById('step-II-0')
+        verifierPasswordStep.style.visibility = 'visible'
+
+        // FIXME: uncomment this:
+        // let importStep = document.getElementById('step-II-1');
+        // importStep.style.visibility = 'visible';
+    });
+}
+
 function checkVerifierPassword() {
     // let loginPromise = new Promise(async(resolve,reject)=>{
     //   resolve(password)
     // })
-    let password = document.getElementById('verifier-password-input').value
-        // FIXME : remove the hardcoded
-        // electionDownload(31).then((package) => {
-        //   if (checkPassword(password, decodeBase64(package['verifier_password']))) {
-        //     let importStep = document.getElementById('step-II-1');
-        //     importStep.style.visibility = 'visible';
-        //   }
-        // })
+    let password = document.getElementById("verifier-password-input").value;
+    // FIXME : remove the hardcoded
+    // electionDownload(31).then((package) => {
+    //   if (checkPassword(password, decodeBase64(package['verifier_password']))) {
+    //     let importStep = document.getElementById('step-II-1');
+    //     importStep.style.visibility = 'visible';
+    //   }
+    // })
 
     // ElectionPackageModel.
 }
@@ -46,7 +70,7 @@ function checkVerifierPassword() {
 
 function submitLocation() {
     // Set rpi_location to the Location.
-    let this_location = document.getElementById('rpi-location-id').value;
+    let this_location = document.getElementById("rpi-location-id").value;
     rpi_location = this_location;
     console.log("The location has been set to: " + rpi_location);
 
@@ -54,18 +78,19 @@ function submitLocation() {
     promptVotingToken();
 }
 
-function promptVotingToken() {
-    let loginForm = document.getElementById('step-I');
-    loginForm.innerHTML = "";
-    loginForm.innerHTML = "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
 
+function promptVotingToken() {
+    let loginForm = document.getElementById("step-I");
+    loginForm.innerHTML = "";
+    loginForm.innerHTML =
+        "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
 }
 
 function submitVotingToken() {
-    this_voting_token = document.getElementById('voting-token-id').value;
-    console.log('this_voting_token: ' + this_voting_token);
+    this_voting_token = document.getElementById("voting-token-id").value;
+    console.log("this_voting_token: " + this_voting_token);
 
-    console.log("Checking voting token check:")
+    console.log("Checking voting token check:");
     console.log(voting_token_check);
 
     if (voting_token_check.includes(this_voting_token)) {
@@ -76,7 +101,7 @@ function submitVotingToken() {
 }
 
 function loadPoll(questJSON) {
-    let loginForm = document.getElementById('step-I');
+    let loginForm = document.getElementById("step-I");
     loginForm.innerHTML = "";
 
     let questArray = questJSON.election_info.questions;
@@ -100,14 +125,18 @@ function loadPoll(questJSON) {
         let title = document.createElement("h2");
         title.appendChild(document.createTextNode("Question " + number));
         questDiv.appendChild(title);
-        questDiv.appendChild(document.createTextNode(questArray[i].question_description));
+        questDiv.appendChild(
+            document.createTextNode(questArray[i].question_description)
+        );
         for (let j = 0; j < questOps.length; j++) {
             let number2 = j + 1;
             let inpt = document.createElement("input");
             let label = document.createElement("label");
             questDiv.appendChild(document.createElement("br"));
             label.style.fontSize = "1em";
-            label.appendChild(document.createTextNode(questOps[j].option_description));
+            label.appendChild(
+                document.createTextNode(questOps[j].option_description)
+            );
             questDiv.appendChild(label);
             inpt.type = "radio";
             inpt.name = name;
@@ -131,101 +160,87 @@ function loadPoll(questJSON) {
     // Submit the Vote.
     // TODO: Add the fields for FirstName, LastName, questions.
     submitButton.onclick = function() {
-            let votingSelection = [];
-            // looping through 
-            for (let j = 0; j < questArray.length; j++) {
-                let num = j + 1;
-                let values = document.getElementsByName("q" + num);
-                let checkVal = null;
-                for (let k = 0; k < values.length; k++) {
-                    if (values[k].checked) {
-                        checkVal = values[k].value;
-                    }
+        let votingSelection = [];
+        // looping through
+        for (let j = 0; j < questArray.length; j++) {
+            let num = j + 1;
+            let values = document.getElementsByName("q" + num);
+            let checkVal = null;
+            for (let k = 0; k < values.length; k++) {
+                if (values[k].checked) {
+                    checkVal = values[k].value;
                 }
-
-                // FIXME: Change this for line 431 as well
-                let choiceObject = {
-                    "option_id": parseInt(checkVal),
-                    // FIXME:  Leaving as 0 for now.
-                    "order_position": 0,
-                    "question_id": questIdArray[j],
-                }
-                votingSelection.push(choiceObject);
             }
-            console.log(votingSelection);
 
-
-            // TODO: Finish building this vote once Karel finalizes vote schema.
-            let vote = {
-                "choices": votingSelection,
-                "location": rpi_location,
-                "time_stamp": getCurrentDateFormatted(),
-                // FIXME: Add fields for names.
-                "voter_first_name": "MARK",
-                "voter_last_name": "KIM",
-                "voting_token": this_voting_token,
-            }
-            console.log(vote);
-
-            // FIXME: SAVE VOTES INTO DB USING Mongoose
-            let axiosResult = axios.post('http://localhost:3000/postVotes', vote);
-
-            // votes_cast.push(vote);
-            // console.log(votes_cast);
-
-
-            let vote_div = document.getElementById("step-IV")
-            vote_div.appendChild(submitButton);
-            vote_div.style.visibility = 'hidden'
-            promptVotingToken()
+            // FIXME: Change this for line 431 as well
+            let choiceObject = {
+                option_id: parseInt(checkVal),
+                // FIXME:  Leaving as 0 for now.
+                order_position: 0,
+                question_id: questIdArray[j],
+            };
+            votingSelection.push(choiceObject);
         }
-        // appending the submit button , make it visible
-    let vote_div = document.getElementById("step-IV")
+        console.log(votingSelection);
+
+        // TODO: Finish building this vote once Karel finalizes vote schema.
+        let vote = {
+            choices: votingSelection,
+            location: rpi_location,
+            time_stamp: getCurrentDateFormatted(),
+            // FIXME: Add fields for names.
+            voter_first_name: "MARK",
+            voter_last_name: "KIM",
+            voting_token: this_voting_token,
+        };
+        console.log(vote);
+
+        // FIXME: SAVE VOTES INTO DB USING Mongoose
+        let axiosResult = axios.post("http://localhost:3000/postVotes", vote);
+
+        // votes_cast.push(vote);
+        // console.log(votes_cast);
+
+        let vote_div = document.getElementById("step-IV");
+        vote_div.appendChild(submitButton);
+        vote_div.style.visibility = "hidden";
+        promptVotingToken();
+    };
+    // appending the submit button , make it visible
+    let vote_div = document.getElementById("step-IV");
     vote_div.appendChild(submitButton);
-    vote_div.style.visibility = 'visible'
-
-
+    vote_div.style.visibility = "visible";
 }
 
-// const {
-//     login,
-//     getElectionsList,
-//     electionDownload,
-// } = require('../utils/pollinationAPI.js');
+document.getElementById("voting-token-button").addEventListener("click", () => {
+    console.log('clicked "voting-token-input"');
 
-
-
-
-//  
-document.getElementById('voting-token-button').addEventListener('click', () => {
-    console.log('clicked "voting-token-input"')
-
-    let updateQuestionApi
+    let updateQuestionApi;
     let xhttp = new XMLHttpRequest();
 
-    let response = ''
+    let response = "";
 
-    console.log('q_list')
-    console.log(q_list)
+    console.log("q_list");
+    console.log(q_list);
     xhttp.open("POST", updateQuestionApi, true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
-    let post_obj = { 'allowVote': true }
-    console.log(JSON.stringify(post_obj))
-    xhttp.send(JSON.stringify(post_obj))
-})
+    let post_obj = { allowVote: true };
+    console.log(JSON.stringify(post_obj));
+    xhttp.send(JSON.stringify(post_obj));
+});
 
 // Start BLE server:
-document.getElementById('start-BLE-button').addEventListener('click', () => {
-    console.log('clicked: start-BLE-button')
-    startBLEServerProcess()
-})
+document.getElementById("start-BLE-button").addEventListener("click", () => {
+    console.log("clicked: start-BLE-button");
+    startBLEServerProcess();
+});
 
-showExportSection()
+showExportSection();
 
 function showExportSection() {
-    const exportSection = document.getElementById('step-V');
-    exportSection.style.visibility = 'visible';
+    const exportSection = document.getElementById("step-V");
+    exportSection.style.visibility = "visible";
 }
 
 function exportData() {
@@ -234,47 +249,43 @@ function exportData() {
 
     const path = checkedRadio.value;
 
-
     const url = new URL("http://localhost:3000/dataExport");
     const params = { pathName: path };
 
     url.search = new URLSearchParams(params).toString();
-    fetch(url).then(response => response.json())
+    fetch(url)
+        .then((response) => response.json())
         .then((body) => {
             console.log(body);
-
         });
 }
 
 function importData() {
-
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
 
     const path = checkedRadio.value;
-
 
     const url = new URL("http://localhost:3000/dataImport");
     const params = { pathName: path };
 
     // fetch the imported data from the usb
     url.search = new URLSearchParams(params).toString();
-    fetch(url).then(response => response.json())
+    fetch(url)
+        .then((response) => response.json())
         .then((body) => {
             console.log(body);
 
-            // After loading, hide the buttons that does the input. 
-            let importStep = document.getElementById('step-II-1');
-            importStep.style.visibility = 'hidden';
-
+            // After loading, hide the buttons that does the input.
+            let importStep = document.getElementById("step-II-1");
+            importStep.style.visibility = "hidden";
 
             let questJSON = JSON.parse(body);
-            console.log('questJSON');
+            console.log("questJSON");
             console.log(questJSON);
 
-            save_election_package_and_questions(questJSON)
-            loadPoll(questJSON)
-                // loadPoll(questJSON)
+            save_election_package_and_questions(questJSON);
+            loadPoll(questJSON);
 
             // // saving electionPackage to mongo
             // const electionPackage = new ElectionPackageModel(body);
@@ -285,30 +296,29 @@ function importData() {
             //   document.getElementById("start-BLE-button").style.visibility = "visible";
             // })
             // document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line
-
         });
 
     function save_election_package_and_questions(questJSON) {
-
         const electionPackage = new ElectionPackageModel(questJSON);
 
         ElectionPackageModel.remove({}, (err, res) => {
             electionPackage.save((err, doc) => {
-                console.log('saving')
+                console.log("saving");
                 err && console.log(err);
-                console.log(doc)
-                document.getElementById("start-BLE-button").style.visibility = "visible";
-            })
+                console.log(doc);
+                document.getElementById("start-BLE-button").style.visibility =
+                    "visible";
+            });
 
             for (let question of electionPackage.election_info.questions) {
-                const question_obj_to_save = new QuestionModel(question)
+                const question_obj_to_save = new QuestionModel(question);
                 question_obj_to_save.save((err, doc) => {
-                    console.log('saving')
+                    console.log("saving");
                     err && console.log(err);
-                    console.log(doc)
-                })
+                    console.log(doc);
+                });
             }
-        })
+        });
     }
 
     function render_questions(questJSON) {
@@ -330,14 +340,18 @@ function importData() {
             let title = document.createElement("h2");
             title.appendChild(document.createTextNode("Question " + number));
             questDiv.appendChild(title);
-            questDiv.appendChild(document.createTextNode(questArray[i].question_description));
+            questDiv.appendChild(
+                document.createTextNode(questArray[i].question_description)
+            );
             for (let j = 0; j < questOps.length; j++) {
                 let number2 = j + 1;
                 let inpt = document.createElement("input");
                 let label = document.createElement("label");
                 questDiv.appendChild(document.createElement("br"));
                 label.style.fontSize = "1em";
-                label.appendChild(document.createTextNode(questOps[j].option_description));
+                label.appendChild(
+                    document.createTextNode(questOps[j].option_description)
+                );
                 questDiv.appendChild(label);
                 inpt.type = "radio";
                 inpt.name = name;
@@ -384,20 +398,12 @@ function importData() {
                 voter_first_name: "MARK",
                 voter_last_name: "KIM",
                 question_num: "5",
-                choices: []
-            }
-
-        }
+                choices: [],
+            };
+        };
         document.getElementById("stepIV").appendChild(submitButton);
     }
-
 }
-
-
-
-
-
-
 
 // // Testing because no RPI during development.
 // function importDataTest() {

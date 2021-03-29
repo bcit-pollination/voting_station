@@ -1,5 +1,4 @@
 const export_controller = require("../../../utils/export_tool/export_controller");
-const ipc = window.require("electron").ipcRenderer;
 const mongoose = require("mongoose");
 
 // stores the jwt returned by login globally
@@ -25,11 +24,6 @@ let button4 = document.getElementById("export-election-button");
 let button5 = document.getElementById("get-election-list-button");
 
 let electionID;
-// go Back
-// document.getElementById('go-back').addEventListener('click', () => {
-//     console.log('clicked: go-back');
-//     ipc.send("go-back", "cat");
-// });
 
 // step-I: login
 document
@@ -249,10 +243,6 @@ function showUsbs() {
                 usbsDiv.appendChild(div);
             }
         });
-}
-
-function goBack() {
-    window.history.back();
 }
 
 async function axiosPOST() {

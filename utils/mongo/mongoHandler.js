@@ -15,10 +15,6 @@ function connectMongoose() {
 
     console.log("Connecting to MongoDB...");
     mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
-
-    setInterval(() => {
-        console.log('mongo handler', mongoose.connection.readyState);
-    }, 1000)
 }
 
 module.exports = {

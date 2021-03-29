@@ -1,3 +1,5 @@
+const ipc = window.require("electron").ipcRenderer;
+
 function showUsbs(port) {
     fetch(`http://localhost:${port}/usbs`)
         .then(response => response.json())
@@ -28,7 +30,7 @@ function showUsbs(port) {
 
 function goBack() {
     console.log("go back");
-    window.history.back();
+    ipc.send('go-back');
 }
 
 module.exports = {
