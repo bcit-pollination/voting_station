@@ -23,6 +23,11 @@ function votingLoginButtonHandler() {
     });
 }
 
+function goBack() {
+    window.history.back();
+}
+
 module.exports = {
-    votingLoginButtonHandler
+    votingLoginButtonHandler,
+    goBack
 }

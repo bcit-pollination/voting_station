@@ -34,9 +34,8 @@ document.getElementById('go-back').addEventListener('click', () => {
 });
 
 // step-I: login
-document.getElementById('voting-login-button').addEventListener('click', votingLoginButtonHandler {})
-    // let submit_password_button = document.getElementById('submit-verifier-password')
-    // submit_password_button.onclick = checkVerifierPassword
+// let submit_password_button = document.getElementById('submit-verifier-password')
+// submit_password_button.onclick = checkVerifierPassword
 
 function checkVerifierPassword() {
     // let loginPromise = new Promise(async(resolve,reject)=>{
@@ -52,9 +51,6 @@ function checkVerifierPassword() {
         // })
 
     // ElectionPackageModel.
-
-
-
 }
 
 
@@ -235,12 +231,6 @@ document.getElementById('start-BLE-button').addEventListener('click', () => {
     startBLEServerProcess()
 })
 
-function goBack() {
-    window.history.back();
-}
-
-// 
-
 showExportSection()
 
 function showExportSection() {
@@ -415,37 +405,7 @@ function importData() {
 
 
 
-function showUsbs() {
-    fetch('http://localhost:3000/usbs')
-        .then(response => response.json())
-        .then(data => {
-            data = JSON.parse(data);
-            console.log(data);
-            let usbsDiv = document.getElementById("usbs");
-            usbsDiv.innerHTML = "";
-            for (const usb of data.usbs) {
-                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
-                let div = document.createElement("div");
-                let input = document.createElement("input");
-                let label = document.createElement("label");
-                input.setAttribute("type", "radio");
-                input.setAttribute("id", usb.path);
-                input.setAttribute("name", "usb");
-                input.setAttribute("value", usb.path);
-                input.setAttribute("class", "radio");
-                input.checked = false;
-                label.innerText = usb.path;
-                div.appendChild(input);
-                div.appendChild(label);
-                usbsDiv.appendChild(div);
-            }
 
-        })
-}
-
-function goBack() {
-    window.history.back();
-}
 
 
 

@@ -12,7 +12,7 @@
 
 <body>
     <div>
-        <button id='go-back'>Go Back</button>
+        <button id='go-back' onclick="goBack()">Go Back</button>
         <div id='step-I' className='steps'>
             <div>
                 <label for="login-username-input">username</label>
@@ -70,14 +70,16 @@
         <div id='step-V' class="steps">
             <div id='usbs'></div>
             <h4>Usb list</h4>
-            <button onclick="showUsbs()">refresh</button>
+            <button onclick="showUsbs(3000)">refresh</button>
             <button onclick="exportData()">Export Election Data</button>
         </div>
     </div>
 
     <script src='./js/voting.js'>
     </script>
-    <script src='./js/votingButtonHandler.js'>
+    <script src='./js/votingButtonHandlers.js'>
+    </script>
+    <script src='./js/buttonHandlers.js'>
     </script>
 </body>
 
