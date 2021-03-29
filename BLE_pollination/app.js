@@ -26,10 +26,8 @@ bleno.on("advertisingStart", function(err) {
     if (!err) {
         console.log("Bluetooth service advertising...");
 
-        //
         // Once we are advertising, it's time to set up our services,
         // along with our characteristics.
-        //
         bleno.setServices([pollingService]);
     }
 });

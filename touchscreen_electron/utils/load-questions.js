@@ -2,7 +2,7 @@
 // const bson = require('./node_modules/bson/browser_build/bson');
 const mongoose = require('mongoose');
 
-var conn = mongoose.connect('mongodb://127.0.0.1/pollination');//connect to the db
+var conn = mongoose.connect('mongodb://127.0.0.1/pollination'); //connect to the db
 
 // define 'Schema' as the 'mongoose.Schema'
 var Schema = mongoose.Schema;
@@ -33,16 +33,17 @@ const QuestionSchema = new Schema({
     election_id: Number,
     question_id: Number,
     question_description: String,
-    'options': [OptionsSchema],   //Array
+    'options': [OptionsSchema], //Array
     ordered_choices: Boolean,
-    max_selection_count: Number,  //How many of the given question options can the user select. Must be >= 1
-    min_selection_count: Number,  //minimum: 1
+    max_selection_count: Number, //How many of the given question options can the user select. Must be >= 1
+    min_selection_count: Number, //minimum: 1
     // Things to add ...
 }, { collection: 'questions' });
 
 
 // Vote Schema :
-// HACK: Changed data type for time_stamp from Date to String
+// HACK: Changed data type
+// for time_stamp from Date to String
 const VoteSchema = new Schema({
     voting_token: String,
     location: String,
@@ -50,13 +51,11 @@ const VoteSchema = new Schema({
     voter_first_name: String,
     voter_last_name: String,
     question_num: Number,
-    choices: [
-        {
-            question_id: Number,
-            option_id: Number,
-            order_position: Number,
-        }
-    ]
+    choices: [{
+        question_id: Number,
+        option_id: Number,
+        order_position: Number,
+    }]
 }, { collection: 'votes' })
 
 // Vote Schema :
@@ -67,13 +66,11 @@ const VoterSchema = new Schema({
     voter_first_name: String,
     voter_last_name: String,
     question_num: Number,
-    choices: [
-        {
-            question_id: Number,
-            option_id: Number,
-            order_position: Number,
-        }
-    ]
+    choices: [{
+        question_id: Number,
+        option_id: Number,
+        order_position: Number,
+    }]
 }, { collection: 'votes' })
 
 
@@ -84,8 +81,8 @@ const ElectionPackageSchema = new Schema({
     verifier_password: String,
     // nested fields
     election_info: {
-        election_id: Number,         // used for getting the package
-        org_id: String,              // used for rendering
+        election_id: Number, // used for getting the package
+        org_id: String, // used for rendering
         anonymous: Boolean,
 
         public_results: String,
@@ -96,7 +93,7 @@ const ElectionPackageSchema = new Schema({
         end_time: String,
         // most important   
         questions: [QuestionSchema], // question objects
-        verified: Boolean,           // type of votes
+        verified: Boolean, // type of votes
     }
 })
 
