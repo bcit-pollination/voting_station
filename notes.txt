@@ -1,1 +1,2 @@
 1. fetch-questions move mongo function to mongoose util
+2. fetch-questions move API function to mongoose util
