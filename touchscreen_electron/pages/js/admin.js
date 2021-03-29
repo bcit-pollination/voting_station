@@ -1,5 +1,4 @@
-console.log('admin.js')
-const export_controller = require('../utils/export_tool/export_controller.js');
+const export_controller = require('../../../utils/export_tool/export_controller.js');
 const ipc = window.require('electron').ipcRenderer;
 const mongoose = require('mongoose');
 
@@ -7,13 +6,6 @@ const mongoose = require('mongoose');
 let session_jwt = {}
     // stores the election package globally
 let election_package = {}
-
-const {
-    // start_load_question_process,
-    start_BLE_server_process,
-    // voting_express_server_process,
-} = require('../utils/voting_pi')
-
 
 const {
     login,

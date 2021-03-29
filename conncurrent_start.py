@@ -3,11 +3,11 @@ import threading
 
 os.system('ls')
 def start_electron():
-    # os.system('cd touchscreen_electron/servers && node voting_express_server.js;')
+    # os.system('cd touchscreen_electron/servers && node votingExpressServer.js;')
     os.system('cd touchscreen_electron && npm start')
 
 # def start_voting_server():
-#     os.system('cd touchscreen_electron/servers && node voting_express_server.js;')
+#     os.system('cd touchscreen_electron/servers && node votingExpressServer.js;')
 #     # os.system('cd touchscreen_electron && npm start')
 
 def start_BLE():

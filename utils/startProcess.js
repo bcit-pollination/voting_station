@@ -1,8 +1,8 @@
 const { spawn } = require("child_process");
 
 const blePollinationServerPath = "./BLE_pollination/app.js";
-const adminExpressServerPath = "./servers/admin_express_server.js";
-const votingExpressServerPath = "./touchscreen_electron/servers/voting_express_server.js";
+const adminExpressServerPath = "./servers/adminExpressServer.js";
+const votingExpressServerPath = "./servers/votingExpressServer.js";
 
 /**
  * Starts the bluetooth low energy server. 
@@ -12,16 +12,15 @@ const votingExpressServerPath = "./touchscreen_electron/servers/voting_express_s
  */
 function startBLEServerProcess() {
     console.log('Starting bluetooth low energy server');
-    let BLE_server_process = spawn("sudo", ["node", blePollinationServerPath]);
-    BLE_server_process.pid;
+    let BLEServerProcess = spawn("sudo", ["node", blePollinationServerPath]);
 
-    BLE_server_process.stdout.on("data", (data) => {
+    BLEServerProcess.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);
     });
-    BLE_server_process.stderr.on("data", (data) => {
+    BLEServerProcess.stderr.on("data", (data) => {
         console.error(`stderr: ${data}`);
     });
-    BLE_server_process.on("close", (code) => {
+    BLEServerProcess.on("close", (code) => {
         console.log(`child process exited with code: ${code}`);
     });
 };
@@ -34,19 +33,19 @@ function startBLEServerProcess() {
  */
 function startVotingExpressServerProcess() {
     console.log('Starting voting express server');
-    let voting_express_server_process = spawn("node", [votingExpressServerPath]);
+    let votingExpresServerProcess = spawn("node", [votingExpressServerPath]);
 
     console.log("run-voting-server");
 
-    voting_express_server_process.stdout.on("data", (data) => {
+    votingExpresServerProcess.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);
     });
 
-    voting_express_server_process.stderr.on("data", (data) => {
+    votingExpresServerProcess.stderr.on("data", (data) => {
         console.error(`stderr: ${data}`);
     });
 
-    voting_express_server_process.on("close", (code) => {
+    votingExpresServerProcess.on("close", (code) => {
         console.log(`child process exited with code: ${code}`);
     });
 };
@@ -59,18 +58,18 @@ function startVotingExpressServerProcess() {
  */
 function startAdminExpressServerProcess() {
     console.log('Starting admin express server');
-    let admin_express_server_process = spawn("node", [adminExpressServerPath]);
+    let adminExpressServerProcess = spawn("node", [adminExpressServerPath]);
 
     console.log("run-admin-server");
-    admin_express_server_process.stdout.on("data", (data) => {
+    adminExpressServerProcess.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);
     });
 
-    admin_express_server_process.stderr.on("data", (data) => {
+    adminExpressServerProcess.stderr.on("data", (data) => {
         console.error(`stderr: ${data}`);
     });
 
-    admin_express_server_process.on("close", (code) => {
+    adminExpressServerProcess.on("close", (code) => {
         console.log(`child process exited with code: ${code}`);
     });
 };
