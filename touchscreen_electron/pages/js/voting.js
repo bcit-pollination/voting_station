@@ -173,6 +173,7 @@ function loadPoll(questJSON) {
       }
       console.log(votingSelection);
 
+
       // TODO: Finish building this vote once Karel finalizes vote schema.
       let vote = {
         "choices": votingSelection,
@@ -196,6 +197,14 @@ function loadPoll(questJSON) {
   }
   document.getElementById("step-I").appendChild(submitButton);
 }
+
+const {
+    login,
+    getElectionsList,
+    electionDownload,
+} = require('../utils/pollination-api.js');
+
+
 
 
 //  
@@ -480,3 +489,9 @@ function showUsbs() {
 
   })
 }
+
+function goBack() {
+   window.history.back();
+ }
+  
+

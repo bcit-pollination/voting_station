@@ -35,7 +35,6 @@ let button4 = document.getElementById('export-election-button');
 let button5 = document.getElementById('get-election-list-button');
 
 let electionID; 
-
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
     console.log('clicked: go-back');
@@ -92,7 +91,6 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
             electionTitleHeaderButton.innerHTML = item.election_description;
             electionTitleHeaderButton.style.fontWeight = "bold";
             electionTitleHeaderButton.style.borderRadius = "3px";
-        
 
             let startRow = document.createElement("tr");
             electionItem.appendChild(startRow);
@@ -139,7 +137,9 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
 // TODO step-IV: download
 //Added the download-electron-package id to the getelementbyid statement.
+
 document.getElementById('download-election-package-button').addEventListener('click', () => {
+
     console.log('clicked: download-election-package-button')
     // TODO: download package
 
@@ -170,6 +170,7 @@ function downloadElectionPackage() {
 }
 
 // TODO: think of a way to do step-III: export json to usb
+
 
 function showExportSection () {
     const exportSection = document.getElementById('step-V');
@@ -240,6 +241,7 @@ function showUsbs() {
 
   })
 }
+
 
 function goBack() {
     window.history.back();
