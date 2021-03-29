@@ -26,6 +26,11 @@ function showUsbs(port) {
         })
 }
 
+function goBack() {
+    window.history.back();
+}
+
 module.exports = {
-    showUsbs
+    showUsbs,
+    goBack
 }

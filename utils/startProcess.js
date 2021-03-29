@@ -1,5 +1,9 @@
 const { spawn } = require("child_process");
 
+const blePollinationServerPath = "./BLE_pollination/app.js";
+const adminExpressServerPath = "./servers/admin_express_server.js";
+const votingExpressServerPath = "./touchscreen_electron/servers/voting_express_server.js";
+
 /**
  * Starts the bluetooth low energy server. 
  * 
@@ -7,8 +11,8 @@ const { spawn } = require("child_process");
  * maps on 'close' event to log exit code.
  */
 function startBLEServerProcess() {
-    let BLE_server_process = spawn("sudo", ["node", "./BLE_pollination/app.js"]);
-    console.log(BLE_server_process);
+    console.log('Starting bluetooth low energy server');
+    let BLE_server_process = spawn("sudo", ["node", blePollinationServerPath]);
     BLE_server_process.pid;
 
     BLE_server_process.stdout.on("data", (data) => {
@@ -29,9 +33,8 @@ function startBLEServerProcess() {
  * maps on 'close' event to log exit code.
  */
 function startVotingExpressServerProcess() {
-    let voting_express_server_process = spawn("node", [
-        "./touchscreen_electron/servers/voting_express_server.js",
-    ]);
+    console.log('Starting voting express server');
+    let voting_express_server_process = spawn("node", [votingExpressServerPath]);
 
     console.log("run-voting-server");
 
@@ -55,9 +58,8 @@ function startVotingExpressServerProcess() {
  * maps on 'close' event to log exit code.
  */
 function startAdminExpressServerProcess() {
-    let admin_express_server_process = spawn("node", [
-        central_pi_express_server_js_route,
-    ]);
+    console.log('Starting admin express server');
+    let admin_express_server_process = spawn("node", [adminExpressServerPath]);
 
     console.log("run-admin-server");
     admin_express_server_process.stdout.on("data", (data) => {

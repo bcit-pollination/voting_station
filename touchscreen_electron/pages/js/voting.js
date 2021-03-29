@@ -1,14 +1,10 @@
-const { votingLoginButtonHandler } = require('./votingButtonHandlers');
-
-const ipc = require('electron').ipcRenderer;
-const { get_current_date_formatted } = require('../utils/dateProcess.js');
-
 // FIXME: DELETE THESE:
 let importStep = document.getElementById('step-II-1');
 importStep.style.visibility = 'visible';
 
 // let global_JSON = {}
 
+const { get_current_date_formatted } = require('../../../utils/dateProcess.js');
 const { login, } = require('../../../utils/pollinationAPI');
 
 const ElectionPackageModel = require('../../../utils/mongo/models/electionPackage');
@@ -26,12 +22,6 @@ let this_voting_token = "";
 let questJSON = null;
 let votes_cast = [];
 let election_id = null;
-
-// go Back
-document.getElementById('go-back').addEventListener('click', () => {
-    console.log('clicked: go-back');
-    ipc.send("go-back", "cat");
-});
 
 // step-I: login
 // let submit_password_button = document.getElementById('submit-verifier-password')
@@ -201,7 +191,7 @@ function loadPoll(questJSON) {
 //     login,
 //     getElectionsList,
 //     electionDownload,
-// } = require('../utils/pollination-api.js');
+// } = require('../utils/pollinationAPI.js');
 
 
 

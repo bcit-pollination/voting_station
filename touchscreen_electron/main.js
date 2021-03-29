@@ -9,18 +9,11 @@ const ipc = require("electron").ipcMain;
 // this sends
 const { webContents } = require("electron");
 
-const {
-    admin_express_server_process,
-    storeQuestionsIntoDB,
-} = require("./utils/central_pi");
+const { startAdminExpressServerProcess } = require("../utils/startProcess");
 
-const { getElectionsList, login } = require("./utils/pollination-api");
+const { getElectionsList, login } = require("../utils/pollinationAPI");
 
-const {
-    start_load_question_process,
-    start_BLE_server_process,
-    voting_express_server_process,
-} = require("./utils/voting_pi");
+const { startBLEServerProcess, startVotingExpressServerProcess } = require("../utils/startProcess");
 
 const bluetooth_off_and_on = async() => {
     await spawn("rfkill", ["block", "bluetooth"]);
@@ -105,7 +98,7 @@ app.whenReady().then(() => {
 
     //webContents sends a message to ipcRenderer
     ipc.on("run-voting-server", () => {
-        voting_express_server_process();
+        startVotingExpressServerProcess();
         mainWindow.loadFile("./pages/voting.html");
     });
 
@@ -117,13 +110,13 @@ app.whenReady().then(() => {
 
     //webContents sends a message to ipcRenderer
     ipc.on("run-admin-server", () => {
-        admin_express_server_process();
+        startAdminExpressServerProcess();
         // load the index.html of the app.
         mainWindow.loadFile("./pages/admin.html");
     });
 
     ipc.on("start-BLE-server", () => {
-        start_BLE_server_process();
+        startBLEServerProcess();
     });
 
     // ipc.on('load-questions', () => {

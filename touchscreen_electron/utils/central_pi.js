@@ -1,8 +1,4 @@
-// import ipc utils
-const ipc = require("electron").ipcMain;
-const { spawn } = require("child_process");
-
-const { login, electionDownload } = require("./pollination-api");
+const { login, electionDownload } = require("../../utils/pollinationAPI");
 
 const central_pi_express_server_js_route = "./servers/admin_express_server.js";
 
