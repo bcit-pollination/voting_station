@@ -16,7 +16,8 @@ const bodyParser = require('body-parser')
 // define 'Schema' as the 'mongoose.Schema'
 const Schema = mongoose.Schema;
 
-let votable = false
+// let votable = false
+let votable = true
 
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -43,7 +44,7 @@ const db = mongoose.connection;
 const VoteSchema = new Schema({
     voting_token: String,
     location: String,
-    time_stamp: Date,
+    time_stamp: String,
     voter_first_name: String,
     voter_last_name: String,
     question_num: Number,
@@ -56,7 +57,7 @@ const VoteSchema = new Schema({
     ]
 }, { collection: 'votes' })
 
-// what is a vote? I think the variable name can be more intuitive.
+// one vote obj
 const Vote = mongoose.model('Vote', VoteSchema);
 
 
@@ -166,61 +167,67 @@ app.get('/dataImport', function(req, res) {
 });
 
 app.get('/dataExport', function(req, res) {
-    //TODO Select the right data to send
-    let jsonToExport = {
-        "election_info": "",
-        "org_info": {
-          "name": "name",
-          "org_id": 0
-        },
-        "user_votes": [
-          {
-            "choices": [
-              {
-                "option_id": 1,
-                "order_position": 0,
-                "question_id": 6
-              },
-              {
-                "option_id": 1,
-                "order_position": 0,
-                "question_id": 6
-              }
-            ],
-            "location": "location",
-            "time_stamp": "2021-01-30T08:30:00+07:30",
-            "voter_first_name": "voter_first_name",
-            "voter_last_name": "voter_last_name",
-            "voting_token": "voting_token"
-          },
-          {
-            "choices": [
-              {
-                "option_id": 1,
-                "order_position": 0,
-                "question_id": 6
-              },
-              {
-                "option_id": 1,
-                "order_position": 0,
-                "question_id": 6
-              }
-            ],
-            "location": "location",
-            "time_stamp": "2021-01-30T08:30:00+07:30",
-            "voter_first_name": "voter_first_name",
-            "voter_last_name": "voter_last_name",
-            "voting_token": "voting_token"
-          }
-        ]
-      }
-    jsonToExport = JSON.stringify(jsonToExport);
-    const pathname = req.query.pathName + "/";
-    console.log(pathname );
-    controller.runExport(jsonToExport, "./testing.key", pathname).then((data) => {
-        console.log(data);
-        res.json(data);
-    }).catch((e) => console.log(e));
+    //TODO Test if this is correct
+    Vote.find({},(err,jsonToExport)=>{
+        console.log(jsonToExport)
+        // 
+        jsonToExport = JSON.stringify(jsonToExport);
+        const pathname = req.query.pathName + "/";
+        console.log(pathname);
+        controller.runExport(jsonToExport, "./testing.key", pathname).then((data) => {
+            console.log(data);
+            res.json(data);
+        }).catch((e) => console.log(e));
+
+    })
+    // let jsonToExport = {
+    //     "election_info": "",
+    //     "org_info": {
+    //       "name": "name",
+    //       "org_id": 0
+    //     },
+    //     "user_votes": [
+    //       {
+    //         "choices": [
+    //           {
+    //             "option_id": 1,
+    //             "order_position": 0,
+    //             "question_id": 6
+    //           },
+    //           {
+    //             "option_id": 1,
+    //             "order_position": 0,
+    //             "question_id": 6
+    //           }
+    //         ],
+    //         "location": "location",
+    //         "time_stamp": "2021-01-30T08:30:00+07:30",
+    //         "voter_first_name": "voter_first_name",
+    //         "voter_last_name": "voter_last_name",
+    //         "voting_token": "voting_token"
+    //       },
+    //       {
+    //         "choices": [
+    //           {
+    //             "option_id": 1,
+    //             "order_position": 0,
+    //             "question_id": 6
+    //           },
+    //           {
+    //             "option_id": 1,
+    //             "order_position": 0,
+    //             "question_id": 6
+    //           }
+    //         ],
+    //         "location": "location",
+    //         "time_stamp": "2021-01-30T08:30:00+07:30",
+    //         "voter_first_name": "voter_first_name",
+    //         "voter_last_name": "voter_last_name",
+    //         "voting_token": "voting_token"
+    //       }
+    //     ]
+    //   }
+
 
 });
 

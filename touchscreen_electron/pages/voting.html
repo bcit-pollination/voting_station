@@ -33,15 +33,15 @@
         <div id='step-II'>
             <div id=step-II-0>
                 <input id='verifier-password-input' type='password' />
-                <button id='submit-verifier-password' >Submit Verifier Password</button>
+                <button id='submit-verifier-password' onclick="checkVerifierPassword()" >Submit Verifier Password</button>
             </div>
-            <!-- step II-1:  -->
+            <!-- step II-1: import from USB -->
             <div id='step-II-1'>
                 <div>
                     <div id='usbs'></div>
                     <h4>Usb list</h4>
                     <button onclick="showUsbs()">refresh</button>
-                    <!-- <button onclick="importData()">Import Election Data</button> -->
+                    <button onclick="importDataTest()">Import Election Data TEST</button>
                     <button onclick="importData()">Import Election Data</button>
                 </div>
             </div>
@@ -62,17 +62,17 @@
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
         <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
-        <div id = 'stepIV'>
+        <div id = 'step-IV'>
 
         </div>
 
 
-        <!-- <div id='step-V' class="steps">
+        <div id='step-V' class="steps">
             <div id='usbs'></div>
             <h4>Usb list</h4>
             <button onclick="showUsbs()">refresh</button>
             <button onclick="exportData()">Export Election Data</button>
-        </div> -->
+        </div>
     </div>
 
     <script src='./js/voting.js'> </script>

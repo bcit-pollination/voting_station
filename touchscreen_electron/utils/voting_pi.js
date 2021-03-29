@@ -15,6 +15,9 @@ const start_load_question_process = () => {
 
 const start_BLE_server_process = () => {
   let BLE_server_process = spawn('sudo', ['node', '../BLE_pollination/peripheral.js']);
+  console.log(BLE_server_process)
+  BLE_server_process.pid
+
   BLE_server_process.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });

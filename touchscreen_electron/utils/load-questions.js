@@ -42,10 +42,11 @@ const QuestionSchema = new Schema({
 
 
 // Vote Schema :
+// HACK: Changed data type for time_stamp from Date to String
 const VoteSchema = new Schema({
     voting_token: String,
     location: String,
-    time_stamp: Date,
+    time_stamp: String,
     voter_first_name: String,
     voter_last_name: String,
     question_num: Number,

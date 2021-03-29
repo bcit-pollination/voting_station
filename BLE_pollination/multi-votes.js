@@ -4,11 +4,11 @@ var pizza = require('./polling');
 // questions got from mongo
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-const {fetchQuestionViaAPI, checkVotabliy} =require('./fetch-questions')
+const { fetchQuestionViaAPI, checkVotabliy } = require('./fetch-questions')
 
 let json_string = ''
 
-fetchQuestionViaAPI().then((res)=>{
+fetchQuestionViaAPI().then((res) => {
   json_string = res
   console.log(json_string)
 })
@@ -72,50 +72,54 @@ let votable = false;
 
 
 MultiVoteCharacteristic.prototype.onWriteRequest = function (data, offset, withoutResponse, callback) {
-  checkVotabliy().then(()=>{
-    votable = true;
-  })
-  
+  // checkVotabliy().then(()=>{
+  //   votable = true;
+  // })
+  votable = true;
+
   //char code
   console.log(typeof data)
 
   console.log(data)
   let decoded_data = String.fromCharCode.apply(null, data)
-  console.log(decoded_data)
+  // console.log(decoded_data)
 
-  //if it's the first time sending info
-  if (data_length_to_process == 0) {
-    console.log('getting data_length_to_process');
-    data_length_to_process = parseInt(decoded_data.substr(0, decoded_data.indexOf(' ')));
-    data_string = decoded_data.substr(decoded_data.indexOf(' ') + 1, decoded_data.length)
-    data_length_processed = data_string.length
-    console.log('data_length_to_process' + data_length_to_process)
-    console.log('data_string' + data_string)
-    console.log('data_length_processed' + data_length_processed)
+  handleMultiVote(decoded_data)
 
-  }
-  else if (data_length_processed < data_length_to_process) {
-    console.log('data_length_processed < data_length_to_process')
-    console.log('data_length_processed' + data_length_processed)
-    data_string += decoded_data
-    data_length_processed += decoded_data.length;
-    console.log('data_length_processed' + data_length_processed)
+  // HACK: This is no longer useful
+  // //if it's the first time sending info
+  // if (data_length_to_process == 0) {
+  //   console.log('getting data_length_to_process');
+  //   data_length_to_process = parseInt(decoded_data.substr(0, decoded_data.indexOf(' ')));
+  //   data_string = decoded_data.substr(decoded_data.indexOf(' ') + 1, decoded_data.length)
+  //   data_length_processed = data_string.length
+  //   console.log('data_length_to_process' + data_length_to_process)
+  //   console.log('data_string' + data_string)
+  //   console.log('data_length_processed' + data_length_processed)
 
-    if (data_length_processed >= data_length_to_process) {
-      console.log('handleMultiVote')
-      handleMultiVote(data_string)
-      data_string = '';
-      data_length_processed = 0;
-      data_length_to_process = 0;
-    }
-  }
-  else if (data_length_processed >= data_length_to_process) {
-    console.log('handleMultiVote')
-    handleMultiVote(data_string)
-    data_string = '';
-    data_length_processed = 0;
-    data_length_to_process = 0;
-  }
+  // }
+  // else if (data_length_processed < data_length_to_process) {
+  //   console.log('data_length_processed < data_length_to_process')
+  //   console.log('data_length_processed' + data_length_processed)
+  //   data_string += decoded_data
+  //   data_length_processed += decoded_data.length;
+  //   console.log('data_length_processed' + data_length_processed)
+
+  //   if (data_length_processed >= data_length_to_process) {
+  //     console.log('handleMultiVote')
+  //     handleMultiVote(data_string)
+  //     data_string = '';
+  //     data_length_processed = 0;
+  //     data_length_to_process = 0;
+  //   }
+  // }
+  // else if (data_length_processed >= data_length_to_process) {
+  //   console.log('handleMultiVote')
+  //   handleMultiVote(data_string)
+  //   data_string = '';
+  //   data_length_processed = 0;
+  //   data_length_to_process = 0;
+  // }
 
 
 
@@ -142,29 +146,46 @@ function handleMultiVote(vote_string) {
 
   let vote_data_json = JSON.parse(vote_string.trim())
   console.log('User Voted For : \n')
-  
+
   let xhttp = new XMLHttpRequest();
 
   let response = ''
 
-  xhttp.open("POST","http://localhost:3000/postVotes", true);
+  xhttp.open("POST", "http://localhost:3000/postVotes", true);
   xhttp.setRequestHeader("Content-Type", "application/json");
- 
+  // {"obj":{
+  // "choices":[
+  // {"option_description":"q3_op1",
+  //   "option_id":117,
+  //   "_id":"6061a3eba49c3fe80a000009",
+  //   "isChecked":true
+  // },
+  //   {"option_description":"q3_op2",
+  //   "option_id":118,
+  //   "_id":"6061a3eba49c3fe80a000008",
+  //   "isChecked":false
+  // },
+  //   {"option_description":"q3_op3",
+  // "option_id":119,
+  // "_id":"6061a3eba49c3fe80a000007",
+  // "isChecked":false}],
+  // "voting_token":"BSjXexWUPez52ELoD6XweLKWsUBlnSUv",
+  // "time_stamp":"2021-03-29 22:04:48.0000 -0-8:00"}}
   let post_obj = JSON.stringify({ 'obj': vote_data_json })
   console.log(post_obj)
 
-  
+
   xhttp.send(post_obj)
   // xhttp.send(JSON.stringify(q_list));
 
   xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-          response = this.responseText;
-          // resolve(response)
-      }
+    if (this.readyState == 4 && this.status == 200) {
+      response = this.responseText;
+      // resolve(response)
+    }
   }
 
-  
+
 }
 
 // let data_string = ''
@@ -182,7 +203,7 @@ let length_sent = false
 
 MultiVoteCharacteristic.prototype.onReadRequest = function (offset, callback) {
 
-  
+
 
   console.log('on read request')
   if (offset) {
@@ -202,7 +223,7 @@ MultiVoteCharacteristic.prototype.onReadRequest = function (offset, callback) {
     // start sending the actual data:
     else if (json_string_len - 20 > 0) {
       console.log(json_string_len)
-      json_string_len -=20
+      json_string_len -= 20
       console.log(json_string_len)
       // 
 
@@ -212,18 +233,18 @@ MultiVoteCharacteristic.prototype.onReadRequest = function (offset, callback) {
       // callback(this.RESULT_SUCCESS, stringToBytes(json_buffer));
     }
     else {
-      json_buffer = json_string.slice(json_sent_len, json_sent_len+json_string_len)
+      json_buffer = json_string.slice(json_sent_len, json_sent_len + json_string_len)
       json_sent_len += 20
       console.log(json_buffer)
       console.log('done!')
 
       // let json_string = ''
-      
+
       // reset
       json_sent_len = 0
       length_sent = false
       json_string_len = json_string.length
-      
+
 
     }
 
