@@ -15,6 +15,6 @@ def encrypt_data(data, keyfile, output_path):
     encrypt_output_file = open("{}encoded_data.txt".format(output_path), "w")
     encrypt_output_file.write(encode_data(encrypted_msg.decode('utf-8')))
     encrypt_output_file.close()
-    print('success');
+    print('success')
 
 encrypt_data(sys.argv[1], sys.argv[2], sys.argv[3])
