@@ -2,7 +2,7 @@ const axios = require('axios').default;
 
 const methods = { "GET": "get", "POST": "post", "PUT": "put", "DELETE": "delete" };
 
-axios.defaults.baseURL = 'http://pollination.live/api';
+axios.defaults.baseURL = 'https://pollination.live/api';
 axios.defaults.headers.common['Authorization'] = '';
 
 const urlLogin = '/user/login';
