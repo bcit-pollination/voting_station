@@ -27,6 +27,7 @@ function showUsbs(port) {
 }
 
 function goBack() {
+    console.log("go back");
     window.history.back();
 }
 

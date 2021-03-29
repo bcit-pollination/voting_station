@@ -4,7 +4,7 @@ importStep.style.visibility = 'visible';
 
 // let global_JSON = {}
 
-const { get_current_date_formatted } = require('../../../utils/dateProcess.js');
+const { getCurrentDateFormatted } = require('../../../utils/dateFormat');
 const { login, } = require('../../../utils/pollinationAPI');
 
 const ElectionPackageModel = require('../../../utils/mongo/models/electionPackage');
@@ -159,7 +159,7 @@ function loadPoll(questJSON) {
             let vote = {
                 "choices": votingSelection,
                 "location": rpi_location,
-                "time_stamp": get_current_date_formatted(),
+                "time_stamp": getCurrentDateFormatted(),
                 // FIXME: Add fields for names.
                 "voter_first_name": "MARK",
                 "voter_last_name": "KIM",
@@ -379,7 +379,7 @@ function importData() {
             let vote = {
                 voting_token: this_voting_token,
                 loation: rpi_location,
-                time_stamp: get_current_date_formatted(),
+                time_stamp: getCurrentDateFormatted(),
                 // FIXME: Add fields for names.
                 voter_first_name: "MARK",
                 voter_last_name: "KIM",
@@ -584,7 +584,7 @@ function importData() {
 //       let vote = {
 //         voting_token: this_voting_token,
 //         loation: rpi_location,
-//         time_stamp: get_current_date_formatted(),
+//         time_stamp: getCurrentDateFormatted(),
 //         // FIXME: Add fields for names.
 //         voter_first_name: "MARK",
 //         voter_last_name: "KIM",

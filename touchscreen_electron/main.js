@@ -99,7 +99,7 @@ app.whenReady().then(() => {
     //webContents sends a message to ipcRenderer
     ipc.on("run-voting-server", () => {
         startVotingExpressServerProcess();
-        mainWindow.loadFile("./pages/voting.html");
+        mainWindow.loadFile("./pages/html/voting.html");
     });
 
     //webContents sends a message to ipcRenderer
@@ -112,7 +112,7 @@ app.whenReady().then(() => {
     ipc.on("run-admin-server", () => {
         startAdminExpressServerProcess();
         // load the index.html of the app.
-        mainWindow.loadFile("./pages/admin.html");
+        mainWindow.loadFile("./pages/html/admin.html");
     });
 
     ipc.on("start-BLE-server", () => {
@@ -164,10 +164,10 @@ app.whenReady().then(() => {
     });
 
     // Go Back
-    ipc.on("go-back", () => {
-        mainWindow.webContents.goBack();
-        console.log("IPC clicked: go-back");
-    });
+    // ipc.on("go-back", () => {
+    //     mainWindow.webContents.goBack();
+    //     console.log("IPC clicked: go-back");
+    // });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
