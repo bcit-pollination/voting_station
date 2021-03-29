@@ -198,11 +198,11 @@ function loadPoll(questJSON) {
   document.getElementById("step-I").appendChild(submitButton);
 }
 
-const {
-    login,
-    getElectionsList,
-    electionDownload,
-} = require('../utils/pollination-api.js');
+// const {
+//     login,
+//     getElectionsList,
+//     electionDownload,
+// } = require('../utils/pollination-api.js');
 
 
 
