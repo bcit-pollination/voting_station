@@ -33,8 +33,9 @@ app.get('/dataExport', function(req, res) {
       console.log(allElections);
       if (err) console.error(err);
       jsonToExport = allElections[0]
-
+      
       jsonToExport = JSON.stringify(jsonToExport);
+      console.log(jsonToExport)
       const pathname = req.query.pathName + "/";
       console.log(pathname );
       controller.runExport(jsonToExport, "./testing.key", pathname).then((data) => {

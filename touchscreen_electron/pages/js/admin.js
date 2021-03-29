@@ -172,16 +172,18 @@ document.getElementById('download-election-package-button').addEventListener('cl
 })
 
 function downloadElectionPackage() {
-    electionDownload(electionID).then(result => {
+    electionDownload(electionID).then((result )=> {
         console.log(result)
         let electionPackage = new ElectionPackage(result)
-        electionPackage.save((err, doc) => {
-            console.log('saving')
-            err && console.log(err);
-            console.log(doc)
-            showExportSection();
-            return
-        })
+         ElectionPackage.remove({},(err,res)=>{
+            electionPackage.save((err, doc) => {
+                console.log('saving')
+                err && console.log(err);
+                console.log(doc)
+                showExportSection();
+                return
+            })
+         })
     });
     //Once election package is downloaded
 

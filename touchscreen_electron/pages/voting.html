@@ -17,13 +17,13 @@
                 <div>
                     <label for="login-username-input">username</label>
                     <br />
-                    <input id='login-username-input' placeholder="username" value='test@test.com' />
+                    <input id='login-username-input' placeholder="username" value='test3@pollination.test' />
                 </div>
 
                 <div>
-                    <label for="login-password-input">password</label>
+                    <label for="login-password-input">Verifier Password</label>
                     <br />
-                    <input id='login-password-input' type="password" placeholder="password" value='testtest' />
+                    <input id='login-password-input' type="password" placeholder="password" value='test' />
                 </div>
 
                 <button id='voting-login-button'>Login(as Voting Pi)</button>
@@ -31,7 +31,10 @@
 
         <!-- step II Setup local environment(BLE and mongoDB) -->
         <div id='step-II'>
-
+            <div id=step-II-0>
+                <input id='verifier-password-input' type='password' />
+                <button id='submit-verifier-password' >Submit Verifier Password</button>
+            </div>
             <!-- step II-1:  -->
             <div id='step-II-1'>
                 <div>
@@ -39,7 +42,7 @@
                     <h4>Usb list</h4>
                     <button onclick="showUsbs()">refresh</button>
                     <!-- <button onclick="importData()">Import Election Data</button> -->
-                    <button onclick="importDataTest()">Import Election Data</button>
+                    <button onclick="importData()">Import Election Data</button>
                 </div>
             </div>
 
