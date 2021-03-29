@@ -4,6 +4,11 @@ const path = require("path");
 const { exec, spawn } = require("child_process");
 
 const { connectMongoose } = require("../utils/mongo/mongoHandler");
+const mongoose = require('mongoose');
+
+setInterval(() => {
+    console.log('main', mongoose.connection.readyState);
+}, 1000)
 
 // import ipc utils
 const ipc = require("electron").ipcMain;
