@@ -1,5 +1,6 @@
 const util = require('util');
 
+
 //
 // Require bleno peripheral library.
 // https://github.com/sandeepmistry/bleno
@@ -17,7 +18,15 @@ const name = 'Raspbian Pollination';
 const pollingService = new PollingService(new polling.Pizza());
 
 
+const express = require('express')
 
+
+// HACK: allow us to kill the BLE process by port
+const app = express()
+const port = 5000
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
 
 
 //
@@ -44,7 +53,8 @@ bleno.on('stateChange', function(state) {
 
 bleno.on('advertisingStart', function(err) {
   if (!err) {
-    console.log('advertising...');
+    console.log('advertising!!!...');
+    
     //
     // Once we are advertising, it's time to set up our services,
     // along with our characteristics.
