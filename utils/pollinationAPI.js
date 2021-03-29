@@ -1,8 +1,18 @@
 const axios = require('axios').default;
 
+// Will setup .env variables when this module is first required. Could be early in the start 
+// process but due to weird package.json setups, this should be fine.
+require('dotenv').config();
+
 const methods = { "GET": "get", "POST": "post", "PUT": "put", "DELETE": "delete" };
 
-axios.defaults.baseURL = 'https://pollination.live/api';
+const {
+    API_SERVER_PROTOCOL,
+    API_SERVER_ADDRESS,
+    API_SERVER_PORT
+} = process.env;
+
+axios.defaults.baseURL = `${API_SERVER_PROTOCOL}://${API_SERVER_ADDRESS}:${API_SERVER_PORT}/api`;
 axios.defaults.headers.common['Authorization'] = '';
 
 const urlLogin = '/user/login';

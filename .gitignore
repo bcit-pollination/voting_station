@@ -76,7 +76,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+# .env commented out for during testing, not for sensitive information until released
 .env.test
 .env*.local
 
