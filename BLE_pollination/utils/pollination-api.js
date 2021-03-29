@@ -19,7 +19,13 @@ const urlElectionDownload = '/org/election/download';
 
 
 
-
+/**
+ * Attempts to login with the main server. On success, the authorization token will be set for all
+ * future calls in this module. logout() will remove the authorization token.
+ * 
+ * @param {string} email 
+ * @param {string} password 
+ */
 function login(email, password) {
     return new Promise((resolve, reject) => {
         axiosRequest(methods.POST, urlLogin, { email: email, password: password }, null, false)
