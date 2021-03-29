@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 from common import load_key, encode_data
 
 def encrypt_data(data, keyfile, output_path):
-    path_to_export_tool = './utils/export_tool/'
+    path_to_export_tool = '../utils/export_tool/'
     msg = data.encode()
 # # path_to_export_tool +
     key = load_key( path_to_export_tool + keyfile) #TODO: Add path to export tool

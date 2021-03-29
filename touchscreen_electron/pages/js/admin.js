@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 // stores the jwt returned by login globally
 let session_jwt = {}
-// stores the election package globally
+    // stores the election package globally
 let election_package = {}
 
 const {
@@ -19,8 +19,9 @@ const {
     login,
     getElectionsList,
     electionDownload,
-    getUserOrgs
-} = require('../utils/pollination-api.js');
+    getUserOrgs,
+    electionUpload
+} = require('../../../utils/pollinationAPI.js');
 // const { electionDownload } = require('../../utils/pollination-api');
 
 const {
@@ -132,7 +133,7 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
                 electionDisplay.appendChild(br);
 
                 // FIXME: Check if the .save() saves to the MongoDB
-                electionTitleHeaderButton.onclick = function () {
+                electionTitleHeaderButton.onclick = function() {
                     electionID = item.election_id;
                     button2.style.visibility = 'visible';
                 }
@@ -159,7 +160,7 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 document.getElementById('download-election-package-button').addEventListener('click', () => {
 
     console.log('clicked: download-election-package-button')
-    // TODO: download package
+        // TODO: download package
 
     let election_id = 15
     button3.style.visibility = 'visible';
@@ -167,15 +168,14 @@ document.getElementById('download-election-package-button').addEventListener('cl
 
 
     document.getElementById('download-election-package-button')
-        .addEventListener('click', () => {
-        })
+        .addEventListener('click', () => {})
 })
 
 function downloadElectionPackage() {
-    electionDownload(electionID).then((result )=> {
+    electionDownload(electionID).then((result) => {
         console.log(result)
         let electionPackage = new ElectionPackage(result)
-         ElectionPackage.remove({},(err,res)=>{
+        ElectionPackage.remove({}, (err, res) => {
             electionPackage.save((err, doc) => {
                 console.log('saving')
                 err && console.log(err);
@@ -183,7 +183,7 @@ function downloadElectionPackage() {
                 showExportSection();
                 return
             })
-         })
+        })
     });
     //Once election package is downloaded
 
@@ -267,3 +267,16 @@ function goBack() {
     window.history.back();
 }
 
+async function axiosPOST() {
+    let data = {
+        "election_id": election_id,
+        "votes_cast": votes_cast,
+    }
+    electionUpload(data)
+    let axiosResult = await axios.post('https://pollination.live/api/org/election/votes', data);
+    console.log(axiosResult);
+    console.log(axiosResult.data);
+    let axiosResultData = axiosResult.data;
+    alert(axiosResultData);
+    window.history.back();
+}

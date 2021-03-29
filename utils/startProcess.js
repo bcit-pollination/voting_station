@@ -7,7 +7,7 @@ const { spawn } = require("child_process");
  * maps on 'close' event to log exit code.
  */
 function startBLEServerProcess() {
-    let BLE_server_process = spawn("sudo", ["node", "../BLE_pollination/app.js"]);
+    let BLE_server_process = spawn("sudo", ["node", "./BLE_pollination/app.js"]);
     console.log(BLE_server_process);
     BLE_server_process.pid;
 
@@ -30,7 +30,7 @@ function startBLEServerProcess() {
  */
 function startVotingExpressServerProcess() {
     let voting_express_server_process = spawn("node", [
-        "./servers/voting_express_server.js",
+        "./touchscreen_electron/servers/voting_express_server.js",
     ]);
 
     console.log("run-voting-server");
