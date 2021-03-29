@@ -113,35 +113,35 @@ var Voter = mongoose.model('Voter', VoterSchema);
 var ElectionPackage = mongoose.model('ElectionPackage', ElectionPackageSchema)
 
 //--------------- Iinstances------------------------//
-var multi_question_test = new Question({
-    question_id: 1,
-    question_description: "Quel est votre plat préféré ?",
-    min_selection_count: 1,
-    max_selection_count: 1,
-    ordered_choices: false,
-    'options': [
-        {
-            option_id: 1,
-            option_description: "Sandwich",
-        },
-        {
-            option_id: 2,
-            option_description: "Pizza",
-        },
-        {
-            option_id: 3,
-            option_description: "SuShi",
-        }
-    ]
-})
-// console.log(multi_question_test)
+// var multi_question_test = new Question({
+//     question_id: 1,
+//     question_description: "Quel est votre plat préféré ?",
+//     min_selection_count: 1,
+//     max_selection_count: 1,
+//     ordered_choices: false,
+//     'options': [
+//         {
+//             option_id: 1,
+//             option_description: "Sandwich",
+//         },
+//         {
+//             option_id: 2,
+//             option_description: "Pizza",
+//         },
+//         {
+//             option_id: 3,
+//             option_description: "SuShi",
+//         }
+//     ]
+// })
+// // console.log(multi_question_test)
 
-multi_question_test.save((err, doc) => {
-    console.log('saving')
-    err && console.log(err);
-    console.log(doc)
-    return
-})
+// multi_question_test.save((err, doc) => {
+//     console.log('saving')
+//     err && console.log(err);
+//     console.log(doc)
+//     return
+// })
 
 
 module.exports = {

@@ -104,12 +104,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // storeQuestionsIntoDB('test@test.com', 'testtest', 19)
-  login('test@test.com', 'testtest').then(() => {
-    getElectionsList(16).then(r => {
-      console.log(r)
-    })
-  })
 
   createWindow()
 
@@ -144,9 +138,9 @@ app.whenReady().then(() => {
     start_BLE_server_process()
   })
 
-  ipc.on('load-questions', () => {
-    start_load_question_process()
-  })
+  // ipc.on('load-questions', () => {
+  //   start_load_question_process()
+  // })
 
 
   ipc.on('kill-processes', () => {

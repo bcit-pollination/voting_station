@@ -53,6 +53,6 @@ Pizza.prototype.vote = function(temperature) {
 };
 
 module.exports.Pizza = Pizza;
-// module.exports.PizzaToppings = PizzaToppings;
-// module.exports.PizzaCrust = PizzaCrust;
-// module.exports.PizzaBakeResult = PizzaBakeResult;
+module.exports.PizzaToppings = PizzaToppings;
+module.exports.PizzaCrust = PizzaCrust;
+module.exports.PizzaBakeResult = PizzaBakeResult;

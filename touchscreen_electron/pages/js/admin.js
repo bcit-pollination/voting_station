@@ -1,6 +1,7 @@
 console.log('admin.js')
-
+const export_controller = require('../utils/export_tool/export_controller.js');
 const ipc = window.require('electron').ipcRenderer;
+const mongoose = require('mongoose');
 
 // stores the jwt returned by login globally
 let session_jwt = {}
@@ -28,11 +29,12 @@ const {
 } = require ('../utils/load-questions.js')
 
 let button1 = document.getElementById('get-organization-list-button');
-let button2 = document.getElementById('download-electron-package-button');
+let button2 = document.getElementById('download-election-package-button');
 let button3 = document.getElementById('import-election-button');
 let button4 = document.getElementById('export-election-button');
 let button5 = document.getElementById('get-election-list-button');
 
+let electionID; 
 // go Back
 document.getElementById('go-back').addEventListener('click', () => {
     console.log('clicked: go-back');
@@ -115,17 +117,8 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
             // FIXME: Check if the .save() saves to the MongoDB
             electionTitleHeaderButton.onclick = function() {
-                let id = item.election_id;
+                electionID = item.election_id;
                 button2.style.visibility = 'visible';
-
-                electionDownload(id).then(result => {
-                    result.save((err, doc) => {
-                        console.log('saving')
-                        err && console.log(err);
-                        console.log(doc)
-                        return
-                    })
-                });
             }
         };
     });
@@ -144,7 +137,9 @@ document.getElementById('get-election-list-button').addEventListener('click', ()
 
 // TODO step-IV: download
 //Added the download-electron-package id to the getelementbyid statement.
-document.getElementById('download-electron-package-button').addEventListener('click', () => {
+
+document.getElementById('download-election-package-button').addEventListener('click', () => {
+
     console.log('clicked: download-election-package-button')
     // TODO: download package
 
@@ -153,12 +148,99 @@ document.getElementById('download-electron-package-button').addEventListener('cl
     button4.style.visibility = 'visible';
 
 
-    document.getElementById('download-electron-package-button')
+    document.getElementById('download-election-package-button')
         .addEventListener('click', () => {
         })
 })
 
+function downloadElectionPackage() {
+    electionDownload(electionID).then(result => {
+        console.log(result)
+        let electionPackage = new ElectionPackage(result)
+        electionPackage.save((err, doc) => {
+            console.log('saving')
+            err && console.log(err);
+            console.log(doc)
+            showExportSection();
+            return
+        })
+    });
+    //Once election package is downloaded
+    
+}
+
 // TODO: think of a way to do step-III: export json to usb
+
+
+function showExportSection () {
+    const exportSection = document.getElementById('step-V');
+    exportSection.style.visibility = 'visible';
+}
+
+function exportData() {
+    const checkedRadio = document.querySelector('input[name="usb"]:checked');
+    if(!checkedRadio) return;
+
+     const path = checkedRadio.value;
+        
+    
+    const url = new URL("http://localhost:4000/dataExport");
+    const params = {pathName: path};
+    
+    url.search = new URLSearchParams(params).toString();
+    fetch(url).then(response => response.json())
+            .then((body) => {
+                    console.log(body);
+                 
+                    
+            }); 
+}
+
+function importData() {
+    const checkedRadio = document.querySelector('input[name="usb"]:checked');
+    if(!checkedRadio) return;
+
+     const path = checkedRadio.value;
+        
+    
+    const url = new URL("http://localhost:4000/dataImport");
+    const params = {pathName: path};
+    
+    url.search = new URLSearchParams(params).toString();
+    fetch(url).then(response => response.json())
+        .then((body) => {
+            console.log(body);
+            // TODO: Store imported data accordingly
+        }); 
+}
+
+function showUsbs() {
+    fetch('http://localhost:4000/usbs')
+  .then(response => response.json())
+  .then(data => {
+    data = JSON.parse(data);
+    console.log(data);
+    let usbsDiv = document.getElementById("usbs");
+    usbsDiv.innerHTML = "";
+        for(const usb of data.usbs){
+        if(usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
+        let div = document.createElement("div");
+        let input = document.createElement("input");
+        let label = document.createElement("label");
+        input.setAttribute("type", "radio");
+        input.setAttribute("id", usb.path);
+        input.setAttribute("name", "usb");
+        input.setAttribute("value", usb.path);
+        input.setAttribute("class", "radio");
+        input.checked = false;
+        label.innerText = usb.path;
+        div.appendChild(input);
+        div.appendChild(label);
+        usbsDiv.appendChild(div);
+    }
+
+  })
+}
 
 
 function goBack() {

@@ -24,7 +24,7 @@
         <div>
             <label for="login-password-input">password</label>
             <br />
-            <input id='login-password-input' placeholder="password" value='testtest' />
+            <input id='login-password-input' type="password" placeholder="password" value='testtest' />
         </div>
 
         <button id='central-login-button'>Login(as Central Pi)</button>
@@ -54,19 +54,23 @@
 
     <!--  -->
     <div id='step-IV' className='steps'>
-        <button id='download-electron-package-button'>Download Election Package</button>
+        <button onclick="downloadElectionPackage()"id='download-election-package-button'>Download Election Package</button>
     </div>
 
     <!-- TODO-Noah integrate import export functions -->
     <div id='step-V' class="steps">
-        <button id='import-election-button'>Import Election Data</button>
-        <button id='export-election-button'>Export Election Data</button>
+
+        <div id='usbs'></div>
+        <h4>Usb list</h4>
+        <button onclick="showUsbs()">refresh</button>
+        <button onclick="importData()">Import Election Data</button>
+        <button onclick="exportData()">Export Election Data</button>
+
     </div>
 
     <div id='bottom'>
 
     </div>
-
     <script src='./js/admin.js'> </script>
 </body>
 

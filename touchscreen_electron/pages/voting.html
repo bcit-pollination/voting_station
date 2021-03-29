@@ -17,13 +17,13 @@
                 <div>
                     <label for="login-username-input">username</label>
                     <br />
-                    <input id='login-username-input' placeholder="username" />
+                    <input id='login-username-input' placeholder="username" value='test@test.com' />
                 </div>
 
                 <div>
                     <label for="login-password-input">password</label>
                     <br />
-                    <input id='login-password-input' placeholder="password" />
+                    <input id='login-password-input' type="password" placeholder="password" value='testtest' />
                 </div>
 
                 <button id='voting-login-button'>Login(as Voting Pi)</button>
@@ -32,14 +32,18 @@
         <!-- step II Setup local environment(BLE and mongoDB) -->
         <div id='step-II'>
 
-            <!-- TODO:step II-1:  -->
+            <!-- step II-1:  -->
             <div id='step-II-1'>
                 <div>
-                    <button id='load-questions-button'>Load Questions</button>
+                    <div id='usbs'></div>
+                    <h4>Usb list</h4>
+                    <button onclick="showUsbs()">refresh</button>
+                    <!-- <button onclick="importData()">Import Election Data</button> -->
+                    <button onclick="importDataTest()">Import Election Data</button>
                 </div>
             </div>
 
-            <!-- TODO:step II-2 Start Server Buttons -->
+            <!-- step II-2 Start Server Buttons -->
             <div id='step-II-2'>
                 <div>
                     <button id='start-BLE-button'>Start BLE server</button>
@@ -47,17 +51,26 @@
             </div>
         </div>
 
+
+
         <!-- step III Setup Voting Token -->
         <div id='step-III'>
             <input id='voting-token-input' placeholder="enter voting token here:" />
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
+        <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
+        <div id = 'stepIV'>
+
+        </div>
 
 
-
-
+        <!-- <div id='step-V' class="steps">
+            <div id='usbs'></div>
+            <h4>Usb list</h4>
+            <button onclick="showUsbs()">refresh</button>
+            <button onclick="exportData()">Export Election Data</button>
+        </div> -->
     </div>
-
 
     <script src='./js/voting.js'> </script>
 </body>
