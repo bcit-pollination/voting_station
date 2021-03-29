@@ -16,11 +16,7 @@ const {
 } = require("../../../utils/pollinationAPI.js");
 // const { electionDownload } = require('../../utils/pollinationAPI');
 
-const {
-    ElectionPackageSchema,
-    ElectionPackage,
-    Schema,
-} = require("../utils/load-questions.js");
+const ElectionPackageSchema = require('../../../utils/mongo/models/electionPackage');
 
 let button1 = document.getElementById("get-organization-list-button");
 let button2 = document.getElementById("download-election-package-button");
@@ -172,8 +168,8 @@ document
 function downloadElectionPackage() {
     electionDownload(electionID).then((result) => {
         console.log(result);
-        let electionPackage = new ElectionPackage(result);
-        ElectionPackage.remove({}, (err, res) => {
+        let electionPackage = new ElectionPackageSchema(result);
+        ElectionPackageSchema.remove({}, (err, res) => {
             electionPackage.save((err, doc) => {
                 console.log("saving");
                 err && console.log(err);

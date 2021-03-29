@@ -1,17 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 function connectMongoose() {
-    mongoose.connect('mongodb://127.0.0.1/pollination').then(value => {
-        console.log("Connected to mongo...");
-    }).catch(err => {
-        console.log("Connection failed to mongo...", err);
+    mongoose.connection.on("connected", () => {
+        console.log("MongoDB Connected");
     });
 
-    mongoose.connection.on('error', err => {
-        console.log("Mongo connection error", err);
-    })
+    mongoose.connection.on("error", (err) => {
+        console.log("MongoDB connection error", err);
+    });
+
+    mongoose.connection.on("disconnected", () => {
+        console.log("MongoDB disconnnected");
+    });
+
+    console.log("Connecting to MongoDB...");
+    mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
+    console.log(mongoose.connection.readyState);
 }
 
 module.exports = {
-    connectMongoose
-}
+    connectMongoose,
+};

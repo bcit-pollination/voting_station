@@ -3,6 +3,8 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const { exec, spawn } = require("child_process");
 
+const { connectMongoose } = require("../utils/mongo/mongoHandler");
+
 // import ipc utils
 const ipc = require("electron").ipcMain;
 
@@ -14,6 +16,9 @@ const { startAdminExpressServerProcess } = require("../utils/startProcess");
 const { getElectionsList, login } = require("../utils/pollinationAPI");
 
 const { startBLEServerProcess, startVotingExpressServerProcess } = require("../utils/startProcess");
+
+// Connect to local mongoose, if and error occurs not much else will work
+connectMongoose();
 
 const bluetooth_off_and_on = async() => {
     await spawn("rfkill", ["block", "bluetooth"]);
