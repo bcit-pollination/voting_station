@@ -30,12 +30,6 @@ function votingLoginButtonHandler() {
     login(email, password).then((jwt) => {
         session_jwt = jwt;
         console.log(jwt);
-        let loginForm = document.getElementById('step-I');
-        // loginForm.style.visibility = 'hidden';
-
-        // Let the Verifier add the location. Submit button uses submitLocation.
-        loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
-        loginForm.style.visibility = 'hidden';
         let verifierPasswordStep = document.getElementById('step-II-0')
         verifierPasswordStep.style.visibility = 'hidden';
 
@@ -65,13 +59,14 @@ async function checkVerifierPassword() {
 
         if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
             console.log('verify successful')
-            let importStep = document.getElementById('step-II-1');
-            importStep.style.visibility = 'visible';
+
+            // Let the Verifier add the location. Submit button uses submitLocation.
+            let loginForm = document.getElementById('step-I');
+            loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
         }
         else{
             console.log('verify failed')
         }
-
     })
     // console.log('findOne()')
     // console.log(package)
@@ -82,8 +77,6 @@ async function checkVerifierPassword() {
     //     let importStep = document.getElementById('step-II-1');
     //     importStep.style.visibility = 'visible';
     // }
-
-
 
     // ElectionPackageModel.
 }
@@ -268,9 +261,11 @@ function loadPoll(questJSON) {
     });
 
     // Start BLE server:
-    document.getElementById("start-BLE-button").addEventListener("click", () => {
+    let startBLEbutton = document.getElementById("start-BLE-button");
+    startBLEbutton.addEventListener("click", () => {
         console.log("clicked: start-BLE-button");
         startBLEServerProcess();
+        startBLEbutton.style.visibility = 'hidden';
     });
 
     showExportSection();
