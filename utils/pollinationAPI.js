@@ -6,11 +6,18 @@ require('dotenv').config();
 
 const methods = { "GET": "get", "POST": "post", "PUT": "put", "DELETE": "delete" };
 
-const {
-    API_SERVER_PROTOCOL,
-    API_SERVER_ADDRESS,
-    API_SERVER_PORT
-} = process.env;
+//FIXME: env variables are undefined
+// const {
+//     API_SERVER_PROTOCOL,
+//     API_SERVER_ADDRESS,
+//     API_SERVER_PORT
+// } = process.env;
+
+const API_SERVER_PROTOCOL = "https";
+const API_SERVER_ADDRESS = "pollination.live";
+const API_SERVER_PORT = "443";
+
+
 
 axios.defaults.baseURL = `${API_SERVER_PROTOCOL}://${API_SERVER_ADDRESS}:${API_SERVER_PORT}/api`;
 axios.defaults.headers.common['Authorization'] = '';
@@ -44,6 +51,7 @@ function login(email, password) {
                 resolve(resp);
             })
             .catch(err => {
+                console.log(err)
                 reject(err);
             });
     })
