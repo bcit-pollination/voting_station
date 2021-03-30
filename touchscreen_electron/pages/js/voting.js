@@ -112,7 +112,7 @@ function submitVotingToken() {
     console.log(this_voting_token)
     console.log("this_voting_token: " + this_voting_token);
 
-    console.log("Checking voting token check:");
+    console.log("Valid voting tokens:");
     console.log(voting_token_check);
 
     if (voting_token_check.includes(this_voting_token)) {
@@ -268,14 +268,6 @@ function loadPoll(questJSON) {
         xhttp.send(JSON.stringify(post_obj));
     });
 
-    // Start BLE server:
-    let startBLEbutton = document.getElementById("start-BLE-button");
-    startBLEbutton.addEventListener("click", () => {
-        console.log("clicked: start-BLE-button");
-        startBLEServerProcess();
-        startBLEbutton.style.visibility = 'hidden';
-    });
-
     // showExportSection();
 }
 
@@ -343,6 +335,14 @@ function importData() {
             // })
             // document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line
         });
+
+    // Start BLE server:
+    let startBLEbutton = document.getElementById("start-BLE-button");
+    startBLEbutton.addEventListener("click", () => {
+        console.log("clicked: start-BLE-button");
+        startBLEServerProcess();
+        startBLEbutton.style.visibility = 'hidden';
+    });
 }
 
 function save_election_package_and_questions(questJSON) {
