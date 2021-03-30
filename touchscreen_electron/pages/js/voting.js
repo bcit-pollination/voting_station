@@ -150,7 +150,7 @@ function loadPoll(questJSON) {
             label.appendChild(document.createTextNode(questOps[j].option_description));
             questDiv.appendChild(label);
 
-            if (questArray[i].ordered_choices == false) {
+            if (questArray[i].ordered_choices == true) {
                 let inpt = document.createElement("select");
                 inpt.name = name;
                 inpt.id = name + number2;
@@ -194,34 +194,41 @@ function loadPoll(questJSON) {
     submitButton.onclick = async function () {
         let votingSelections = [];
         // looping through
-        for (let j = 0; j < questArray.length; j++) {
-            let num = j + 1;
-            let values = document.getElementsByName("q" + num);
-            let checkVal = null;
-
-             //REVIEW:
-            // If user selected more than just one
-            //  a brand new object needs to be there, with the same option_id
-            // eg:
-            // {question_id:19, option_id:17, order_position: 0}
-            // {question_id:19, option_id:18, order_position: 0}
-            // {question_id:19, option_id:19, order_position: 0}
-           
-            for (let k = 0; k < values.length; k++) {
-                if (values[k].checked) {
-                    checkVal = values[k].value;
-                    let choiceObject = {
-                        option_id: parseInt(checkVal),
-                        // HACK:  Leaving as 0 for now.
-                        order_position: 0,
-                        question_id: questArray[j].question_id,
-                    };
-                    await votingSelections.push(choiceObject);
-                }
-
+        if (questArray[i].ordered_choices == true) {
+            for (let j = 0; j < questArray.length; j++) {
+                let num = j + 1;
+                let values = document.getElementsByName("q" + num);
+                console.log(values);
             }
-
+        } else {
+            for (let j = 0; j < questArray.length; j++) {
+                let num = j + 1;
+                let values = document.getElementsByName("q" + num);
+                let checkVal = null;
+    
+                 //REVIEW:
+                // If user selected more than just one
+                //  a brand new object needs to be there, with the same option_id
+                // eg:
+                // {question_id:19, option_id:17, order_position: 0}
+                // {question_id:19, option_id:18, order_position: 0}
+                // {question_id:19, option_id:19, order_position: 0}
+               
+                for (let k = 0; k < values.length; k++) {
+                    if (values[k].checked) {
+                        checkVal = values[k].value;
+                        let choiceObject = {
+                            option_id: parseInt(checkVal),
+                            // HACK:  Leaving as 0 for now.
+                            order_position: 0,
+                            question_id: questArray[j].question_id,
+                        };
+                        await votingSelections.push(choiceObject);
+                    }
+                }
+            }
         }
+
         console.log(votingSelections);
         // votingSelections = new
 
