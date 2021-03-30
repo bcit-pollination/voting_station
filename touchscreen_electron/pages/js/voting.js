@@ -201,6 +201,16 @@ function loadPoll(questJSON) {
             let num = j + 1;
             let values = document.getElementsByName("q" + num);
             let checkVal = null;
+
+             //FIXME:
+            // If user selected more than just one
+            //  a brand new object needs to be there, with the same option_id
+            // eg:
+            
+            // {question_id:19, option_id:17, order_position: 0}
+            // {question_id:19, option_id:18, order_position: 0}
+            // {question_id:19, option_id:19, order_position: 0}
+           
             for (let k = 0; k < values.length; k++) {
                 if (values[k].checked) {
                     checkVal = values[k].value;
