@@ -41,13 +41,12 @@ function votingLoginButtonHandler() {
         // loginForm.style.visibility = 'hidden';
 
         // Let the Verifier add the location. Submit button uses submitLocation.
-        loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>    <div id=step-II-0><input id='verifier-password-input' type='password' /><br><button id='submit-verifier-password' onclick='checkVerifierPassword()'>Submit Verifier Password</button></div>";
-        // let verifierPasswordStep = document.getElementById('step-II-0')
-        // verifierPasswordStep.style.visibility = 'visible'
+        loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
+        let verifierPasswordStep = document.getElementById('step-II-0')
+        verifierPasswordStep.style.visibility = 'visible'
 
-        // FIXME: uncomment this:
-        // let importStep = document.getElementById('step-II-1');
-        // importStep.style.visibility = 'visible';
+        let importStep = document.getElementById('step-II-1');
+        importStep.style.visibility = 'visible';
     });
 }
 
