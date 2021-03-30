@@ -7,6 +7,5 @@ function goBack() {
 }
 
 module.exports = {
-    showUsbs,
     goBack
 }

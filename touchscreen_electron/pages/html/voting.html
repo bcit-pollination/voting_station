@@ -40,9 +40,9 @@
                 <div>
                     <div id='usbs'></div>
                     <h4>Usb list</h4>
-                    <button onclick="showUsbs(3000)">refresh</button>
-                    <button onclick="importDataTest()" style="visibility: hidden;">Import Election Data TEST</button>
+                    <button onclick="showUsbs()">refresh</button>
                     <button onclick="importData()">Import Election Data</button>
+                    <button onclick="importDataTest()" style="visibility: hidden;">Import Election Data TEST</button>
                 </div>
             </div>
 
@@ -54,18 +54,15 @@
             </div>
         </div>
 
-
-
         <!-- step III Setup Voting Token -->
         <div id='step-III'>
             <input id='voting-token-input' placeholder="enter voting token here:" />
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
         <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
+        
         <div id='step-IV'>
-
         </div>
-
 
         <div id='step-V' class="steps">
             <div id='usbs'></div>
