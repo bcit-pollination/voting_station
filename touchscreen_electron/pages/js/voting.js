@@ -108,6 +108,8 @@ function promptVotingToken() {
 }
 
 function submitVotingToken() {
+    generateValidTokenList(questJSON);
+
     this_voting_token = document.getElementById("voting-token-id").value;
     console.log(this_voting_token)
     console.log("this_voting_token: " + this_voting_token);
@@ -128,17 +130,7 @@ function loadPoll(questJSON) {
 
     let questArray = questJSON.election_info.questions;
     let questIdArray = [];
-
-    for (let item of questJSON.voter_list) {
-        console.log(item);
-        console.log(item.voting_token);
-        voting_token_check = voting_token_check.concat(item.voting_token);
-    }
-
-    console.log(voting_token_check);
-
-    // let questArray = questJSON.election_info.questions;
-
+    
     for (let i = 0; i < questArray.length; i++) {
         let number = i + 1;
         let name = "q" + number;
@@ -269,6 +261,15 @@ function loadPoll(questJSON) {
     });
 
     // showExportSection();
+}
+
+function generateValidTokenList(questJSON) {
+    for (let item of questJSON.voter_list) {
+        console.log(item);
+        console.log(item.voting_token);
+        voting_token_check = voting_token_check.concat(item.voting_token);
+    }
+    console.log(voting_token_check);
 }
 
 function showExportSection() {
