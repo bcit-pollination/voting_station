@@ -3,6 +3,7 @@
 #voting-token-button,
 #voting-token-input,
 #step-V,
-#step-II-1 {
+#step-II-1,
+#step-II-0 {
   visibility: hidden;
 }

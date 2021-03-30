@@ -321,6 +321,9 @@ function importData() {
             let importStep = document.getElementById('step-II-1');
             importStep.style.visibility = 'hidden';
 
+            let verifier = document.getElementById('step-II-0');
+            verifier.style.visibility = 'visible';
+
 
             let questJSON = JSON.parse(body);
             console.log('questJSON');
