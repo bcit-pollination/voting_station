@@ -128,8 +128,7 @@ app.get("/uploadElectionResults", function(req, res) {
 
         all_votes_casts = []
         for(let each of votes_casts){
-            submission_obj.election_id = each.election_id
-            all_votes_casts = all_votes_casts.concat(each.votes_casts)
+            all_votes_casts = all_votes_casts.concat(each.votes_cast)
         }
         
     

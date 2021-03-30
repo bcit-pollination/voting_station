@@ -87,13 +87,14 @@ function startAdminExpressServerProcess() {
 function killProcesses() {
     let kill_node_processes_BLE = spawn("fuser", ["-k", "5000/tcp"]);
     let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
-    let kill_node_processes2 = spawn("fuser", ["-k", "4000/tcp"]);
+    let kill_node_processes2 = spawn("kill", kill_node_processes_BLE.pid);
 
     console.log("kill_node_processes");
 
     kill_node_processes_BLE.on("data", (data) => {
         console.log(`stdout: ${data}`);
     });
+    
 
     kill_node_processes_BLE.stderr.on("data", (data) => {
         console.error(`stderr: ${data}`);
