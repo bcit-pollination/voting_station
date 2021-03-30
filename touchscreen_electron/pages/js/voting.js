@@ -151,21 +151,34 @@ function loadPoll(questJSON) {
             questDiv.appendChild(label);
 
             if (questArray[i].ordered_choices == true) {
-                console.log("Make ordered choices.");
-            }
-            let inpt = document.createElement("input");
-            if (questArray[i].max_selection_count == 1 && questArray[i].min_selection_count == 1) {
-                inpt.type = "radio";
+                let inpt = document.createElement("select");
+                inpt.name = name;
+                inpt.id = name + number2;
+                inpt.style.height = "2vw";
+                inpt.style.width = "2vh";
+                for (let k = 0; k < questOps.length; k++) {
+                    let option = document.createElement("option");
+                    option.value = k;
+                    input.add(option);
+                }
+                questDiv.appendChild(inpt);
+                questDiv.appendChild(document.createElement("br"));
             } else {
-                inpt.type = "checkbox";
+                let inpt = document.createElement("input");
+                if (questArray[i].max_selection_count == 1 && questArray[i].min_selection_count == 1) {
+                    inpt.type = "radio";
+                } else {
+                    inpt.type = "checkbox";
+                }
+                inpt.name = name;
+                inpt.id = name + number2;
+                inpt.value = questOps[j].option_id;
+                inpt.style.height = "2vw";
+                inpt.style.width = "2vh";
+                questDiv.appendChild(inpt);
+                questDiv.appendChild(document.createElement("br"));
             }
-            inpt.name = name;
-            inpt.id = name + number2;
-            inpt.value = questOps[j].option_id;
-            inpt.style.height = "2vw";
-            inpt.style.width = "2vh";
-            questDiv.appendChild(inpt);
-            questDiv.appendChild(document.createElement("br"));
+            
         }
         document.getElementById("step-IV").appendChild(questDiv);
         console.log(questArray[i]);
