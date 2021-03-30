@@ -35,6 +35,9 @@ function votingLoginButtonHandler() {
 
         let importStep = document.getElementById('step-II-1');
         importStep.style.visibility = 'visible';
+
+        let loginForm = document.getElementById('step-I');
+        loginForm.style.visibility = 'hidden';            
     });
 }
 
@@ -63,6 +66,7 @@ async function checkVerifierPassword() {
             // Let the Verifier add the location. Submit button uses submitLocation.
             let loginForm = document.getElementById('step-I');
             loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
+            loginForm.style.visibility = 'visible';            
         }
         else{
             console.log('verify failed')
