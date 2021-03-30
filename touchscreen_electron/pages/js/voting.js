@@ -104,12 +104,10 @@ function promptVotingToken() {
     loginForm.innerHTML = "";
     loginForm.innerHTML =
         "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
-
+    generateValidTokenList(questJSON);
 }
 
 function submitVotingToken() {
-    generateValidTokenList(questJSON);
-
     this_voting_token = document.getElementById("voting-token-id").value;
     console.log(this_voting_token)
     console.log("this_voting_token: " + this_voting_token);
@@ -130,7 +128,7 @@ function loadPoll(questJSON) {
 
     let questArray = questJSON.election_info.questions;
     let questIdArray = [];
-    
+
     for (let i = 0; i < questArray.length; i++) {
         let number = i + 1;
         let name = "q" + number;
@@ -269,6 +267,7 @@ function generateValidTokenList(questJSON) {
         console.log(item.voting_token);
         voting_token_check = voting_token_check.concat(item.voting_token);
     }
+    console.log("list of valid token ids:");
     console.log(voting_token_check);
 }
 
