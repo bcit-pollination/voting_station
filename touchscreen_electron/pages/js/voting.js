@@ -187,7 +187,11 @@ function loadPoll(questJSON) {
       label.style.fontSize = "1em";
       label.appendChild(document.createTextNode(questOps[j].option_description));
       questDiv.appendChild(label);
-      inpt.type = "radio";
+      if(questJSON.max_selection_count == 1 && questJSON.min_selection_count == 1){
+        inpt.type = "radio";
+      } else {
+        inpt.type = "checkbox";
+      }
       inpt.name = name;
       inpt.id = name + number2;
       inpt.value = questOps[j].option_id;
@@ -393,90 +397,6 @@ function importData() {
       }
     })
   }
-
-  function render_questions(questJSON) {
-    for (let item of questJSON.voter_list) {
-      console.log(item);
-      console.log(item.voting_token);
-      voting_token_check = voting_token_check.concat(item.voting_token);
-    }
-
-    console.log(voting_token_check);
-
-    let questArray = questJSON.election_info.questions;
-
-    for (let i = 0; i < questArray.length; i++) {
-      let number = i + 1;
-      let name = "q" + number;
-      let questOps = questArray[i].options;
-      let questDiv = document.createElement("div");
-      let title = document.createElement("h2");
-      title.appendChild(document.createTextNode("Question " + number));
-      questDiv.appendChild(title);
-      questDiv.appendChild(document.createTextNode(questArray[i].question_description));
-      for (let j = 0; j < questOps.length; j++) {
-        let number2 = j + 1;
-        let inpt = document.createElement("input");
-        let label = document.createElement("label");
-        questDiv.appendChild(document.createElement("br"));
-        label.style.fontSize = "1em";
-        label.appendChild(document.createTextNode(questOps[j].option_description));
-        questDiv.appendChild(label);
-        inpt.type = "radio";
-        inpt.name = name;
-        inpt.id = name + number2;
-        inpt.value = questOps[j].option_id;
-        inpt.style.height = "2vw";
-        inpt.style.width = "2vh";
-        questDiv.appendChild(inpt);
-        questDiv.appendChild(document.createElement("br"));
-      }
-
-      document.getElementById("stepIV").appendChild(questDiv);
-      console.log(questArray[i]);
-    }
-    let votingSelection = [];
-    let submitButton = document.createElement("button");
-    submitButton.style.width = "10%";
-    submitButton.style.height = "10%";
-    submitButton.appendChild(document.createTextNode("Submit Votes"));
-
-    // Submit the Vote.
-    // TODO: Add the fields for FirstName, LastName, questions.
-    submitButton.onclick = function () {
-      votingSelection = [];
-      for (let j = 0; j < questArray.length; j++) {
-        let num = j + 1;
-        let values = document.getElementsByName("q" + num);
-        let checkVal = null;
-        for (let k = 0; k < values.length; k++) {
-          if (values[k].checked) {
-            checkVal = values[k].value;
-          }
-        }
-        
-        votingSelection.push(checkVal);
-      }
-      console.log(votingSelection);
-
-      let vote = {
-        voting_token: this_voting_token,
-        loation: rpi_location,
-        time_stamp: get_current_date_formatted(),
-        // FIXME: Add fields for names.
-        voter_first_name: "MARK",
-        voter_last_name: "KIM",
-        question_num: "5",
-        choices: []
-      }
-
-    }
-    document.getElementById("stepIV").appendChild(submitButton);
-  }
-
-}
-
-
 
 function showUsbs() {
   fetch('http://localhost:3000/usbs')
