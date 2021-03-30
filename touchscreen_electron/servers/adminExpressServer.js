@@ -2,18 +2,29 @@ const controller = require("../../utils/export_tool/export_controller");
 const ElectionPackageModel = require("../../utils/mongo/models/electionPackage");
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
-
+const VotesCastModel = require('../../utils/mongo/models/votesCast')
+const {electionUpload,login} = require('../../utils/pollinationAPI')
 const express = require("express");
 const app = express();
 const port = 4000;
 
+
 app.get("/dataImport", function(req, res) {
+    
     const pathname = req.query.pathName + "/";
     console.log(pathname);
     //TODO: Decide if key file should be env variable
     controller
         .runImport("./testing.key", pathname)
         .then((data) => {
+            let vote_cast_to_save = JSON.parse(data)
+            vote_cast_to_save = new VotesCastModel(vote_cast_to_save)
+
+            vote_cast_to_save.save({},(err,doc)=>{
+                 err && console.log(err)
+                 console.log(doc)
+            })
+
             console.log(data);
             res.json(data);
             // TODO: Store data in proper table
@@ -102,6 +113,33 @@ app.get("/usbs", function(req, res) {
             res.json(data);
         })
         .catch((e) => console.log(e));
+});
+
+
+app.get("/uploadElectionResults", function(req, res) {
+    console.log('uploadElectionResults')
+    VotesCastModel.find({},(err,votes_casts)=>{
+
+        err && console.log(err)
+        console.log(votes_casts)
+        let submission_obj = {}
+
+        submission_obj.election_id = votes_casts[0].election_id
+
+        all_votes_casts = []
+        for(let each of votes_casts){
+            submission_obj.election_id = each.election_id
+            all_votes_casts = all_votes_casts.concat(each.votes_casts)
+        }
+        
+    
+        submission_obj.votes_cast = all_votes_casts
+
+        console.log('submission_obj')
+        console.log(submission_obj)
+        res.json(submission_obj)
+
+    })
 });
 
 app.listen(port, () => {

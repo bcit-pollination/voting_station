@@ -283,3 +283,23 @@ async function axiosPOST() {
     alert(axiosResultData);
     window.history.back();
 }
+
+function uploadElectionResults(){
+    console.log('clicked uploadElectionResults')
+    const url = new URL("http://localhost:4000/uploadElectionResults");
+    // const params = { pathName: path };
+
+    // url.search = new URLSearchParams(params).toString();
+
+    fetch(url)                                                                                  
+        .then((response) => response.json())
+        .then((body) => {
+            electionUpload(body).then((r)=>{
+                console.log(body)
+                console.log(remove)
+            })
+            // console.log(body);
+            // TODO: Store imported data accordingly
+        });
+
+}

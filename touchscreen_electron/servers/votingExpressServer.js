@@ -47,11 +47,16 @@ const VoteSchema = new Schema({
         question_id: Number,
         option_id: Number,
         order_position: Number,
-    }, ],
+    },],
 }, { collection: "votes" });
 
 // one vote obj
 const Vote = mongoose.model("Vote", VoteSchema);
+
+const VoteModel = require('../../utils/mongo/models/vote')
+
+const VotesCastModel = require('../../utils/mongo/models/votesCast')
+const ElectionPackageModel = require('../../utils/mongo/models/electionPackage')
 
 // app.get('/getQuestion/:id', function (req, res) {
 //     let question_id = req.params.id;
@@ -87,30 +92,40 @@ async function addVote(voteVal) {
 }
 
 async function verifyVotingToken(query_target) {
-    let collection_name = "voting_users";
+    let collection_name = "electionPackage";
 
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         await MongoClient.connect(
             `mongodb://${mongoHost}:${mongoPort}/`,
-            function(err, db) {
+            function (err, db) {
                 if (err) throw err;
                 var dbo = db.db(`${dbName}`);
                 dbo
                     .collection(collection_name)
                     .find({
-                        voting_token: query_target,
+                        // voting_token: query_target,
                     })
-                    .toArray(function(err, result) {
+                    .toArray(function (err, result) {
                         if (err) throw err;
+                        console.log('result.voter_list')
+                        console.log(result[0].voter_list)
+                        let voting_token_arr = []
+                        for (let item of result[0].voter_list) {
+                            voting_token_arr.push(item.voting_token)
+                        }
 
-                        console.log("result=======");
-                        console.log(result);
-                        console.log("result=======");
+                        console.log('voting_token_arr.includes(query_target)')
+                        console.log(voting_token_arr.includes(query_target))
+
+                        console.log(voting_token_arr)
+                        // console.log("result=======");
+                        // console.log(result);
+                        // console.log("result=======");
 
                         //FIXME: if it is not a user, the vote must not proceed.
                         if (result.length != 0) {
-                            console.log(result);
-                            console.log("votable!!!");
+                            // console.log(result);
+                            console.log("result.length != 0");
                             votable = true;
                         } else {
                             console.log(result);
@@ -126,20 +141,20 @@ async function verifyVotingToken(query_target) {
     });
 }
 
-app.get("/getQuestions", function(req, res) {
+app.get("/getQuestions", function (req, res) {
     console.log("getQuestions");
 
     // fetch questions from DB
     // MongoClient.connect(`mongodb://${userName}:${userPassword}@${mongoHost}:${mongoPort}/`
     MongoClient.connect(
         `mongodb://${mongoHost}:${mongoPort}/`,
-        function(err, db) {
+        function (err, db) {
             if (err) throw err;
             var dbo = db.db(`${dbName}`);
             dbo
                 .collection(collectionName)
                 .find({})
-                .toArray(function(err, result) {
+                .toArray(function (err, result) {
                     if (err) throw err;
                     console.log(result);
                     db.close();
@@ -149,7 +164,7 @@ app.get("/getQuestions", function(req, res) {
     );
 });
 
-app.get("/dataImport", function(req, res) {
+app.get("/dataImport", function (req, res) {
     const pathname = req.query.pathName + "/";
     console.log(pathname);
     //TODO: Decide if key file should be env variable
@@ -163,21 +178,39 @@ app.get("/dataImport", function(req, res) {
         .catch((e) => console.log(e));
 });
 
-app.get("/dataExport", function(req, res) {
+app.get("/dataExport", function (req, res) {
+
+
+    // VotesCastModel.find({},(err,res)=>{
+
+    // })
+
     //TODO Test if this is correct
-    Vote.find({}, (err, jsonToExport) => {
-        console.log(jsonToExport);
-        //
-        jsonToExport = JSON.stringify(jsonToExport);
-        const pathname = req.query.pathName + "/";
-        console.log(pathname);
-        controller
-            .runExport(jsonToExport, "./testing.key", pathname)
-            .then((data) => {
-                console.log(data);
-                res.json(data);
-            })
-            .catch((e) => console.log(e));
+    VoteModel.find({}, (err, votes) => {
+        let election_id = null
+        ElectionPackageModel.findOne({}, (err, election) => {
+            let votes_cast = {}
+            // get the election_id
+            election_id = election.election_info.election_id
+            // set votes_cast's election id 
+            votes_cast.election_id = election_id
+            votes_cast.votes_cast = votes
+
+            console.log('votes_cast');
+            console.log(votes_cast);
+
+            const jsonToExport = JSON.stringify(votes_cast);
+            const pathname = req.query.pathName + "/";
+            console.log(pathname);
+            controller
+                .runExport(jsonToExport, "./testing.key", pathname)
+                .then((data) => {
+                    console.log(data);
+                    res.json(data);
+                })
+                .catch((e) => console.log(e));
+        })
+
     });
     // let jsonToExport = {
     //     "election_info": "",
@@ -228,7 +261,7 @@ app.get("/dataExport", function(req, res) {
     //   }
 });
 
-app.get("/usbs", function(req, res) {
+app.get("/usbs", function (req, res) {
     controller
         .runUsbFetcher()
         .then((data) => {
@@ -238,19 +271,21 @@ app.get("/usbs", function(req, res) {
         .catch((e) => console.log(e));
 });
 
-app.post("/postVotes", async function(req, res) {
+app.post("/postVotes", async function (req, res) {
     console.log("postVotes");
-
+    let query_target = req.body.voting_token
     console.log("votable??????");
-    let p = verifyVotingToken();
+    let p = verifyVotingToken(query_target);
 
+    console.log('p.then((votable) => {')
     p.then((votable) => {
+        console.log('votable in then')
         console.log(votable);
 
         if (votable) {
             let vote = req.body.obj;
-            console.log(req.body.obj);
-
+            console.log('vote obj:')
+            console.log(vote);
             //Placed vote adding in an async function at the top.
             addVote(vote);
         } else {
@@ -259,16 +294,16 @@ app.post("/postVotes", async function(req, res) {
     });
 });
 
-app.post("/allowVote", function(req, res) {
-    console.log("allow vote?");
-
+app.post("/allowVote", function (req, res) {
+    // console.log("allow vote?");
+    // console.log(req.body)
     let query_target = req.body.voting_token;
     votable = verifyVotingToken(query_target);
     // votable = true
-    console.log(votable);
+    // console.log(votable);
 });
 
-app.post("/disableVote", function(req, res) {
+app.post("/disableVote", function (req, res) {
     console.log("allow vote?");
 
     votable = false;

@@ -47,8 +47,12 @@ function login(email, password) {
     return new Promise((resolve, reject) => {
         axiosRequest(methods.POST, urlLogin, { email: email, password: password }, null, false)
             .then(resp => {
+
                 axios.defaults.headers.common['Authorization'] = "Bearer " + resp['jwt_token'];
+                console.log('axios.defaults.headers')
+                console.log(axios.defaults.headers)
                 resolve(resp);
+
             })
             .catch(err => {
                 console.log(err)
@@ -114,6 +118,7 @@ function axiosRequest(method, url, data = null, params = null, authorized = true
         requestObject['params'] = params;
 
     return new Promise((resolve, reject) => {
+        console.log(axios.defaults.headers)
         if (authorized && !axios.defaults.headers.common['Authorization']) {
             console.log("Missing authorization token, login first");
             return reject();

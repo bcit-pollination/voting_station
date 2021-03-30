@@ -1,7 +1,7 @@
 const util = require("util");
 const bleno = require("bleno");
 
-const VoteHandler = require("./votes-handler");
+const VoteHandler = require("./vote-handler");
 
 function PollingService(poll) {
     bleno.PrimaryService.call(this, {

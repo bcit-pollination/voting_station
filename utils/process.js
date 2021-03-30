@@ -1,6 +1,6 @@
 const { spawn } = require("child_process");
 
-const blePollinationServerPath = "./BLE_pollination/app.js";
+const blePollinationServerPath = "../BLE_pollination/app.js";
 const adminExpressServerPath = "./servers/adminExpressServer.js";
 const votingExpressServerPath = "./servers/votingExpressServer.js";
 
@@ -11,8 +11,11 @@ const votingExpressServerPath = "./servers/votingExpressServer.js";
  * maps on 'close' event to log exit code.
  */
 function startBLEServerProcess() {
+   
     console.log('Starting bluetooth low energy server');
     let BLEServerProcess = spawn("sudo", ["node", blePollinationServerPath]);
+
+    console.log(BLEServerProcess.pid)
 
     BLEServerProcess.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);

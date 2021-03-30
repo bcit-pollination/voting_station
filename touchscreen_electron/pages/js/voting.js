@@ -1,6 +1,12 @@
 // FIXME: DELETE THESE:
 let importStep = document.getElementById("step-II-1");
 importStep.style.visibility = "visible";
+let step5 = document.getElementById('step-V')
+step5.style.visibility = 'visible'
+
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
 
 // let global_JSON = {}
 
@@ -12,7 +18,8 @@ const { checkPassword, decodeBase64 } = require("../../../utils/passwordHash");
 
 const ElectionPackageModel = require("../../../utils/mongo/models/electionPackage");
 const QuestionModel = require("../../../utils/mongo/models/question");
-
+const VotesCastSchema = require("../../../utils/mongo/models/question");
+const VoteModel = require('../../../utils/mongo/models/vote')
 const axios = require("axios");
 
 let rpi_location = "";
@@ -51,18 +58,46 @@ function votingLoginButtonHandler() {
     });
 }
 
-function checkVerifierPassword() {
+async function checkVerifierPassword() {
     // let loginPromise = new Promise(async(resolve,reject)=>{
     //   resolve(password)
     // })
-    let password = document.getElementById("verifier-password-input").value;
+    console.log('findOne()')
+    let verifier_password = document.getElementById("verifier-password-input").value;
     // FIXME : remove the hardcoded
-    // electionDownload(31).then((package) => {
-    //   if (checkPassword(password, decodeBase64(package['verifier_password']))) {
+    console.log(verifier_password)
+    // let package = await ElectionPackageModel.findOne({})
+    // ElectionPackageModel.find({},(err,res)=>{
+    //     console.log(err)
+    //     console.log(res)
+    // })
+
+    let query = ElectionPackageModel.where({});
+    ElectionPackageModel.find({},function (err, election) {
+        if (err) return console.log(err);
+        console.log(election[0]);
+
+        if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
+            console.log('verify successful')
+            let importStep = document.getElementById('step-II-1');
+            importStep.style.visibility = 'visible';
+        }
+        else{
+            console.log('verify failed')
+        }
+
+    })
+    // console.log('findOne()')
+    // console.log(package)
+    // package.then(r=>{
+    //     console.log(r)
+    // })
+    // if (checkPassword(verifier_password, decodeBase64(package['verifier_password']))) {
     //     let importStep = document.getElementById('step-II-1');
     //     importStep.style.visibility = 'visible';
-    //   }
-    // })
+    // }
+
+
 
     // ElectionPackageModel.
 }
@@ -85,7 +120,7 @@ function promptVotingToken() {
     loginForm.innerHTML =
         "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
 
-    }
+}
 
 function submitVotingToken() {
     this_voting_token = document.getElementById("voting-token-id").value;
@@ -149,8 +184,8 @@ function loadPoll(questJSON) {
             questDiv.appendChild(inpt);
             questDiv.appendChild(document.createElement("br"));
         }
-            document.getElementById("step-IV").appendChild(questDiv);
-            console.log(questArray[i]);
+        document.getElementById("step-IV").appendChild(questDiv);
+        console.log(questArray[i]);
     }
 
     let submitButton = document.createElement("button");
@@ -160,8 +195,8 @@ function loadPoll(questJSON) {
 
     // Submit the Vote.
     // TODO: Add the fields for FirstName, LastName, questions.
-    submitButton.onclick = function() {
-        let votingSelection = [];
+    submitButton.onclick = async function () {
+        let votingSelections = [];
         // looping through
         for (let j = 0; j < questArray.length; j++) {
             let num = j + 1;
@@ -178,23 +213,31 @@ function loadPoll(questJSON) {
                 option_id: parseInt(checkVal),
                 // FIXME:  Leaving as 0 for now.
                 order_position: 0,
-                question_id: questIdArray[j],
+                question_id: questArray[j].question_id,
             };
-            votingSelection.push(choiceObject);
+            await votingSelections.push(choiceObject);
         }
-        console.log(votingSelection);
+        console.log(votingSelections);
+        // votingSelections = new
 
-        // TODO: Finish building this vote once Karel finalizes vote schema.
+        // FIXME: It's saving 2 objects, one of which is empty
         let vote = {
-            choices: votingSelection,
+            choices: votingSelections,
             location: rpi_location,
             time_stamp: getCurrentDateFormatted(),
-            // FIXME: Add fields for names.
+            // HACK: not needed for the video
             voter_first_name: "MARK",
             voter_last_name: "KIM",
             voting_token: this_voting_token,
         };
+        console.log('vote:')
         console.log(vote);
+
+        vote = new VoteModel(vote)
+        vote.save({},(err,res)=>{
+            err&& console.log(err)
+            res && console.log(res)
+        })
 
         // FIXME: SAVE VOTES INTO DB USING Mongoose
         let axiosResult = axios.post("http://localhost:3000/postVotes", vote);
@@ -244,6 +287,7 @@ function showExportSection() {
     exportSection.style.visibility = "visible";
 }
 
+// exportData
 function exportData() {
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
@@ -252,6 +296,9 @@ function exportData() {
 
     const url = new URL("http://localhost:3000/dataExport");
     const params = { pathName: path };
+    
+    
+    
 
     url.search = new URLSearchParams(params).toString();
     fetch(url)
@@ -289,7 +336,7 @@ function importData() {
 
             save_election_package_and_questions(questJSON)
             loadPoll(questJSON)
-                // loadPoll(questJSON)
+            // loadPoll(questJSON)
 
             // // saving electionPackage to mongo
             // const electionPackage = new ElectionPackage(body);
@@ -309,23 +356,41 @@ function save_election_package_and_questions(questJSON) {
 
     const electionPackage = new ElectionPackageModel(questJSON);
 
-    ElectionPackageModel.remove({}, (err, res) => {
+    ElectionPackageModel.remove({ }, (err, res) => {
         electionPackage.save((err, doc) => {
             console.log('saving')
             err && console.log(err);
+            console.log('saved package')
             console.log(doc)
-            document.getElementById("start-BLE-button").style.visibility = "visible";
-        })
 
+            
+        }) 
+
+
+    })
+
+    console.log('removing questions');
+    mongoose.connection.db.dropCollection('questions',(err,res)=>{
+       
+        err && console.log(err);
+        console.log('saving questions')
         for (let question of electionPackage.election_info.questions) {
-            const question_obj_to_save = new Question(question)
+            const question_obj_to_save = new QuestionModel(question)
             question_obj_to_save.save((err, doc) => {
-                console.log('saving')
+                
                 err && console.log(err);
+                console.log('saving question:')
                 console.log(doc)
             })
         }
+    
     })
+    // let removed = QuestionModel.deleteMany({})
+    // console.log(removed)
+
+
+
+    document.getElementById("start-BLE-button").style.visibility = "visible";
 }
 
 function showUsbs() {
