@@ -69,7 +69,7 @@ async function checkVerifierPassword() {
             loginForm.style.visibility = 'visible';
             
             let verifierPrompt = document.getElementById('step-II-0');
-            verifier.style.visibility = 'hidden';
+            verifierPrompt.style.visibility = 'hidden';
 
         }
         else{
@@ -276,7 +276,7 @@ function loadPoll(questJSON) {
         startBLEbutton.style.visibility = 'hidden';
     });
 
-    showExportSection();
+    // showExportSection();
 }
 
 function showExportSection() {
@@ -372,7 +372,6 @@ function save_election_package_and_questions(questJSON) {
     })
     // let removed = QuestionModel.deleteMany({})
     // console.log(removed)
-
     document.getElementById("step-II-2").style.visibility = "visible";
 }
 
