@@ -24,6 +24,20 @@ let button2 = document.getElementById("download-election-package-button");
 let button3 = document.getElementById("import-election-button");
 let button4 = document.getElementById("export-election-button");
 let button5 = document.getElementById("get-election-list-button");
+let button6 = document.getElementById("upload-election-results");
+let button7 = document.getElementById("post-election-results");
+let button8 = document.getElementById("import-button");
+let button9 = document.getElementById("export-button");
+
+document.getElementById("titleForImpExp").style.display = "none";
+
+button6.style.display = "none";
+button7.style.display = "none";
+
+button8.style.display = "none";
+button9.style.display = "none";
+
+document.getElementById("step-V-I").style.display = "none";
 
 let electionID;
 
@@ -44,7 +58,8 @@ document
 
         // hides step-1 items
         document.getElementById("step-I").style.display = "none";
-        button5.style.visibility = "visible";
+        button5.style.display = "inline";
+        button7.style.display = "inline"
     });
 
 // step-II: getUserOrgs()
@@ -70,7 +85,8 @@ document
     .getElementById("get-election-list-button")
     .addEventListener("click", () => {
         console.log("clicked: get-election-list-button");
-
+        button5.style.display = "none";
+        button7.style.display = "none";
         let electionDisplay = document.getElementById("election-list-display");
         electionDisplay.innerHTML = "<h2>List of Elections:</h2>";
 
@@ -125,7 +141,8 @@ document
                     // FIXME: Check if the .save() saves to the MongoDB
                     electionTitleHeaderButton.onclick = function() {
                         electionID = item.election_id;
-                        button2.style.visibility = "visible";
+                        button2.style.display = "inline";
+                        button6.style.display = "inline";
                     };
                 }
             });
@@ -136,11 +153,15 @@ document
         // This part of the function, handles hiding the buttons when the table is generated,
         // and creates a return button to bring it all back.
 
-        button1.style.visibility = "hidden";
-        button2.style.visibility = "hidden";
-        button3.style.visibility = "hidden";
-        button4.style.visibility = "hidden";
-        button5.style.visibility = "hidden";
+        button1.style.display = "none";
+        button2.style.display = "none";
+        button3.style.display = "none";
+        button4.style.display = "none";
+        button5.style.display = "none";
+        button6.style.display = "none";
+        button7.style.display = "none";
+        button8.style.display = "none";
+        button9.style.display = "none";
     });
 
 // TODO step-IV: download
@@ -153,8 +174,8 @@ document
         // TODO: download package
 
         let election_id = 15;
-        button3.style.visibility = "visible";
-        button4.style.visibility = "visible";
+        button3.style.display = "inline";
+        button4.style.display = "inline";
 
         document
             .getElementById("download-election-package-button")
@@ -171,9 +192,15 @@ document
             const savedElection = electionPackage.save(function(err) {
                 if (err) console.log(err);
             });
-    
             
-            showExportSection();
+            button6.style.display = "none";
+            button2.style.display = "none";
+
+            document.getElementById("step-II").style.display = "none";
+            document.getElementById("titleForImpExp").style.display = "block";
+            
+            button8.style.display = "inline";
+            button9.style.display = "inline";
         });
     }
 /** 
@@ -199,14 +226,25 @@ function downloadElectionPackage() {
 */
 // TODO: think of a way to do step-III: export json to usb
 
+function showImportSection(){
+    document.getElementById("titleForImpExp").style.display = "none";
+    button8.style.display = "none";
+    button9.style.display = "none";
+    const importSection = document.getElementById("step-V-I");
+    importSection.style.display = "block";
+}
+
 function showExportSection() {
+    document.getElementById("titleForImpExp").style.display = "none";
+    button8.style.display = "none";
+    button9.style.display = "none";
     const exportSection = document.getElementById("step-V");
-    exportSection.style.visibility = "visible";
+    exportSection.style.display = "block";
 }
 
 function exportData() {
     console.log('exportData');
-    const checkedRadio = document.querySelector('input[name="usb"]:checked');
+    const checkedRadio = document.querySelector('input[name="usb2"]:checked');
     if (!checkedRadio) return;
 
     const path = checkedRadio.value;
@@ -220,6 +258,8 @@ function exportData() {
         .then((body) => {
             console.log(body);
         });
+    //document.getElementById("step-II").style.display = "none";
+    //document.getElementById("step-V").style.display = "none";
 }
 
 function importData() {
@@ -238,6 +278,9 @@ function importData() {
             console.log(body);
             // TODO: Store imported data accordingly
         });
+
+    //document.getElementById("step-II").style.display = "none";
+    //document.getElementById("step-V-I").style.display = "none";
 }
 
 function showUsbs() {
@@ -266,6 +309,34 @@ function showUsbs() {
             }
         });
 }
+
+function showUsbs2() {
+    fetch("http://localhost:4000/usbs")
+        .then((response) => response.json())
+        .then((data) => {
+            data = JSON.parse(data);
+            console.log(data);
+            let usbsDiv = document.getElementById("usbs2");
+            usbsDiv.innerHTML = "";
+            for (const usb of data.usbs) {
+                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
+                let div = document.createElement("div");
+                let input = document.createElement("input");
+                let label = document.createElement("label");
+                input.setAttribute("type", "radio");
+                input.setAttribute("id", usb.path);
+                input.setAttribute("name", "usb2");
+                input.setAttribute("value", usb.path);
+                input.setAttribute("class", "radio");
+                input.checked = false;
+                label.innerText = usb.path;
+                div.appendChild(input);
+                div.appendChild(label);
+                usbsDiv.appendChild(div);
+            }
+        });
+}
+
 
 async function axiosPOST() {
     let data = {
@@ -301,5 +372,7 @@ function uploadElectionResults(){
             // console.log(body);
             // TODO: Store imported data accordingly
         });
-
+        document.getElementById("step-II").style.display = "none";
+        button2.style.display = "none";
+        button6.style.display = "none";
 }

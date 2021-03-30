@@ -29,7 +29,6 @@
 
         <button id='central-login-button'>Login(as Central Pi)</button>
     </div>
-
     <!-- step II: display the election list  -->
     <div id='step-II' className='steps'>
 
@@ -38,6 +37,8 @@
         </div>
 
         <button id='get-election-list-button'>Get Election List</button>
+        <button id='post-election-results'>Post Election Results</button>
+
     </div>
 
 
@@ -54,26 +55,53 @@
 
     <!--  -->
     <div id='step-IV' className='steps'>
-        <button onclick="downloadElectionPackage()" id='download-election-package-button'>Download Election Package</button>
+        <section id="download-election-section">
+            <button onclick="downloadElectionPackage()" id='download-election-package-button'>Download Election Package</button>
+            
+        </section>
+        <section id="upload-election-section">
+            <button onclick="uploadElectionResults()" id="upload-election-results">Upload Election Results</button>
+        </section>
     </div>
 
-    <!-- TODO-Noah integrate import export functions -->
-    <div id='step-V' class="steps">
+
+    <div id="impExpSel">
+        <h2 id="titleForImpExp">Would you like to import or export?</h2>
+        <button id='import-button' onclick="showImportSection()">Import</button>
+        <button id='export-button' onclick="showExportSection()">Export</button>
+    </div>
+
+    <div id='step-V-I' class="steps">
 
         <div id='usbs'></div>
         <h4>Usb list</h4>
         <button onclick="showUsbs(4000)">refresh</button>
         <button onclick="importData()">Import Election Data</button>
+        <!--
         <button onclick="exportData()">Export Election Data</button>
+        -->
 
     </div>
+
+        <!-- TODO-Noah integrate import export functions -->
+        <div id='step-V' class="steps">
+
+            <div id='usbs2'></div>
+            <h4>Usb list</h4>
+            <button onclick="showUsbs2(4000)">refresh</button>
+            <!--
+                <button onclick="importData()">Import Election Data</button>
+            -->
+            <button onclick="exportData()">Export Election Data</button>
+    
+        </div>
 
         <!-- TODO-Noah integrate import export functions -->
         <div id='step-VI' class="steps">
 
         
     
-            <button onclick="uploadElectionResults()">Upload Election Results</button>
+            
     
         </div>
 
