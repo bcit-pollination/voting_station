@@ -1,5 +1,7 @@
 const controller = require("../../utils/export_tool/export_controller");
 const ElectionPackageModel = require("../../utils/mongo/models/electionPackage");
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
 
 const express = require("express");
 const app = express();
@@ -22,6 +24,9 @@ app.get("/dataImport", function(req, res) {
 app.get("/dataExport", function(req, res) {
     //TODO Select the right data to send
     let jsonToExport = {};
+    console.log('dataExport')
+    // Verify new election package was saved
+    console.log(mongoose.connection.readyState)
     ElectionPackageModel.find({}, (err, allElections) => {
         console.log("allElections");
         console.log(allElections);

@@ -84,10 +84,12 @@ function promptVotingToken() {
     loginForm.innerHTML = "";
     loginForm.innerHTML =
         "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
-}
+
+    }
 
 function submitVotingToken() {
     this_voting_token = document.getElementById("voting-token-id").value;
+    console.log(this_voting_token)
     console.log("this_voting_token: " + this_voting_token);
 
     console.log("Checking voting token check:");

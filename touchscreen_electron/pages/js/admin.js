@@ -166,13 +166,13 @@ document
             console.log("Election package from api", result);
             let electionPackage = new ElectionPackageModel(result);
             // Clear all election packages and insert new package
+           
             await ElectionPackageModel.remove({});
             const savedElection = electionPackage.save(function(err) {
                 if (err) console.log(err);
             });
     
-            // Verify new election package was saved
-            console.log("Saved election package:", savedElection === electionPackage);
+            
             showExportSection();
         });
     }
@@ -205,6 +205,7 @@ function showExportSection() {
 }
 
 function exportData() {
+    console.log('exportData');
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
 
