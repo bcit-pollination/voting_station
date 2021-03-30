@@ -194,26 +194,27 @@ function loadPoll(questJSON) {
     submitButton.onclick = async function () {
         let votingSelections = [];
         // looping through
-        if (questArray[i].ordered_choices == true) {
-            for (let j = 0; j < questArray.length; j++) {
-                let num = j + 1;
-                let values = document.getElementsByName("q" + num);
-                console.log(values);
-            }
-        } else {
-            for (let j = 0; j < questArray.length; j++) {
+
+        for (let j = 0; j < questArray.length; j++) {
+            if (questArray[j].ordered_choices == true) {
+                for (let j = 0; j < questArray.length; j++) {
+                    let num = j + 1;
+                    let values = document.getElementsByName("q" + num);
+                    console.log(values);
+                }
+            } else {
                 let num = j + 1;
                 let values = document.getElementsByName("q" + num);
                 let checkVal = null;
-    
-                 //REVIEW:
+
+                    //REVIEW:
                 // If user selected more than just one
                 //  a brand new object needs to be there, with the same option_id
                 // eg:
                 // {question_id:19, option_id:17, order_position: 0}
                 // {question_id:19, option_id:18, order_position: 0}
                 // {question_id:19, option_id:19, order_position: 0}
-               
+                
                 for (let k = 0; k < values.length; k++) {
                     if (values[k].checked) {
                         checkVal = values[k].value;
