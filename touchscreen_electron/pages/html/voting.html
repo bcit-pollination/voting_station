@@ -15,13 +15,13 @@
         <button id='go-back' onclick="goBack()">Go Back</button>
         <div id='step-I' className='steps'>
             <div>
-                <label for="login-username-input">username</label>
+                <label for="login-username-input">Admin Username</label>
                 <br />
                 <input id='login-username-input' placeholder="username" value='test@pollination.test' />
             </div>
 
             <div>
-                <label for="login-password-input">Verifier Password</label>
+                <label for="login-password-input">Admin Password</label>
                 <br />
                 <input id='login-password-input' type="password" placeholder="password" value='adminadmin' />
             </div>
@@ -33,16 +33,16 @@
         <div id='step-II'>
             <div id=step-II-0>
                 <input id='verifier-password-input' type='password' />
-                <button id='submit-verifier-password' onclick="checkVerifierPassword()">Submit Verifier Password</button>
+                <button id='submit-verifier-password' onclick='checkVerifierPassword()'>Submit Verifier Password</button>
             </div>
             <!-- step II-1: import from USB -->
             <div id='step-II-1'>
                 <div>
-                    <div id='usbs'></div>
                     <h4>Usb list</h4>
-                    <button onclick="showUsbs(3000)">refresh</button>
-                    <button onclick="importDataTest()">Import Election Data TEST</button>
-                    <button onclick="importData()">Import Election Data</button>
+                    <div id='usbs'>Please load USBs</div>
+                    <button onclick="showUsbs()">1. Identify USB</button>
+                    <button onclick="importData()">2. Import Election Data</button>
+                    <button onclick="importDataTest()" style="visibility: hidden;">Import Election Data TEST</button>
                 </div>
             </div>
 
@@ -55,17 +55,15 @@
         </div>
 
 
-
         <!-- step III Setup Voting Token -->
         <div id='step-III'>
             <input id='voting-token-input' placeholder="enter voting token here:" />
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
         <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
+        
         <div id='step-IV'>
-
         </div>
-
 
         <div id='step-V' class="steps">
             <div id='usbs'></div>
