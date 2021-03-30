@@ -100,6 +100,8 @@ function submitLocation() {
 }
 
 function promptVotingToken() {
+    showExportSection();
+
     let loginForm = document.getElementById("step-I");
     loginForm.innerHTML = "";
     loginForm.innerHTML =
@@ -117,6 +119,7 @@ function submitVotingToken() {
 
     if (voting_token_check.includes(this_voting_token)) {
         loadPoll(questJSON);
+        hideExportSection();
     } else {
         promptVotingToken();
     }
@@ -278,6 +281,11 @@ function showExportSection() {
     exportSection.style.visibility = "visible";
 }
 
+function hideExportSection() {
+    const exportSection = document.getElementById("step-V");
+    exportSection.style.visibility = "hidden";
+}
+
 function exportData() {
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
@@ -286,9 +294,6 @@ function exportData() {
 
     const url = new URL("http://localhost:3000/dataExport");
     const params = { pathName: path };
-    
-    
-    
 
     url.search = new URLSearchParams(params).toString();
     fetch(url)
