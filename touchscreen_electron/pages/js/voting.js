@@ -103,7 +103,7 @@ function promptVotingToken() {
     let loginForm = document.getElementById("step-I");
     loginForm.innerHTML = "";
     loginForm.innerHTML =
-        "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button><br><br><button onclick = 'axiosPOST()'>End Election</button></center>";
+        "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button></center>";
     generateValidTokenList(questJSON);
 }
 
