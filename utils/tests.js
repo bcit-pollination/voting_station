@@ -20,7 +20,7 @@ async function test_pollination_api() {
 /**
  *  Use for testing electionUpload.
  */
-function test_election_upload_api() {
+function testElectionUpload() {
     api.login('test@test.com', 'testtest');
 
     let voteObj = {

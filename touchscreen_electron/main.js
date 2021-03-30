@@ -3,24 +3,24 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const { exec, spawn } = require("child_process");
 
-// import ipc utils
+const { connectMongoose } = require("../utils/mongo/mongoHandler");
+const mongoose = require("mongoose");
+
+// Electron main process event emitter
 const ipc = require("electron").ipcMain;
 
-// this sends
 const { webContents } = require("electron");
+const { getElectionsList, login } = require("../utils/pollinationAPI");
 
 const {
-    admin_express_server_process,
-    storeQuestionsIntoDB,
-} = require("./utils/central_pi");
+    startBLEServerProcess,
+    startVotingExpressServerProcess,
+    startAdminExpressServerProcess,
+    killProcesses
+} = require("../utils/process");
 
-const { getElectionsList, login } = require("./utils/pollination-api");
-
-const {
-    start_load_question_process,
-    start_BLE_server_process,
-    voting_express_server_process,
-} = require("./utils/voting_pi");
+// Connect to local mongoose, if and error occurs not much else will work
+connectMongoose();
 
 const bluetooth_off_and_on = async() => {
     await spawn("rfkill", ["block", "bluetooth"]);
@@ -105,8 +105,8 @@ app.whenReady().then(() => {
 
     //webContents sends a message to ipcRenderer
     ipc.on("run-voting-server", () => {
-        voting_express_server_process();
-        mainWindow.loadFile("./pages/voting.html");
+        startVotingExpressServerProcess();
+        mainWindow.loadFile("./pages/html/voting.html");
     });
 
     //webContents sends a message to ipcRenderer
@@ -117,58 +117,20 @@ app.whenReady().then(() => {
 
     //webContents sends a message to ipcRenderer
     ipc.on("run-admin-server", () => {
-        admin_express_server_process();
+        startAdminExpressServerProcess();
         // load the index.html of the app.
-        mainWindow.loadFile("./pages/admin.html");
+        mainWindow.loadFile("./pages/html/admin.html");
     });
 
     ipc.on("start-BLE-server", () => {
-        start_BLE_server_process();
+        startBLEServerProcess();
     });
 
     // ipc.on('load-questions', () => {
     //   start_load_question_process()
     // })
 
-    ipc.on("kill-processes", () => {
-        let kill_node_processes_BLE = spawn("fuser", ["-k", "5000/tcp"]);
-        let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
-        let kill_node_processes2 = spawn("fuser", ["-k", "4000/tcp"]);
-
-        console.log("kill_node_processes");
-
-        kill_node_processes_BLE.on("data", (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        kill_node_processes_BLE.stderr.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes_BLE.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-
-        kill_node_processes.stdout.on("data", (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        kill_node_processes.stderr.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-
-        kill_node_processes2.on("data", (data) => {
-            console.error(`stderr: ${data}`);
-        });
-
-        kill_node_processes2.on("close", (code) => {
-            console.log(`child process exited with code: ${code}`);
-        });
-    });
+    ipc.on("kill-processes", () => killProcesses);
 
     // Go Back
     ipc.on("go-back", () => {

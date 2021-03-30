@@ -5,35 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href='./css/voting.css' />
-    <link rel="stylesheet" href='./css/buttons.css' />
-    <link rel="stylesheet" href='./css/forms.css' />
+    <link rel="stylesheet" href='../css/voting.css' />
+    <link rel="stylesheet" href='../css/buttons.css' />
+    <link rel="stylesheet" href='../css/forms.css' />
 </head>
 
 <body>
     <div>
-        <button id='go-back'>Go Back</button>
+        <button id='go-back' onclick="goBack()">Go Back</button>
         <div id='step-I' className='steps'>
-                <div>
-                    <label for="login-username-input">username</label>
-                    <br />
-                    <input id='login-username-input' placeholder="username" value='test3@pollination.test' />
-                </div>
+            <div>
+                <label for="login-username-input">username</label>
+                <br />
+                <input id='login-username-input' placeholder="username" value='test3@pollination.test' />
+            </div>
 
-                <div>
-                    <label for="login-password-input">Verifier Password</label>
-                    <br />
-                    <input id='login-password-input' type="password" placeholder="password" value='test' />
-                </div>
+            <div>
+                <label for="login-password-input">Verifier Password</label>
+                <br />
+                <input id='login-password-input' type="password" placeholder="password" value='test' />
+            </div>
 
-                <button id='voting-login-button'>Login(as Voting Pi)</button>
+            <button id='voting-login-button' onclick="votingLoginButtonHandler()">Login(as Voting Pi)</button>
         </div>
 
         <!-- step II Setup local environment(BLE and mongoDB) -->
         <div id='step-II'>
             <div id=step-II-0>
                 <input id='verifier-password-input' type='password' />
-                <button id='submit-verifier-password' onclick="checkVerifierPassword()" >Submit Verifier Password</button>
+                <button id='submit-verifier-password' onclick="checkVerifierPassword()">Submit Verifier Password</button>
             </div>
             <!-- step II-1: import from USB -->
             <div id='step-II-1'>
@@ -62,7 +62,7 @@
             <button id='voting-token-button'>Grant Permission to Vote</button>
         </div>
         <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
-        <div id = 'step-IV'>
+        <div id='step-IV'>
 
         </div>
 
@@ -70,12 +70,15 @@
         <div id='step-V' class="steps">
             <div id='usbs'></div>
             <h4>Usb list</h4>
-            <button onclick="showUsbs()">refresh</button>
+            <button onclick="showUsbs(3000)">refresh</button>
             <button onclick="exportData()">Export Election Data</button>
         </div>
     </div>
 
-    <script src='./js/voting.js'> </script>
+    <script src='../js/voting.js'>
+    </script>
+    <script src='../js/shared.js'>
+    </script>
 </body>
 
 </html>

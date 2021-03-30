@@ -1,48 +1,45 @@
-console.log('in express admin server')
-const controller = require('../utils/export_tool/export_controller');
+const controller = require("../../utils/export_tool/export_controller");
+const ElectionPackageModel = require("../../utils/mongo/models/electionPackage");
 
+const express = require("express");
+const app = express();
+const port = 4000;
 
-const {
-  ElectionPackage,
-} = require ('../utils/load-questions.js')
-
-const express = require('express')
-const app = express()
-const port = 4000
-
-
-app.get('/dataImport', function(req, res) {
-  
+app.get("/dataImport", function(req, res) {
     const pathname = req.query.pathName + "/";
-    console.log(pathname );
+    console.log(pathname);
     //TODO: Decide if key file should be env variable
-    controller.runImport("./testing.key", pathname).then((data) => {
-        console.log(data);
-        res.json(data);
-        // TODO: Store data in proper table
-    }).catch((e) => console.log(e));
-
+    controller
+        .runImport("./testing.key", pathname)
+        .then((data) => {
+            console.log(data);
+            res.json(data);
+            // TODO: Store data in proper table
+        })
+        .catch((e) => console.log(e));
 });
 
-app.get('/dataExport', function(req, res) {
+app.get("/dataExport", function(req, res) {
     //TODO Select the right data to send
-    let jsonToExport = {}
-     ElectionPackage.find({}, (err, allElections) => {
+    let jsonToExport = {};
+    ElectionPackageModel.find({}, (err, allElections) => {
+        console.log("allElections");
+        console.log(allElections);
+        if (err) console.error(err);
+        jsonToExport = allElections[0];
 
-      console.log('allElections');
-      console.log(allElections);
-      if (err) console.error(err);
-      jsonToExport = allElections[0]
-      
-      jsonToExport = JSON.stringify(jsonToExport);
-      console.log(jsonToExport)
-      const pathname = req.query.pathName + "/";
-      console.log(pathname );
-      controller.runExport(jsonToExport, "./testing.key", pathname).then((data) => {
-          console.log(data);
-          res.json(data);
-      }).catch((e) => console.log(e));
-  })
+        jsonToExport = JSON.stringify(jsonToExport);
+        console.log(jsonToExport);
+        const pathname = req.query.pathName + "/";
+        console.log(pathname);
+        controller
+            .runExport(jsonToExport, "./testing.key", pathname)
+            .then((data) => {
+                console.log(data);
+                res.json(data);
+            })
+            .catch((e) => console.log(e));
+    });
     // {
     //     "election_info": "",
     //     "org_info": {
@@ -90,19 +87,20 @@ app.get('/dataExport', function(req, res) {
     //       }
     //     ]
     //   }
-
-
 });
 
-app.get('/usbs', function(req, res) {
-    controller.runUsbFetcher().then((data) => {
-        console.log(data);
-        res.json(data);
-    }).catch((e) => console.log(e));
+app.get("/usbs", function(req, res) {
+    controller
+        .runUsbFetcher()
+        .then((data) => {
+            console.log(data);
+            res.json(data);
+        })
+        .catch((e) => console.log(e));
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-  })
+    console.log(`Example app listening at http://localhost:${port}`);
+});
 
-console.log('Server running at http://127.0.0.1:4000/');
+console.log("Server running at http://127.0.0.1:4000/");

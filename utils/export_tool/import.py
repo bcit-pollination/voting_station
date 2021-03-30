@@ -6,7 +6,7 @@ def decrypt_data(keyfile, input_path):
     # print(keyfile)
     # print(input_path)
     # print(os.getcwd())
-    path_to_export_tool = './utils/export_tool/'
+    path_to_export_tool = '../utils/export_tool/'
     
     decrypt_input_file = open("{}encoded_data.txt".format(input_path), "r")
     input = decrypt_input_file.read()

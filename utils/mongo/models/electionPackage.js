@@ -4,6 +4,7 @@ const Question = require("./question");
 
 const { Schema } = mongoose;
 
+
 const electionPackageSchema = new Schema({
     // the two primary fields
     voter_list: [Voter.schema],
