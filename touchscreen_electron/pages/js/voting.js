@@ -129,6 +129,8 @@ function loadPoll(questJSON) {
     let questArray = questJSON.election_info.questions;
     let questIdArray = [];
 
+    document.getElementById("step-IV").innerHTML = "";
+
     for (let i = 0; i < questArray.length; i++) {
         let number = i + 1;
         let name = "q" + number;
