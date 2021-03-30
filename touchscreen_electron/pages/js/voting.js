@@ -1,10 +1,3 @@
-// FIXME: DELETE THESE:
-let importStep = document.getElementById("step-II-1");
-importStep.style.visibility = "visible";
-let step5 = document.getElementById('step-V')
-step5.style.visibility = 'visible'
-console.log("On new voting UI branch - Hans");
-
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
 
