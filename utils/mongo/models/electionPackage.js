@@ -12,9 +12,9 @@ const electionPackageSchema = new Schema({
     // nested fields
     election_info: {
         election_id: Number, // used for getting the package
-        org_id: String, // used for rendering
+        org_id: Number, // used for rendering
         anonymous: Boolean,
-        public_results: String,
+        public_results: Boolean,
         election_description: String,
 
         // deals with time period
@@ -25,6 +25,6 @@ const electionPackageSchema = new Schema({
         questions: [Question.schema], // question objects
         verified: Boolean, // type of votes
     },
-});
+}, { collection: 'electionPackage' });
 
 module.exports = mongoose.model("ElectionPackage", electionPackageSchema);

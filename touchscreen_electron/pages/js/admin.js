@@ -1,6 +1,8 @@
 const export_controller = require("../../../utils/export_tool/export_controller");
 const mongoose = require("mongoose");
 
+mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
+
 // stores the jwt returned by login globally
 let session_jwt = {};
 // stores the election package globally
@@ -15,7 +17,7 @@ const {
 } = require("../../../utils/pollinationAPI.js");
 // const { electionDownload } = require('../../utils/pollinationAPI');
 
-const ElectionPackageSchema = require('../../../utils/mongo/models/electionPackage');
+const ElectionPackageModel = require('../../../utils/mongo/models/electionPackage');
 
 let button1 = document.getElementById("get-organization-list-button");
 let button2 = document.getElementById("download-election-package-button");
@@ -159,23 +161,42 @@ document
             .addEventListener("click", () => {});
     });
 
+    function downloadElectionPackage() {
+        electionDownload(electionID).then(async(result) => {
+            console.log("Election package from api", result);
+            let electionPackage = new ElectionPackageModel(result);
+            // Clear all election packages and insert new package
+            await ElectionPackageModel.remove({});
+            const savedElection = electionPackage.save(function(err) {
+                if (err) console.log(err);
+            });
+    
+            // Verify new election package was saved
+            console.log("Saved election package:", savedElection === electionPackage);
+            showExportSection();
+        });
+    }
+/** 
 function downloadElectionPackage() {
     electionDownload(electionID).then((result) => {
         console.log(result);
-        let electionPackage = new ElectionPackageSchema(result);
-        ElectionPackageSchema.remove({}, (err, res) => {
+        let electionPackage = new ElectionPackageModel(result);
+        ElectionPackageModel.remove({}, (err, res) => {
+            err && console.log(err);
             electionPackage.save((err, doc) => {
                 console.log("saving");
                 err && console.log(err);
                 console.log(doc);
                 showExportSection();
+
                 return;
             });
         });
     });
     //Once election package is downloaded
+    console.log("Hit");
 }
-
+*/
 // TODO: think of a way to do step-III: export json to usb
 
 function showExportSection() {
