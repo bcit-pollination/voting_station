@@ -150,7 +150,7 @@ function loadPoll(questJSON) {
             label.style.fontSize = "1em";
             label.appendChild(document.createTextNode(questOps[j].option_description));
             questDiv.appendChild(label);
-            if (questArray.max_selection_count == 1 && questArray.min_selection_count == 1) {
+            if (questArray[j].max_selection_count == 1 && questArray[j].min_selection_count == 1) {
                 inpt.type = "radio";
             } else {
                 inpt.type = "checkbox";
