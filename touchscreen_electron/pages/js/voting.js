@@ -305,13 +305,10 @@ function exportData() {
 }
 
 function importData() {
-
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
 
     const path = checkedRadio.value;
-
-
     const url = new URL("http://localhost:3000/dataImport");
     const params = { pathName: path };
 
@@ -345,12 +342,10 @@ function importData() {
             //   document.getElementById("start-BLE-button").style.visibility = "visible";
             // })
             // document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line
-
         });
 }
 
 function save_election_package_and_questions(questJSON) {
-
     const electionPackage = new ElectionPackageModel(questJSON);
 
     ElectionPackageModel.remove({ }, (err, res) => {
@@ -359,35 +354,26 @@ function save_election_package_and_questions(questJSON) {
             err && console.log(err);
             console.log('saved package')
             console.log(doc)
-
-            
         }) 
-
-
     })
 
     console.log('removing questions');
     mongoose.connection.db.dropCollection('questions',(err,res)=>{
-       
         err && console.log(err);
         console.log('saving questions')
         for (let question of electionPackage.election_info.questions) {
             const question_obj_to_save = new QuestionModel(question)
             question_obj_to_save.save((err, doc) => {
-                
                 err && console.log(err);
                 console.log('saving question:')
                 console.log(doc)
             })
         }
-    
     })
     // let removed = QuestionModel.deleteMany({})
     // console.log(removed)
 
-
-
-    document.getElementById("start-BLE-button").style.visibility = "visible";
+    document.getElementById("step-II-2").style.visibility = "visible";
 }
 
 function showUsbs() {
