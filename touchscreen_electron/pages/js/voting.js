@@ -159,7 +159,7 @@ function loadPoll(questJSON) {
                 for (let k = 0; k < questOps.length; k++) {
                     let option = document.createElement("option");
                     option.value = k;
-                    input.add(option);
+                    inpt.add(option);
                 }
                 questDiv.appendChild(inpt);
                 questDiv.appendChild(document.createElement("br"));
