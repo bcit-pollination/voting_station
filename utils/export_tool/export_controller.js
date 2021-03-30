@@ -3,7 +3,7 @@ const { spawn } = require('child_process');
 const runUsbFetcher = async() => {
     let spawnOutput = "";
 
-    const python = spawn('python3', ['./utils/export_tool/usb_fetcher.py']);
+    const python = spawn('python3', ['../utils/export_tool/usb_fetcher.py']);
 
     python.stdout.on('data', function(data) {
         console.log('Received output from usb_fetcher.py');
@@ -27,7 +27,7 @@ const runUsbFetcher = async() => {
 const runExport = async(data, key, dest_path) => {
     let spawnOutput = "";
 
-    const pyFile = './utils/export_tool/export.py';
+    const pyFile = '../utils/export_tool/export.py';
     const args = [data, key, dest_path];
     args.unshift(pyFile);
     const python = spawn('python3', args);
@@ -53,7 +53,7 @@ const runExport = async(data, key, dest_path) => {
 const runImport = async(key, input_data_path) => {
         let spawnOutput = "";
 
-        const pyFile = './utils/export_tool/import.py';
+        const pyFile = '../utils/export_tool/import.py';
         const args = [key, input_data_path];
         args.unshift(pyFile);
         const python = spawn('python3', args);
