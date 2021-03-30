@@ -194,7 +194,6 @@ function loadPoll(questJSON) {
     submitButton.appendChild(document.createTextNode("Submit Votes"));
 
     // Submit the Vote.
-    // TODO: Add the fields for FirstName, LastName, questions.
     submitButton.onclick = async function () {
         let votingSelections = [];
         // looping through
@@ -207,11 +206,9 @@ function loadPoll(questJSON) {
                     checkVal = values[k].value;
                 }
             }
-
-            // FIXME: Change this for line 431 as well
             let choiceObject = {
                 option_id: parseInt(checkVal),
-                // FIXME:  Leaving as 0 for now.
+                // HACK:  Leaving as 0 for now.
                 order_position: 0,
                 question_id: questArray[j].question_id,
             };
@@ -239,8 +236,8 @@ function loadPoll(questJSON) {
             res && console.log(res)
         })
 
-        // FIXME: SAVE VOTES INTO DB USING Mongoose
-        let axiosResult = axios.post("http://localhost:3000/postVotes", vote);
+        // // SAVE VOTES INTO DB USING Mongoose
+        // let axiosResult = axios.post("http://localhost:3000/postVotes", vote);
 
         // votes_cast.push(vote);
         // console.log(votes_cast);
