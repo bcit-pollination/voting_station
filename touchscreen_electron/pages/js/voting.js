@@ -202,11 +202,12 @@ function loadPoll(questJSON) {
             let values = document.getElementsByName("q" + num);
             let checkVal = null;
 
-             //FIXME:
+             //REVIEW:
+
             // If user selected more than just one
             //  a brand new object needs to be there, with the same option_id
             // eg:
-            
+
             // {question_id:19, option_id:17, order_position: 0}
             // {question_id:19, option_id:18, order_position: 0}
             // {question_id:19, option_id:19, order_position: 0}
@@ -214,15 +215,17 @@ function loadPoll(questJSON) {
             for (let k = 0; k < values.length; k++) {
                 if (values[k].checked) {
                     checkVal = values[k].value;
+                    let choiceObject = {
+                        option_id: parseInt(checkVal),
+                        // HACK:  Leaving as 0 for now.
+                        order_position: 0,
+                        question_id: questArray[j].question_id,
+                    };
+                    await votingSelections.push(choiceObject);
                 }
+
             }
-            let choiceObject = {
-                option_id: parseInt(checkVal),
-                // HACK:  Leaving as 0 for now.
-                order_position: 0,
-                question_id: questArray[j].question_id,
-            };
-            await votingSelections.push(choiceObject);
+
         }
         console.log(votingSelections);
         // votingSelections = new
@@ -461,199 +464,3 @@ function goBack() {
     window.history.back();
 }
 
-// // Testing because no RPI during development.
-// function importDataTest() {
-//   let importStep = document.getElementById('step-II-1');
-//   importStep.style.visibility = 'hidden';
-
-//   // Test election for when I'm not developing on RPI.
-//   let test_election = {
-//     "election_info": {
-//       "anonymous": true,
-//       "election_description": "ELECTION FOR THE PRESIDENTE.",
-//       "election_id": 14,
-//       "end_time": "2021-03-27T06:00:00+00:00",
-//       "org_id": 16,
-//       "public_results": false,
-//       "questions": [
-//         {
-//           "election_id": 14,
-//           "max_selection_count": 1,
-//           "min_selection_count": 1,
-//           "options": [
-//             {
-//               "option_description": "Polar bear",
-//               "option_id": 31
-//             },
-//             {
-//               "option_description": "Grizzly bear",
-//               "option_id": 32
-//             },
-//             {
-//               "option_description": "Black bear",
-//               "option_id": 33
-//             }
-//           ],
-//           "ordered_choices": true,
-//           "question_description": "What bear is best?",
-//           "question_id": 16
-//         },
-//         {
-//           "election_id": 14,
-//           "max_selection_count": 1,
-//           "min_selection_count": 1,
-//           "options": [
-//             {
-//               "option_description": "Fine",
-//               "option_id": 34
-//             },
-//             {
-//               "option_description": "Well thank you",
-//               "option_id": 35
-//             },
-//             {
-//               "option_description": "Swell!",
-//               "option_id": 36
-//             }
-//           ],
-//           "ordered_choices": true,
-//           "question_description": "How are you?",
-//           "question_id": 17
-//         }
-//       ],
-//       "start_time": "2021-03-27T05:00:00+00:00",
-//       "verified": true
-//     },
-//     "verifier_password": "batsandcats",
-//     "voter_list": [
-//       {
-//         "user_org_id": "4444",
-//         "voting_token": [
-//           "fake_token5.545866420051571e+18"
-//         ]
-//       },
-//       {
-//         "user_org_id": "4444",
-//         "voting_token": [
-//           "token2",
-//           "token3",
-//         ]
-//       }
-//     ]
-//   }
-//   questJSON = test_election;
-
-//   render_questions(questJSON)
-
-//   // Imports the array of valid Voting Tokens.
-//   for (let item of questJSON.voter_list) {
-//     console.log(item);
-//     console.log(item.voting_token);
-//     voting_token_check = voting_token_check.concat(item.voting_token);
-//   }
-//   console.log(voting_token_check);
-
-//   election_id = questJSON.election_info.election_id;
-
-//   const electionPackage = new ElectionPackageModel(test_election);
-
-//   ElectionPackageModel.remove({}, (err, res) => {
-//     electionPackage.save((err, doc) => {
-//       console.log('saving')
-//       err && console.log(err);
-//       console.log(doc)
-//       // document.getElementById("start-BLE-button").style.visibility = "visible";
-//     })
-
-//     for (let question of electionPackage.election_info.questions) {
-//       const question_obj_to_save = new Question(question)
-//       question_obj_to_save.save((err, doc) => {
-//         console.log('saving')
-//         err && console.log(err);
-//         console.log(doc)
-//       })
-//     }
-//   })
-
-//   console.log('document.getElementById("start-BLE-button")')
-//   console.log(document.getElementById("start-BLE-button"))
-//   document.getElementById("start-BLE-button").style.visibility = "visible";
-
-//   function render_questions(questJSON) {
-//     for (let item of questJSON.voter_list) {
-//       console.log(item);
-//       console.log(item.voting_token);
-//       voting_token_check = voting_token_check.concat(item.voting_token);
-//     }
-
-//     console.log(voting_token_check);
-
-//     let questArray = questJSON.election_info.questions;
-
-//     for (let i = 0; i < questArray.length; i++) {
-//       let number = i + 1;
-//       let name = "q" + number;
-//       let questOps = questArray[i].options;
-//       let questDiv = document.createElement("div");
-//       let title = document.createElement("h2");
-//       title.appendChild(document.createTextNode("Question " + number));
-//       questDiv.appendChild(title);
-//       questDiv.appendChild(document.createTextNode(questArray[i].question_description));
-//       for (let j = 0; j < questOps.length; j++) {
-//         let number2 = j + 1;
-//         let inpt = document.createElement("input");
-//         let label = document.createElement("label");
-//         questDiv.appendChild(document.createElement("br"));
-//         label.style.fontSize = "1em";
-//         label.appendChild(document.createTextNode(questOps[j].option_description));
-//         questDiv.appendChild(label);
-//         inpt.type = "radio";
-//         inpt.name = name;
-//         inpt.id = name + number2;
-//         inpt.value = questOps[j].option_id;
-//         inpt.style.height = "2vw";
-//         inpt.style.width = "2vh";
-//         questDiv.appendChild(inpt);
-//         questDiv.appendChild(document.createElement("br"));
-//       }
-
-//       document.getElementById("stepIV").appendChild(questDiv);
-//       console.log(questArray[i]);
-//     }
-//     let votingSelection = [];
-//     let submitButton = document.createElement("button");
-//     submitButton.style.width = "10%";
-//     submitButton.style.height = "10%";
-//     submitButton.appendChild(document.createTextNode("Submit Votes"));
-
-//     // Submit the Vote.
-//     // TODO: Add the fields for FirstName, LastName, questions.
-//     submitButton.onclick = function () {
-//       votingSelection = [];
-//       for (let j = 0; j < questArray.length; j++) {
-//         let num = j + 1;
-//         let values = document.getElementsByName("q" + num);
-//         let checkVal = null;
-//         for (let k = 0; k < values.length; k++) {
-//           if (values[k].checked) {
-//             checkVal = values[k].value;
-//           }
-//         }
-//         votingSelection.push(checkVal);
-//       }
-//       console.log(votingSelection);
-
-//       let vote = {
-//         voting_token: this_voting_token,
-//         loation: rpi_location,
-//         time_stamp: getCurrentDateFormatted(),
-//         // FIXME: Add fields for names.
-//         voter_first_name: "MARK",
-//         voter_last_name: "KIM",
-//         question_num: "5",
-//         choices: []
-//       }
-//     }
-//     document.getElementById("stepIV").appendChild(submitButton);
-//   }
-// }
