@@ -27,16 +27,16 @@ const getCurrentDateFormatted = () => {
     formatted_date += addZeroPrefix(month)
     formatted_date += "-";
     formatted_date += addZeroPrefix(day)
-    formatted_date += " ";
+    formatted_date += "T";
     formatted_date += addZeroPrefix(hours)
     formatted_date += ":";
     formatted_date += addZeroPrefix(minutes)
     formatted_date += ":";
     formatted_date += addZeroPrefix(secs)
-    formatted_date += ".0000"
-    formatted_date += " ";
+    // formatted_date += ".0000"
+    // formatted_date += " ";
     formatted_date += utc_offset_is_positive ? "+" : "-";
-    formatted_date += addZeroPrefix(utc_offset_hours);
+    formatted_date += addZeroPrefix(Math.abs(utc_offset_hours));
     formatted_date += ":"
     formatted_date += addZeroPrefix(utc_offset_minutes);
 
@@ -46,4 +46,4 @@ const getCurrentDateFormatted = () => {
 
 module.exports = {
     getCurrentDateFormatted,
-}
+}   
