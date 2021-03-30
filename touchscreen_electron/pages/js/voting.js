@@ -326,12 +326,11 @@ function importData() {
             verifier.style.visibility = 'visible';
 
 
-            let questJSON = JSON.parse(body);
+            questJSON = JSON.parse(body);
             console.log('questJSON');
             console.log(questJSON);
 
             save_election_package_and_questions(questJSON)
-            loadPoll(questJSON)
             // loadPoll(questJSON)
 
             // // saving electionPackage to mongo

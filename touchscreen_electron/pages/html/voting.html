@@ -38,10 +38,10 @@
             <!-- step II-1: import from USB -->
             <div id='step-II-1'>
                 <div>
-                    <div id='usbs'></div>
                     <h4>Usb list</h4>
-                    <button onclick="showUsbs()">refresh</button>
-                    <button onclick="importData()">Import Election Data</button>
+                    <div id='usbs'>Please load USBs</div>
+                    <button onclick="showUsbs()">1. Identify USB</button>
+                    <button onclick="importData()">2. Import Election Data</button>
                     <button onclick="importDataTest()" style="visibility: hidden;">Import Election Data TEST</button>
                 </div>
             </div>
@@ -53,6 +53,8 @@
                 </div>
             </div>
         </div>
+
+        <button onclick="loadPoll(questJSON)">load poll</button>
 
         <!-- step III Setup Voting Token -->
         <div id='step-III'>
