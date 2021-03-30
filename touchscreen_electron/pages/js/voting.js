@@ -6,17 +6,14 @@ step5.style.visibility = 'visible'
 console.log("On new voting UI branch - Hans");
 
 const mongoose = require("mongoose");
-
 mongoose.connect("mongodb://localhost:27017/pollination", { useNewUrlParser: true });
 
 // let global_JSON = {}
 
 const { getCurrentDateFormatted } = require("../../../utils/dateFormat");
 const { login } = require("../../../utils/pollinationAPI");
-
 const { startBLEServerProcess } = require("../../../utils/process");
 const { checkPassword, decodeBase64 } = require("../../../utils/passwordHash");
-
 const ElectionPackageModel = require("../../../utils/mongo/models/electionPackage");
 const QuestionModel = require("../../../utils/mongo/models/question");
 const VotesCastSchema = require("../../../utils/mongo/models/question");
@@ -29,10 +26,6 @@ let this_voting_token = "";
 let questJSON = null;
 let votes_cast = [];
 let election_id = null;
-
-// step-I: login
-// let submit_password_button = document.getElementById('submit-verifier-password')
-// submit_password_button.onclick = checkVerifierPassword
 
 function votingLoginButtonHandler() {
     console.log('clicked: voting-login-button')
@@ -49,7 +42,7 @@ function votingLoginButtonHandler() {
 
         // Let the Verifier add the location. Submit button uses submitLocation.
         loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
-
+        loginForm.innerHTMl += "<div id=step-II-0><input id='verifier-password-input' type='password' /><br><button id='submit-verifier-password' onclick='checkVerifierPassword()'>Submit Verifier Password</button></div>"
         let verifierPasswordStep = document.getElementById('step-II-0')
         verifierPasswordStep.style.visibility = 'visible'
 
@@ -103,7 +96,6 @@ async function checkVerifierPassword() {
     // ElectionPackageModel.
 }
 
-
 function submitLocation() {
     // Set rpi_location to the Location.
     let this_location = document.getElementById("rpi-location-id").value;
@@ -113,7 +105,6 @@ function submitLocation() {
     // Clear login page.
     promptVotingToken();
 }
-
 
 function promptVotingToken() {
     let loginForm = document.getElementById("step-I");
@@ -298,7 +289,6 @@ function showExportSection() {
     exportSection.style.visibility = "visible";
 }
 
-// exportData
 function exportData() {
     const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
@@ -361,7 +351,6 @@ function importData() {
 
         });
 }
-
 
 function save_election_package_and_questions(questJSON) {
 
@@ -431,35 +420,6 @@ function showUsbs() {
 
         })
 }
-
-function showUsbs() {
-    fetch(`http://localhost:3000/usbs`)
-        .then(response => response.json())
-        .then(data => {
-            data = JSON.parse(data);
-            console.log(data);
-            let usbsDiv = document.getElementById("usbs");
-            usbsDiv.innerHTML = "";
-            for (const usb of data.usbs) {
-                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
-                let div = document.createElement("div");
-                let input = document.createElement("input");
-                let label = document.createElement("label");
-                input.setAttribute("type", "radio");
-                input.setAttribute("id", usb.path);
-                input.setAttribute("name", "usb");
-                input.setAttribute("value", usb.path);
-                input.setAttribute("class", "radio");
-                input.checked = false;
-                label.innerText = usb.path;
-                div.appendChild(input);
-                div.appendChild(label);
-                usbsDiv.appendChild(div);
-            }
-
-        })
-}
-
 
 function goBack() {
     window.history.back();
