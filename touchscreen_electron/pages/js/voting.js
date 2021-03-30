@@ -150,7 +150,7 @@ function loadPoll(questJSON) {
             label.appendChild(document.createTextNode(questOps[j].option_description));
             questDiv.appendChild(label);
 
-            if (questArray[i].ordered_choices == true) {
+            if (questArray[i].ordered_choices == false) {
                 let inpt = document.createElement("select");
                 inpt.name = name;
                 inpt.id = name + number2;
@@ -158,8 +158,8 @@ function loadPoll(questJSON) {
                 inpt.style.width = "2vh";
                 for (let k = 0; k < questOps.length; k++) {
                     let option = document.createElement("option");
-                    option.value = k;
-                    option.text = k;
+                    option.value = k + 1;
+                    option.text = k + 1;
                     inpt.add(option);
                 }
                 questDiv.appendChild(inpt);
@@ -200,11 +200,9 @@ function loadPoll(questJSON) {
             let checkVal = null;
 
              //REVIEW:
-
             // If user selected more than just one
             //  a brand new object needs to be there, with the same option_id
             // eg:
-
             // {question_id:19, option_id:17, order_position: 0}
             // {question_id:19, option_id:18, order_position: 0}
             // {question_id:19, option_id:19, order_position: 0}
