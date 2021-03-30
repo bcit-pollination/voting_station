@@ -144,12 +144,16 @@ function loadPoll(questJSON) {
         questDiv.appendChild(document.createTextNode(questArray[i].question_description));
         for (let j = 0; j < questOps.length; j++) {
             let number2 = j + 1;
-            let inpt = document.createElement("input");
             let label = document.createElement("label");
             questDiv.appendChild(document.createElement("br"));
             label.style.fontSize = "1em";
             label.appendChild(document.createTextNode(questOps[j].option_description));
             questDiv.appendChild(label);
+
+            if (questArray[i].ordered_choices == true) {
+                console.log("Make ordered choices.");
+            }
+            let inpt = document.createElement("input");
             if (questArray[i].max_selection_count == 1 && questArray[i].min_selection_count == 1) {
                 inpt.type = "radio";
             } else {
