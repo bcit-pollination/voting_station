@@ -389,6 +389,7 @@ function showUsbs() {
             data = JSON.parse(data);
             console.log(data);
             let usbsDiv = document.getElementById("usbs");
+            usbsDiv.style.visibility = "visible";
             usbsDiv.innerHTML = "";
             for (const usb of data.usbs) {
                 if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
