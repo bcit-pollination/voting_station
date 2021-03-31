@@ -1,5 +1,7 @@
 button {
     width: 25vw;
     height: 55px;
+    font-size:2em;
+    
     background-color: white;
 }

@@ -18,10 +18,21 @@ button{
 }
 
 select{
-  font-size: larger;
+  font-size: 1.8em;
 }
 
 .texture{
   max-width: 100%;
   max-height: 100%;
+}
+
+input{
+  font-size: 1.7em;
+}
+
+#usbs{
+  font-size: 1.7em;
+}
+#usbs2{
+  font-size: 1.7em;
 }

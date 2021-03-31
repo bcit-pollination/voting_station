@@ -1,6 +1,7 @@
 input {
   width: 45vw;
   height: 10vh;
+  font-size: 1.7em;
 }
 
 label {
@@ -9,10 +10,11 @@ label {
 
 
 #usbs input, #usbs_export input, #usbs2 input {
-  width: initial;
-  height: initial;
+  /* width: initial;
+  height: initial; */
+  font-size: 1.8em;
 }
 
 #usbs label, #usbs_export label, #usbs2 label {
-  font-size: initial;
+  font-size: 1.8em;
 }
