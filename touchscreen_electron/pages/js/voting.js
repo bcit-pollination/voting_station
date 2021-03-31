@@ -155,7 +155,7 @@ function loadPoll(questJSON) {
                 inpt.name = name;
                 inpt.id = name + number2;
                 inpt.style.height = "2vw";
-                inpt.style.width = "2vh";
+                inpt.style.width = "8vh";
                 for (let k = 0; k < questOps.length; k++) {
                     let option = document.createElement("option");
                     option.value = k + 1;
@@ -197,10 +197,10 @@ function loadPoll(questJSON) {
 
         for (let j = 0; j < questArray.length; j++) {
             if (questArray[j].ordered_choices == true) {
-                for (let j = 0; j < questArray.length; j++) {
-                    let num = j + 1;
+                for (let k = 0; j < questArray.length; k++) {
+                    let num = k + 1;
                     let values = document.getElementsByName("q" + num);
-                    console.log(values);
+                    console.log(values.option);
                 }
             } else {
                 let num = j + 1;
