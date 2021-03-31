@@ -39,7 +39,7 @@ function MultiVoteCharacteristic(pizza) {
         descriptors: [
             new bleno.Descriptor({
                 uuid: "2901",
-                value: "Notify service;Read poll questions;Send poll results;",
+                value: "polling",
             }),
         ],
     });
