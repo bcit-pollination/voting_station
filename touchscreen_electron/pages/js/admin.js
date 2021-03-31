@@ -29,15 +29,19 @@ let button7 = document.getElementById("post-election-results");
 let button8 = document.getElementById("import-button");
 let button9 = document.getElementById("export-button");
 
-document.getElementById("titleForImpExp").style.display = "none";
+// document.getElementById("titleForImpExp").style.display = "none";
 
-button6.style.display = "none";
-button7.style.display = "none";
+// button6.style.display = "none";
+// button7.style.display = "none";
 
-button8.style.display = "none";
-button9.style.display = "none";
+// button8.style.display = "none";
+// button9.style.display = "none";
+// button7.style.display = "none";
 
-document.getElementById("step-V-I").style.display = "none";
+// button8.style.display = "none";
+// button9.style.display = "none";
+
+// document.getElementById("step-V-I").style.display = "none";
 
 let electionID;
 
@@ -54,19 +58,21 @@ document
         login(email, password).then((jwt) => {
             session_jwt = jwt;
             console.log(jwt);
+
+            // hides step-I items
+            document.getElementById("step-I").style.display = "none";
+            // show step-II items
+            document.getElementById("step-II").style.display = "block";
         });
 
-        // hides step-1 items
-        document.getElementById("step-I").style.display = "none";
-        button5.style.display = "inline";
-        button7.style.display = "inline"
+
     });
 
 // step-II: getUserOrgs()
 document
     .getElementById("get-organization-list-button")
     .addEventListener("click", () => {
-        console.log("clicked: ");
+        console.log("clicked: get-organization-list-button");
     });
 
 // {
@@ -81,14 +87,19 @@ document
 //   }
 
 // TODO:step-III: get election list, render it to a div
-document
-    .getElementById("get-election-list-button")
-    .addEventListener("click", () => {
+ function getElectionButtHandler(){
+             // hides step-II items
+             document.getElementById("step-II").style.display = "none";
+             // show step-III items
+             document.getElementById("step-III").style.display = "block";
+
         console.log("clicked: get-election-list-button");
-        button5.style.display = "none";
-        button7.style.display = "none";
+        // button5.style.display = "none";
+        // button7.style.display = "none";
         let electionDisplay = document.getElementById("election-list-display");
-        electionDisplay.innerHTML = "<h2>List of Elections:</h2>";
+        // electionDisplay.innerHTML = "<h2>List of Elections:</h2>";
+        electionDisplay.style.display = 'block'
+        electionDisplay.style.visibility = 'visible'
 
         let org_id;
         getUserOrgs().then((r) => {
@@ -139,7 +150,7 @@ document
                     electionDisplay.appendChild(br);
 
                     // FIXME: Check if the .save() saves to the MongoDB
-                    electionTitleHeaderButton.onclick = function() {
+                    electionTitleHeaderButton.onclick = function () {
                         electionID = item.election_id;
                         button2.style.display = "inline";
                         button6.style.display = "inline";
@@ -153,56 +164,48 @@ document
         // This part of the function, handles hiding the buttons when the table is generated,
         // and creates a return button to bring it all back.
 
-        button1.style.display = "none";
-        button2.style.display = "none";
-        button3.style.display = "none";
-        button4.style.display = "none";
-        button5.style.display = "none";
-        button6.style.display = "none";
-        button7.style.display = "none";
-        button8.style.display = "none";
-        button9.style.display = "none";
-    });
+        // button1.style.display = "none";
+        // button2.style.display = "none";
+        // button3.style.display = "none";
+        // button4.style.display = "none";
+        // button5.style.display = "none";
+        // button6.style.display = "none";
+        // button7.style.display = "none";
+        // button8.style.display = "none";
+        // button9.style.display = "none";
+    }
 
 // TODO step-IV: download
 //Added the download-electron-package id to the getelementbyid statement.
 
-document
-    .getElementById("download-election-package-button")
-    .addEventListener("click", () => {
-        console.log("clicked: download-election-package-button");
-        // TODO: download package
 
-        let election_id = 15;
-        button3.style.display = "inline";
-        button4.style.display = "inline";
 
-        document
-            .getElementById("download-election-package-button")
-            .addEventListener("click", () => {});
-    });
+function downloadElectionPackage() {
+    electionDownload(electionID).then(async (result) => {
+        console.log("Election package from api", result);
+        let electionPackage = new ElectionPackageModel(result);
+        // Clear all election packages and insert new package
 
-    function downloadElectionPackage() {
-        electionDownload(electionID).then(async(result) => {
-            console.log("Election package from api", result);
-            let electionPackage = new ElectionPackageModel(result);
-            // Clear all election packages and insert new package
-           
-            await ElectionPackageModel.remove({});
-            const savedElection = electionPackage.save(function(err) {
-                if (err) console.log(err);
-            });
-            
-            button6.style.display = "none";
-            button2.style.display = "none";
-
-            document.getElementById("step-II").style.display = "none";
-            document.getElementById("titleForImpExp").style.display = "block";
-            
-            button8.style.display = "inline";
-            button9.style.display = "inline";
+        await ElectionPackageModel.remove({});
+        const savedElection = electionPackage.save(function (err) {
+            if (err) console.log(err);
         });
-    }
+
+        button6.style.display = "none";
+        button2.style.display = "none";
+
+        document.getElementById("step-II").style.display = "none";
+        // document.getElementById("titleForImpExp").style.display = "block";
+
+        // button8.style.display = "inline";
+        // button9.style.display = "inline";
+        document.getElementById("step-III").style.display = "none";
+             // show step-III items
+             document.getElementById("step-V").style.display = "block";
+
+        document.getElementById("step-V-II").style.display = "none";
+    });
+}
 /** 
 function downloadElectionPackage() {
     electionDownload(electionID).then((result) => {
@@ -226,25 +229,28 @@ function downloadElectionPackage() {
 */
 // TODO: think of a way to do step-III: export json to usb
 
-function showImportSection(){
-    document.getElementById("titleForImpExp").style.display = "none";
-    button8.style.display = "none";
-    button9.style.display = "none";
+function showImportSection() {
+    // document.getElementById("titleForImpExp").style.display = "none";
+    // button8.style.display = "none";
+    // button9.style.display = "none";
     const importSection = document.getElementById("step-V-I");
     importSection.style.display = "block";
+
+    document.getElementById("step-III").style.display = "none";
 }
 
-function showExportSection() {
-    document.getElementById("titleForImpExp").style.display = "none";
-    button8.style.display = "none";
-    button9.style.display = "none";
+function showImportSection() {
+    // document.getElementById("titleForImpExp").style.display = "none";
+    // button8.style.display = "none";
+    // button9.style.display = "none";
     const exportSection = document.getElementById("step-V");
+    document.getElementById("step-V-I").style.display='none'
     exportSection.style.display = "block";
 }
 
 function exportData() {
     console.log('exportData');
-    const checkedRadio = document.querySelector('input[name="usb2"]:checked');
+    const checkedRadio = document.querySelector('input[name="usb"]:checked');
     if (!checkedRadio) return;
 
     const path = checkedRadio.value;
@@ -257,6 +263,8 @@ function exportData() {
         .then((response) => response.json())
         .then((body) => {
             console.log(body);
+            alert('Exported Successfully!!!!')
+
         });
     //document.getElementById("step-II").style.display = "none";
     //document.getElementById("step-V").style.display = "none";
@@ -276,7 +284,12 @@ function importData() {
         .then((response) => response.json())
         .then((body) => {
             console.log(body);
-            // TODO: Store imported data accordingly
+            
+            document.getElementById("step-V").style.display = "none";
+            document.getElementById("step-VI").style.display = "block";
+            alert('Votes imported successfully !!!!!!!')
+        }).catch((err)=>{
+            alert(`Failed!: ${err}`)
         });
 
     //document.getElementById("step-II").style.display = "none";
@@ -310,33 +323,6 @@ function showUsbs() {
         });
 }
 
-function showUsbs2() {
-    fetch("http://localhost:4000/usbs")
-        .then((response) => response.json())
-        .then((data) => {
-            data = JSON.parse(data);
-            console.log(data);
-            let usbsDiv = document.getElementById("usbs2");
-            usbsDiv.innerHTML = "";
-            for (const usb of data.usbs) {
-                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
-                let div = document.createElement("div");
-                let input = document.createElement("input");
-                let label = document.createElement("label");
-                input.setAttribute("type", "radio");
-                input.setAttribute("id", usb.path);
-                input.setAttribute("name", "usb2");
-                input.setAttribute("value", usb.path);
-                input.setAttribute("class", "radio");
-                input.checked = false;
-                label.innerText = usb.path;
-                div.appendChild(input);
-                div.appendChild(label);
-                usbsDiv.appendChild(div);
-            }
-        });
-}
-
 
 async function axiosPOST() {
     let data = {
@@ -355,24 +341,25 @@ async function axiosPOST() {
     window.history.back();
 }
 
-function uploadElectionResults(){
+function uploadElectionResults() {
     console.log('clicked uploadElectionResults')
     const url = new URL("http://localhost:4000/uploadElectionResults");
     // const params = { pathName: path };
 
     // url.search = new URLSearchParams(params).toString();
 
-    fetch(url)                                                                                  
+    fetch(url)
         .then((response) => response.json())
         .then((body) => {
-            electionUpload(body).then((r)=>{
+            electionUpload(body).then((r) => {
                 console.log(body)
-                console.log(remove)
-            })
+                alert(`Upload Success!: ${body}`)
+
+            }).catch(err=> alert(`Upload Success!: ${body}`))
             // console.log(body);
             // TODO: Store imported data accordingly
         });
-        document.getElementById("step-II").style.display = "none";
-        button2.style.display = "none";
-        button6.style.display = "none";
+    document.getElementById("step-II").style.display = "none";
+    button2.style.display = "none";
+    button6.style.display = "none";
 }

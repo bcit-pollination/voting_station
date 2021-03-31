@@ -1,9 +1,24 @@
-#get-organization-list-button,
-#download-election-package-button,
-#import-election-button,
-#export-election-button,
-#get-election-list-button,
-#step-V
+#step-II,
+#step-III,
+#step-IV,
+#step-V,
+#step-VI
  {
   display: none;
 }
+
+#download-election-package-button{
+  display: none;
+}
+
+button{
+
+  margin: 15px;
+}
+
+
+/* #get-organization-list-button,
+#download-election-package-button,
+#import-election-button,
+#export-election-button,
+#get-election-list-button, */

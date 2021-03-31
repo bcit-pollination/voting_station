@@ -29,87 +29,92 @@
 
         <button id='central-login-button'>Login(as Central Pi)</button>
     </div>
+    
     <!-- step II: display the election list  -->
     <div id='step-II' className='steps'>
 
-        <div id='election-list-display'>
-            <!-- for(let item of ) -->
-        </div>
-
-        <button id='get-election-list-button'>Get Election List</button>
-        <button id='post-election-results'>Post Election Results</button>
-
+        <button id='get-election-list-button' onclick="getElectionButtHandler()">Get Election List</button>
+        <!-- <button id='post-election-results'>Post Election Results</button> -->
+        <button id='export-button' onclick="showImportSection()">Post Election Results</button>
     </div>
 
 
-    <!-- step II: display the election list  -->
+    <!-- step III: display the election list  -->
     <div id='step-III' className='steps'>
 
+        <h2>List of Elections:</h2>
         <div id='election-list-display'>
             <!-- for(let item of ) -->
         </div>
+        
+        <button onclick="downloadElectionPackage()" id='download-election-package-button'>
+            Download Election Package
+        </button>
 
-        <button id='get-organization-list-button'>Get Organization List</button>
+        <!-- FIXME: Orglist -->
+        <!-- <button id='get-organization-list-button'>Get Organization List</button> -->
     </div>
 
 
     <!--  -->
     <div id='step-IV' className='steps'>
-        <section id="download-election-section">
-            <button onclick="downloadElectionPackage()" id='download-election-package-button'>Download Election Package</button>
-            
-        </section>
+
         <section id="upload-election-section">
-            <button onclick="uploadElectionResults()" id="upload-election-results">Upload Election Results</button>
         </section>
+
     </div>
 
 
-    <div id="impExpSel">
-        <h2 id="titleForImpExp">Would you like to import or export?</h2>
+    <!-- <div id="impExpSel">
+        <h2 id="titleForImpExp">Would you like to import votes results from the votingPI?</h2>
         <button id='import-button' onclick="showImportSection()">Import</button>
-        <button id='export-button' onclick="showExportSection()">Export</button>
-    </div>
+    </div> -->
 
-    <div id='step-V-I' class="steps">
+
+
+    <!-- TODO-Noah integrate import export functions -->
+    <div id='step-V' class="steps">
+
         <h4>Usb list</h4>
-        <div id='usbs'></div>
-        
-        <button onclick="showUsbs(4000)">refresh</button>
-        <button onclick="importData()">Import Election Data</button>
-        <!--
-        <button onclick="exportData()">Export Election Data</button>
-        -->
+        <div id='usbs'>
 
-    </div>
+        </div>
 
-        <!-- TODO-Noah integrate import export functions -->
-        <div id='step-V' class="steps">
-            <h4>Usb list</h4>
-            <div id='usbs2'></div>
+
+        <div id='step-V-I' class="steps">
+            <!-- <div>
+                <p>Exported Successfully!!!!</p>
+            </div> -->
+           
+            <button onclick="showUsbs()">refresh</button>
+            <button onclick="exportData()">Export Election </button>
+            <!--
+                <button onclick="exportData()">Export Election Data</button>
+                -->
+
+        </div>
+
+        <div id='step-V-II'>
+
+
             
-            <button onclick="showUsbs2(4000)">refresh</button>
+            <button onclick="showUsbs()">refresh</button>
+            <button onclick="importData()">Import Vote Results</button>
             <!--
                 <button onclick="importData()">Import Election Data</button>
             -->
-            <button onclick="exportData()">Export Election Data</button>
-    
+           
         </div>
-
-        <!-- TODO-Noah integrate import export functions -->
-        <div id='step-VI' class="steps">
-
-        
-    
-            
-    
-        </div>
-
-
-
-    <div id='bottom'>
 
     </div>
+
+    <!-- TODO-Noah integrate import export functions -->
+    <div id='step-VI' class="steps">
+        <button onclick="uploadElectionResults()" id="upload-election-results">Upload Election Results</button>
+
+    </div>
+
+
 
     <script src='../js/admin.js'>
     </script>
