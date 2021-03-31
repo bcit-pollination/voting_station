@@ -1,9 +1,19 @@
-#load-questions-button,
+/* #load-questions-button,
 #step-II-2,
 #voting-token-button,
 #voting-token-input,
-#step-V,
-#step-II-1,
-#step-II-0 {
-  visibility: hidden;
+#step-I, */
+#step-II,
+#step-III,
+#step-IV,
+#step-V ,
+#step-vote,
+#step-check-verifier-password-before-ending,
+#step-export-votes {
+  display: none;
 }
+
+button{
+  margin: 15px;
+}
+

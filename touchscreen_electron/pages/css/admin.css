@@ -2,7 +2,8 @@
 #step-III,
 #step-IV,
 #step-V,
-#step-VI
+#step-VI,
+#step-vote
  {
   display: none;
 }
@@ -12,7 +13,6 @@
 }
 
 button{
-
   margin: 15px;
 }
 

@@ -31,12 +31,10 @@
 
         <!-- step II Setup local environment(BLE and mongoDB) -->
         <div id='step-II'>
-            <div id=step-II-0>
-                <input id='verifier-password-input' type='password' />
-                <button id='submit-verifier-password' onclick='checkVerifierPassword()'>Submit Verifier Password</button>
-            </div>
-            <!-- step II-1: import from USB -->
-            <div id='step-II-1'>
+
+
+            <!-- step II-0: import from USB -->
+            <div id='step-II-0'>
                 <div>
                     <h4>Usb list</h4>
                     <div id='usbs'>Please load USBs</div>
@@ -46,32 +44,71 @@
                 </div>
             </div>
 
+            <div id=step-II-1>
+                <input id='verifier-password-input' type='password' />
+                <button id='submit-verifier-password' onclick='checkVerifierPassword()'>Submit Verifier
+                    Password
+                </button>
+            </div>
+
+
+
             <!-- step II-2 Start Server Buttons -->
             <div id='step-II-2'>
                 <div>
-                    <button id='start-BLE-button'>Start BLE server</button>
+                    <button id='start-BLE-button' onclick="startBLEServerProcess()">Start BLE server</button>
                 </div>
             </div>
+
         </div>
 
 
-        <!-- step III Setup Voting Token -->
-        <div id='step-III'>
-            <input id='voting-token-input' placeholder="enter voting token here:" />
-            <button id='voting-token-button'>Grant Permission to Vote</button>
-        </div>
+    
+
+
         <!-- TODO: @hans show vote questions, vote then go back to step 3 until vote is ended-->
-        
-        <div id='step-IV'>
+
+        <div id='step-III'>
+            <center>
+                <h2>Please enter the location of this polling station.</h2>
+                <br><br>
+                <input type='text' id='rpi-location-id' />
+                <br><br>
+                <button onclick='submitLocation()'>Submit</button>
+            </center>
         </div>
 
-        <div id='step-V' class="steps">
-            <h4>Usb list</h4>
-            <div id='usbs_export'></div>
-            
-            <button onclick="showUsbs()">refresh</button>
-            <button onclick="exportData()">Export Election Data</button>
+        <div id='step-IV'>
+            <input id='voting-token-input' placeholder="enter voting token here:" />
+            <button id='voting-token-button' onclick="submitVotingToken()">Grant Permission to Vote</button>
         </div>
+
+        <div id='step-vote'>
+            <div id='step-vote-question-div'>
+            
+            </div>
+            <!-- line 195 in voting.js -->
+            <button id='submit-question-button'>Submit Vote</button>
+            <button id='end-vote-button' onclick='showEndVoteSection()'>End Vote</button>
+        </div>
+
+        <div id='step-check-verifier-password-before-ending'>
+            <input id='verifier-password-input2' type='password' />
+            <button id='submit-verifier-password2' onclick='checkVerifierPassword2(document.getElementById("verifier-password-input2").value)'>
+                Submit Verifier Password
+            </button>
+        </div>
+
+        <div id='step-export-votes' class="steps">
+            
+            <h4>Usb list</h4>
+
+            <div id='usbs_export'></div>
+
+            <button onclick="showUsbs()">refresh</button>
+            <button onclick="exportData()">Export Vote Data</button>
+        </div>
+
     </div>
 
     <script src='../js/voting.js'>

@@ -31,14 +31,20 @@ function votingLoginButtonHandler() {
     login(email, password).then((jwt) => {
         session_jwt = jwt;
         console.log(jwt);
-        let verifierPasswordStep = document.getElementById('step-II-0')
-        verifierPasswordStep.style.visibility = 'hidden';
 
-        let importStep = document.getElementById('step-II-1');
-        importStep.style.visibility = 'visible';
+        // let importStep = document.getElementById('step-II-1');
+        // importStep.style.visibility = 'visible';
 
-        let loginForm = document.getElementById('step-I');
-        loginForm.style.visibility = 'hidden';            
+        // let loginForm = document.getElementById('step-I');
+        // loginForm.style.visibility = 'hidden'; 
+
+        // {state&&<?>}
+        document.getElementById('step-I').style.display = 'none'
+        document.getElementById('step-II').style.display = 'block'
+        document.getElementById('step-II-0').style.display = 'block'
+        document.getElementById('step-II-1').style.display = 'none'
+        document.getElementById('step-II-2').style.display = 'none' 
+        // document.getElementById('step-II-3').style.display = 'none'       
     });
 }
 
@@ -46,7 +52,7 @@ async function checkVerifierPassword() {
     // let loginPromise = new Promise(async(resolve,reject)=>{
     //   resolve(password)
     // })
-    console.log('findOne()')
+
     let verifier_password = document.getElementById("verifier-password-input").value;
     // FIXME : remove the hardcoded
     console.log(verifier_password)
@@ -62,56 +68,92 @@ async function checkVerifierPassword() {
         console.log(election[0]);
 
         if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
-            console.log('verify successful')
+            alert('verify successful')
 
             // Let the Verifier add the location. Submit button uses submitLocation.
             let loginForm = document.getElementById('step-I');
             loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
-            loginForm.style.visibility = 'visible';
+            // loginForm.style.visibility = 'visible';
             
-            let verifierPrompt = document.getElementById('step-II-0');
-            verifierPrompt.style.visibility = 'hidden';
-
+            // let verifierPrompt = document.getElementById('step-II-0');
+            document.getElementById('step-II-0').style.display = 'none';
+            document.getElementById('step-II-1').style.display = 'none';
+            document.getElementById('step-II-2').style.display = 'block';
+            document.getElementById('step-III').style.display = 'block';
         }
         else{
             console.log('verify failed')
         }
     })
-    // console.log('findOne()')
-    // console.log(package)
-    // package.then(r=>{
-    //     console.log(r)
-    // })
-    // if (checkPassword(verifier_password, decodeBase64(package['verifier_password']))) {
-    //     let importStep = document.getElementById('step-II-1');
-    //     importStep.style.visibility = 'visible';
-    // }
+}
 
-    // ElectionPackageModel.
+async function checkVerifierPassword2(verifier_password) {
+    // let loginPromise = new Promise(async(resolve,reject)=>{
+    //   resolve(password)
+    // })
+
+    // let verifier_password = document.getElementById("verifier-password-input").value;
+    // FIXME : remove the hardcoded
+    console.log(verifier_password)
+    // let package = await ElectionPackageModel.findOne({})
+    // ElectionPackageModel.find({},(err,res)=>{
+    //     console.log(err)
+    //     console.log(res)
+    // })
+
+    let query = ElectionPackageModel.where({});
+    ElectionPackageModel.find({},function (err, election) {
+        if (err) return console.log(err);
+        console.log(election[0]);
+
+        if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
+            alert('verify successful')
+
+            // Let the Verifier add the location. Submit button uses submitLocation.
+            let loginForm = document.getElementById('step-I');
+            loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
+            // loginForm.style.visibility = 'visible';
+            
+            // let verifierPrompt = document.getElementById('step-II-0');
+            document.getElementById('step-II-0').style.display = 'none';
+            document.getElementById('step-II-1').style.display = 'none';
+            document.getElementById('step-II-2').style.display = 'block';
+            document.getElementById('step-III').style.display = 'block';
+        }
+        else{
+            console.log('verify failed')
+        }
+    })
 }
 
 function submitLocation() {
+
     // Set rpi_location to the Location.
     let this_location = document.getElementById("rpi-location-id").value;
     rpi_location = this_location;
     console.log("The location has been set to: " + rpi_location);
 
+    document.getElementById("step-III").style.display = 'none'
+    document.getElementById("step-IV").style.display = 'block'
     // Clear login page.
     promptVotingToken();
 }
 
 function promptVotingToken() {
-    showExportSection();
-    
-    let loginForm = document.getElementById("step-I");
-    loginForm.innerHTML = "";
-    loginForm.innerHTML =
-        "<center><h2>Please enter the voter's voting token.</h2><br><br><input type='text' id='voting-token-id' /><br><br><button onclick = 'submitVotingToken()'>Submit</button></center>";
-    generateValidTokenList(questJSON);
+    console.log('promptVotingToken')
+    // showExportSection();
+    document.getElementById('step-vote').style.display = 'none'
+    document.getElementById('step-IV').style.display = 'block'
+
+
+    // generateValidTokenList(questJSON);
 }
 
 function submitVotingToken() {
-    this_voting_token = document.getElementById("voting-token-id").value;
+    generateValidTokenList(questJSON)
+    // loadPoll(questJSON)
+
+    this_voting_token = document.getElementById("voting-token-input").value;
     console.log(this_voting_token)
     console.log("this_voting_token: " + this_voting_token);
 
@@ -120,20 +162,26 @@ function submitVotingToken() {
 
     if (voting_token_check.includes(this_voting_token)) {
         loadPoll(questJSON);
-        hideExportSection();
+        // hideExportSection();
     } else {
         promptVotingToken();
     }
 }
 
+function EndElection(){
+   alert('Enter Password to Proceed')
+}
+
 function loadPoll(questJSON) {
-    let loginForm = document.getElementById('step-I');
-    loginForm.innerHTML = "";
+    document.getElementById('step-vote').style.display = 'block'
+    document.getElementById('step-IV').style.display = 'none'
+    // let loginForm = document.getElementById('step-I');
+    // loginForm.innerHTML = "";
 
     let questArray = questJSON.election_info.questions;
     let questIdArray = [];
 
-    document.getElementById("step-IV").innerHTML = "";
+    document.getElementById("step-vote-question-div").innerHTML = "";
 
     console.log(questArray);
 
@@ -188,17 +236,23 @@ function loadPoll(questJSON) {
             }
             
         }
-        document.getElementById("step-IV").appendChild(questDiv);
+        document.getElementById("step-vote-question-div").appendChild(questDiv);
         console.log(questArray[i]);
     }
 
-    let submitButton = document.createElement("button");
-    submitButton.style.width = "10%";
-    submitButton.style.height = "10%";
-    submitButton.appendChild(document.createTextNode("Submit Votes"));
-
+    let submitButton = document.getElementById("submit-question-button");
+    // submitButton.style.width = "10%";
+    // submitButton.style.height = "10%";
+    // submitButton.appendChild(document.createTextNode("Submit Votes"));
+    
     // Submit the Vote.
     submitButton.onclick = async function () {
+
+    document.getElementById('step-vote').style.display = 'none'
+
+    document.getElementById('step-IV').style.display = 'block'
+
+        console.log(submitButton)
         let votingSelections = [];
         // looping through
 
@@ -248,7 +302,7 @@ function loadPoll(questJSON) {
                 }
             }
         }
-
+       
         console.log(votingSelections);
         // votingSelections = new
 
@@ -277,33 +331,35 @@ function loadPoll(questJSON) {
         // votes_cast.push(vote);
         // console.log(votes_cast);
 
-        let vote_div = document.getElementById("step-IV");
-        vote_div.appendChild(submitButton);
-        vote_div.style.visibility = "hidden";
-        promptVotingToken();
+        // let vote_div = document.getElementById("step-IV");
+        // vote_div.appendChild(submitButton);
+        // vote_div.style.visibility = "hidden";
+        
+        
+
     };
     // appending the submit button , make it visible
-    let vote_div = document.getElementById("step-IV");
-    vote_div.appendChild(submitButton);
-    vote_div.style.visibility = "visible";
+    // let vote_div = document.getElementById("step-IV");
+    // vote_div.appendChild(submitButton);
+    // vote_div.style.visibility = "visible";
 
-    document.getElementById("voting-token-button").addEventListener("click", () => {
-        console.log('clicked "voting-token-input"');
+// document.getElementById("voting-token-button").addEventListener("click", () => {
+//         console.log('clicked "voting-token-input"');
 
-        let updateQuestionApi;
-        let xhttp = new XMLHttpRequest();
+//         let updateQuestionApi;
+//         let xhttp = new XMLHttpRequest();
 
-        let response = "";
+//         let response = "";
 
-        console.log("q_list");
-        console.log(q_list);
-        xhttp.open("POST", updateQuestionApi, true);
-        xhttp.setRequestHeader("Content-type", "application/json");
+//         console.log("q_list");
+//         console.log(q_list);
+//         xhttp.open("POST", updateQuestionApi, true);
+//         xhttp.setRequestHeader("Content-type", "application/json");
 
-        let post_obj = { allowVote: true };
-        console.log(JSON.stringify(post_obj));
-        xhttp.send(JSON.stringify(post_obj));
-    });
+//         let post_obj = { allowVote: true };
+//         console.log(JSON.stringify(post_obj));
+//         xhttp.send(JSON.stringify(post_obj));
+//     });
 
     // showExportSection();
 }
@@ -318,14 +374,23 @@ function generateValidTokenList(questJSON) {
     console.log(voting_token_check);
 }
 
+function showEndVoteSection() {
+    document.getElementById('step-check-verifier-password-before-ending').style.display='block'
+}
+
+function hideEndVoteSection() {
+    document.getElementById('step-check-verifier-password-before-ending').style.display='block'
+}
+
+
 function showExportSection() {
-    const exportSection = document.getElementById("step-V");
-    exportSection.style.visibility = "visible";
+    const exportSection = document.getElementById("step-export-votes");
+    exportSection.style.display = "block";
 }
 
 function hideExportSection() {
-    const exportSection = document.getElementById("step-V");
-    exportSection.style.visibility = "hidden";
+    const exportSection = document.getElementById("step-export-votes");
+    exportSection.style.display = "none";
 }
 
 function exportData() {
@@ -364,10 +429,10 @@ function importData() {
 
             // After loading, hide the buttons that does the input. 
             let importStep = document.getElementById('step-II-1');
-            importStep.style.visibility = 'hidden';
+            // importStep.style.visibility = 'hidden';
 
             let verifier = document.getElementById('step-II-0');
-            verifier.style.visibility = 'visible';
+            // verifier.style.visibility = 'visible';
 
 
             questJSON = JSON.parse(body);
@@ -375,6 +440,10 @@ function importData() {
             console.log(questJSON);
 
             save_election_package_and_questions(questJSON)
+            document.getElementById("step-II-0").style.display = 'none'
+            document.getElementById("step-II-1").style.display = 'block'
+            document.getElementById("step-II-2").style.display = 'none'
+            alert('Election Package Successfully Imported !!!!')
             // loadPoll(questJSON)
 
             // // saving electionPackage to mongo
@@ -386,15 +455,16 @@ function importData() {
             //   document.getElementById("start-BLE-button").style.visibility = "visible";
             // })
             // document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line
+        
         });
 
-    // Start BLE server:
-    let startBLEbutton = document.getElementById("start-BLE-button");
-    startBLEbutton.addEventListener("click", () => {
-        console.log("clicked: start-BLE-button");
-        startBLEServerProcess();
-        startBLEbutton.style.visibility = 'hidden';
-    });
+    // // Start BLE server:
+    // let startBLEbutton = document.getElementById("start-BLE-button");
+    // startBLEbutton.addEventListener("click", () => {
+    //     console.log("clicked: start-BLE-button");
+    //     startBLEServerProcess();
+    //     // startBLEbutton.style.visibility = 'hidden';
+    // });
 }
 
 function save_election_package_and_questions(questJSON) {
@@ -424,7 +494,7 @@ function save_election_package_and_questions(questJSON) {
     })
     // let removed = QuestionModel.deleteMany({})
     // console.log(removed)
-    document.getElementById("step-II-2").style.visibility = "visible";
+    // document.getElementById("step-II-2").style.visibility = "visible";
 }
 
 function showUsbs() {
@@ -451,7 +521,7 @@ function showUsbs() {
                 div.appendChild(input);
                 div.appendChild(label);
                 usbsDiv.appendChild(div);
-                usbsDiv.style.visibility ='visible'
+                // usbsDiv.style.visibility ='visible'
             }
 
         })
