@@ -89,7 +89,11 @@ function startAdminExpressServerProcess() {
 function killBLEProcesses() {
     console.log('killBleProcesses:',processIDs.bluetooth)
     // let kill_node_processes_BLE = spawn("sudo", ["kill", processIDs.bluetooth]);
-    let kill_node_processes_BLE = spawn('sudo',['service','bluetooth','restart']);
+    let kill_node_processes_BLE = spawn('rfkill',['block','bluetooth']);
+
+
+ 
+    
 
     kill_node_processes_BLE.on("data", (data) => {
         console.log(`stdout: ${data}`);
@@ -101,7 +105,12 @@ function killBLEProcesses() {
     });
 
     kill_node_processes_BLE.on("close", (code) => {
+        let kill_node_processes_BLE_2 = spawn('rfkill',['unblock','bluetooth']);
+        // kill_node_processes_BLE_2.on("data", (data) => {
+        //     console.log(`stdout: ${data}`);
+        // });
         console.log(`child process exited with code: ${code}`);
+    
     });
 }
 
@@ -114,7 +123,7 @@ function killBLEProcesses() {
 function killProcesses() {
 
     
-   
+    killBLEProcesses()
     
     let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
     

@@ -46,7 +46,8 @@ bleno.on("advertisingStart", function(err) {
 bleno.on("advertisingStop", function(err) {
     if (!err) {
         console.log("advertising stopped...");
-        spawn("sudo", ["kill", process.pid])
+        // spawn("sudo", ["kill", process.pid])
+        process.exit()
         // Once we are advertising, it's time to set up our services,
         // along with our characteristics.
         
