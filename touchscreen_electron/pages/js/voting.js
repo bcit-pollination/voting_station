@@ -12,6 +12,7 @@ const QuestionModel = require("../../../utils/mongo/models/question");
 const VotesCastSchema = require("../../../utils/mongo/models/question");
 const VoteModel = require('../../../utils/mongo/models/vote')
 const axios = require("axios");
+const options = require("../../../utils/mongo/models/options");
 
 let rpi_location = "";
 let voting_token_check = [];
@@ -200,7 +201,7 @@ function loadPoll(questJSON) {
                 for (let k = 0; k < questArray[j].options.length; k++) {
                     let num = k + 1;
                     let values = document.getElementsByName("q" + num);
-                    console.log(values);
+                    console.log(values.options[options.selectedIndex].value);
                 }
             } else {
                 let num = j + 1;
