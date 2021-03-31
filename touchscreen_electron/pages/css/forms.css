@@ -6,3 +6,13 @@ input {
 label {
   font-size: 4em;
 }
+
+
+#usbs input, #usbs_export input, #usbs2 input {
+  width: initial;
+  height: initial;
+}
+
+#usbs label, #usbs_export labe, #usbs2 label {
+  font-size: initial;
+}
