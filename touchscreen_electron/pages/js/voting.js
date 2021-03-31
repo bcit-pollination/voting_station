@@ -201,7 +201,7 @@ function loadPoll(questJSON) {
                 for (let k = 0; k < questArray[j].options.length; k++) {
                     let num = k + 1;
                     let values = document.getElementsByName("q" + num);
-                    console.log(values.options[options.selectedIndex].value);
+                    console.log(values.value);
                 }
             } else {
                 let num = j + 1;
