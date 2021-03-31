@@ -199,13 +199,19 @@ function loadPoll(questJSON) {
 
         for (let j = 0; j < questArray.length; j++) {
             if (questArray[j].ordered_choices == true) {
+                let values = document.getElementsByName("q" + num);
                 for (let k = 0; k < questArray[j].options.length; k++) {
                     let questionNumber = j+1;
                     let questionAnswerNumber = k+1;
                     let question = document.getElementById("q" + questionNumber + questionAnswerNumber);
-                    console.log(question);
                     let result = question.options[question.selectedIndex].value;
-                    console.log(result);
+                    let choiceObject = {
+                        option_id: parseInt(values[k].value),
+                        // HACK:  Leaving as 0 for now.
+                        order_position: result,
+                        question_id: questArray[j].question_id,
+                    };
+                    await votingSelections.push(choiceObject);
                 }
             } else {
                 let num = j + 1;
