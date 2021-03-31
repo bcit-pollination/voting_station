@@ -199,6 +199,7 @@ function loadPoll(questJSON) {
 
         for (let j = 0; j < questArray.length; j++) {
             if (questArray[j].ordered_choices == true) {
+                let num = j + 1;
                 let values = document.getElementsByName("q" + num);
                 for (let k = 0; k < questArray[j].options.length; k++) {
                     let questionNumber = j+1;
