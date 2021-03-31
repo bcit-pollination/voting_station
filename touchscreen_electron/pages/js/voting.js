@@ -375,6 +375,7 @@ function generateValidTokenList(questJSON) {
 }
 
 function showEndVoteSection() {
+    document.getElementById('step-vote').style.display= 'none'
     document.getElementById('step-check-verifier-password-before-ending').style.display='block'
 }
 
