@@ -1,6 +1,10 @@
 const bleno = require("bleno"); // https://github.com/sandeepmistry/bleno
 const polling = require("./polling");
 const PollingService = require("./polling-service");
+const {killBLEProcesses} = require('../utils/process');
+const { spawn } = require("child_process");
+const process = require('process');
+
 
 // name that will appear when searching for the bluetooth device
 const name = "Raspbian Pollination";
@@ -18,7 +22,11 @@ bleno.on("stateChange", function(state) {
         });
 
     } else {
+        
         bleno.stopAdvertising();
+        spawn("sudo", ["kill", process.pid])
+        // killBLEProcesses();
+
     }
 });
 

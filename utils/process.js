@@ -4,6 +4,12 @@ const blePollinationServerPath = "../BLE_pollination/app.js";
 const adminExpressServerPath = "./servers/adminExpressServer.js";
 const votingExpressServerPath = "./servers/votingExpressServer.js";
 
+const processIDs = {
+    bluetooth: -1,
+    adminExpress: -1,
+    votingExpress: -1
+}
+
 /**
  * Starts the bluetooth low energy server. 
  * 
@@ -15,7 +21,10 @@ function startBLEServerProcess() {
     console.log('Starting bluetooth low energy server');
     let BLEServerProcess = spawn("sudo", ["node", blePollinationServerPath]);
 
-    console.log(BLEServerProcess.pid)
+    // Get the pid of tthe bluetooth server
+    processIDs.bluetooth = BLEServerProcess.pid
+    
+    // console.log(BLEServerProcess.pid)
 
     BLEServerProcess.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);
@@ -77,19 +86,10 @@ function startAdminExpressServerProcess() {
     });
 };
 
-
-/**
- * Attempts to kill the admin, ble, and voting servers using the binded ports.
- * 
- * Sets standard out and err of the new process to the current process's standard descriptors. Also
- * maps on 'close' event to log exit code.
- */
-function killProcesses() {
-    let kill_node_processes_BLE = spawn("fuser", ["-k", "5000/tcp"]);
-    let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
-    let kill_node_processes2 = spawn("kill", kill_node_processes_BLE.pid);
-
-    console.log("kill_node_processes");
+function killBLEProcesses() {
+    console.log('killBleProcesses:',processIDs.bluetooth)
+    // let kill_node_processes_BLE = spawn("sudo", ["kill", processIDs.bluetooth]);
+    let kill_node_processes_BLE = spawn('sudo',['service','bluetooth','restart']);
 
     kill_node_processes_BLE.on("data", (data) => {
         console.log(`stdout: ${data}`);
@@ -103,6 +103,25 @@ function killProcesses() {
     kill_node_processes_BLE.on("close", (code) => {
         console.log(`child process exited with code: ${code}`);
     });
+}
+
+/**
+ * Attempts to kill the admin, ble, and voting servers using the binded ports.
+ * 
+ * Sets standard out and err of the new process to the current process's standard descriptors. Also
+ * maps on 'close' event to log exit code.
+ */
+function killProcesses() {
+
+    
+   
+    
+    let kill_node_processes = spawn("fuser", ["-k", "3000/tcp"]);
+    
+    let kill_node_processes2 = spawn("fuser", ["-k", "4000/tcp"]);
+
+    console.log("kill_node_processes");
+
 
     kill_node_processes.stdout.on("data", (data) => {
         console.log(`stdout: ${data}`);
@@ -129,5 +148,6 @@ module.exports = {
     startBLEServerProcess,
     startVotingExpressServerProcess,
     startAdminExpressServerProcess,
-    killProcesses
+    killProcesses,
+    killBLEProcesses
 };
