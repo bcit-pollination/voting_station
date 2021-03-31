@@ -200,7 +200,12 @@ function loadPoll(questJSON) {
         for (let j = 0; j < questArray.length; j++) {
             if (questArray[j].ordered_choices == true) {
                 for (let k = 0; k < questArray[j].options.length; k++) {
-                    console.log(k);
+                    let questionNumber = j+1;
+                    let questionAnswerNumber = k+1;
+                    let question = document.getElementById("q" + questionNumber + questionAnswerNumber);
+                    console.log(question);
+                    let result = question.options[question.selectedIndex].value;
+                    console.log(result);
                 }
             } else {
                 let num = j + 1;
