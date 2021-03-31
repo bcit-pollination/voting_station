@@ -130,7 +130,7 @@ app.whenReady().then(() => {
     //   start_load_question_process()
     // })
 
-    ipc.on("kill-processes", () => killProcesses);
+    ipc.on("kill-processes", () => killProcesses());
 
     // Go Back
     ipc.on("go-back", () => {
