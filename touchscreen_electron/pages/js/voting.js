@@ -177,6 +177,7 @@ function loadPoll(questJSON) {
                     inpt.type = "radio";
                 } else {
                     inpt.type = "checkbox";
+                    inpt.classList.add(name);
                 }
                 inpt.name = name;
                 inpt.id = name + number2;
@@ -224,7 +225,53 @@ function loadPoll(questJSON) {
             } else {
                 let num = j + 1;
                 let values = document.getElementsByName("q" + num);
-                let checkVal = null;
+
+                if(values[0].type == "radio"){
+
+                    let checkVal = null;
+
+                    for (let k = 0; k < values.length; k++) {
+                        if (values[k].checked) {
+                            checkVal = values[k].value;
+                            let choiceObject = {
+                                option_id: parseInt(checkVal),
+                                // HACK:  Leaving as 0 for now.
+                                order_position: 0,
+                                question_id: questArray[j].question_id,
+                            };
+                            await votingSelections.push(choiceObject);
+                        }
+                    }
+
+                } else {
+
+                    let checkedArr = [];
+
+                    for(let k = 0; k < values.length; k++){
+                        if(values[k].checked){
+                            checkedArr.push(values[k].value);
+                        }
+                    }
+
+                    if(checkedArr.length <= questArray[j].max_selection_count 
+                        && checkedArr.length >= questArray[j].min_selection_count){
+
+                            for(let b = 0; b < checkedArr.length; b++){
+                                let choiceObject = {
+                                    option_id: checkedArr[b],
+                                    // HACK:  Leaving as 0 for now.
+                                    order_position: 0,
+                                    question_id: questArray[j].question_id,
+                                };
+                                await votingSelections.push(choiceObject);
+                            }
+
+                    } else {
+                        voting_selections = [];
+                        return;
+                    }
+
+                }
 
                     //REVIEW:
                 // If user selected more than just one
@@ -233,19 +280,7 @@ function loadPoll(questJSON) {
                 // {question_id:19, option_id:17, order_position: 0}
                 // {question_id:19, option_id:18, order_position: 0}
                 // {question_id:19, option_id:19, order_position: 0}
-                
-                for (let k = 0; k < values.length; k++) {
-                    if (values[k].checked) {
-                        checkVal = values[k].value;
-                        let choiceObject = {
-                            option_id: parseInt(checkVal),
-                            // HACK:  Leaving as 0 for now.
-                            order_position: 0,
-                            question_id: questArray[j].question_id,
-                        };
-                        await votingSelections.push(choiceObject);
-                    }
-                }
+
             }
         }
 
