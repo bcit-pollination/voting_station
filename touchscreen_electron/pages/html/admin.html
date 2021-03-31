@@ -4,115 +4,121 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Election Package ManPage</title>
     <link rel="stylesheet" href='../css/admin.css' />
     <link rel="stylesheet" href='../css/buttons.css' />
     <link rel="stylesheet" href='../css/forms.css' />
 </head>
 
 <body>
-    <button id='go-back' onclick="goBack()">Go Back</button>
+    <div id='bg'>
 
-    <!-- step I: login -->
-    <div id='step-I' className='steps'>
-        <div>
-            <label for="login-username-input">username</label>
-            <br />
-            <input id='login-username-input' placeholder="username" value='test@pollination.test' />
-        </div>
+        <div id='content'>
+            <button id='go-back' onclick="goBack()">Go Back</button>
 
-        <div>
-            <label for="login-password-input">password</label>
-            <br />
-            <input id='login-password-input' type="password" placeholder="password" value='adminadmin' />
-        </div>
+            <!-- step I: login -->
+            <div id='step-I' className='steps'>
+                <div>
+                    <label for="login-username-input">username</label>
+                    <br />
+                    <input id='login-username-input' placeholder="username" value='test@pollination.test' />
+                </div>
 
-        <button id='central-login-button'>Login(as Central Pi)</button>
-    </div>
-    
-    <!-- step II: display the election list  -->
-    <div id='step-II' className='steps'>
+                <div>
+                    <label for="login-password-input">password</label>
+                    <br />
+                    <input id='login-password-input' type="password" placeholder="password" value='adminadmin' />
+                </div>
 
-        <button id='get-election-list-button' onclick="getElectionButtHandler()">Get Election List</button>
-        <!-- <button id='post-election-results'>Post Election Results</button> -->
-        <button id='export-button' onclick="showImportSection()">Post Election Results</button>
-    </div>
+                <button id='central-login-button'>Login(as Central Pi)</button>
+            </div>
 
+            <!-- step II: display the election list  -->
+            <div id='step-II' className='steps'>
 
-    <!-- step III: display the election list  -->
-    <div id='step-III' className='steps'>
-
-        <h2>List of Elections:</h2>
-        <div id='election-list-display'>
-            <!-- for(let item of ) -->
-        </div>
-        
-        <button onclick="downloadElectionPackage()" id='download-election-package-button'>
-            Download Election Package
-        </button>
-
-        <!-- FIXME: Orglist -->
-        <!-- <button id='get-organization-list-button'>Get Organization List</button> -->
-    </div>
+                <button id='get-election-list-button' onclick="getElectionButtHandler()">Get Election List</button>
+                <!-- <button id='post-election-results'>Post Election Results</button> -->
+                <button id='export-button' onclick="showImportSection()">Post Election Results</button>
+            </div>
 
 
-    <!--  -->
-    <div id='step-IV' className='steps'>
+            <!-- step III: display the election list  -->
+            <div id='step-III' className='steps'>
 
-        <section id="upload-election-section">
-        </section>
+                <h2>List of Elections:</h2>
+                <div id='election-list-display'>
+                    <!-- for(let item of ) -->
+                </div>
 
-    </div>
+                <button onclick="downloadElectionPackage()" id='download-election-package-button'>
+                    Download Election Package
+                </button>
+
+                <!-- FIXME: Orglist -->
+                <!-- <button id='get-organization-list-button'>Get Organization List</button> -->
+            </div>
 
 
-    <!-- <div id="impExpSel">
+            <!--  -->
+            <div id='step-IV' className='steps'>
+
+                <section id="upload-election-section">
+                </section>
+
+            </div>
+
+
+            <!-- <div id="impExpSel">
         <h2 id="titleForImpExp">Would you like to import votes results from the votingPI?</h2>
         <button id='import-button' onclick="showImportSection()">Import</button>
     </div> -->
 
 
 
-    <!-- TODO-Noah integrate import export functions -->
-    <div id='step-V' class="steps">
+            <!-- TODO-Noah integrate import export functions -->
+            <div id='step-V' class="steps">
 
-        <h4>Usb list</h4>
-        <div id='usbs'>
+                <h4>Usb list</h4>
+                <div id='usbs'>
 
-        </div>
+                </div>
 
 
-        <div id='step-V-I' class="steps">
-            <!-- <div>
+                <div id='step-V-I' class="steps">
+                    <!-- <div>
                 <p>Exported Successfully!!!!</p>
             </div> -->
-           
-            <button onclick="showUsbs()">refresh</button>
-            <button onclick="exportData()">Export Election </button>
-            <!--
+
+                    <button onclick="showUsbs()">refresh</button>
+                    <button onclick="exportData()">Export Election </button>
+                    <!--
                 <button onclick="exportData()">Export Election Data</button>
                 -->
 
-        </div>
+                </div>
 
-        <div id='step-V-II'>
+                <div id='step-V-II'>
 
 
-            
-            <button onclick="showUsbs()">refresh</button>
-            <button onclick="importData()">Import Vote Results</button>
-            <!--
+
+                    <button onclick="showUsbs()">refresh</button>
+                    <button onclick="importData()">Import Vote Results</button>
+                    <!--
                 <button onclick="importData()">Import Election Data</button>
             -->
-           
+
+                </div>
+
+            </div>
+
+            <!-- TODO-Noah integrate import export functions -->
+            <div id='step-VI' class="steps">
+                <button onclick="uploadElectionResults()" id="upload-election-results">Upload Election Results</button>
+
+            </div>
         </div>
-
     </div>
 
-    <!-- TODO-Noah integrate import export functions -->
-    <div id='step-VI' class="steps">
-        <button onclick="uploadElectionResults()" id="upload-election-results">Upload Election Results</button>
-
-    </div>
 
 
 

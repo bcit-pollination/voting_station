@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Pollination</title>
-    <link href="./pages/css/buttons.css" rel="stylesheet">
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <title>Pollination</title>
+  <link href="./pages/css/buttons.css" rel="stylesheet">
+  <link href='./pages/css/index.css' rel='stylesheet'>
+</head>
+
+<body>
+ 
+
+    <div id='logo-div'>
+      <img id='poll-img' src='./pages/img/logo_pollination.jpg' />
+      <img id='rasp-img' src='./pages/img/rasp.jpg'>
+    </div>
+    <div id='content'> 
     <h1>Pollination RPI </h1>
     <div>
       <button id='start-process-1'>Run Control Server</button>
@@ -38,9 +47,11 @@
     <div>
       <button id='kill-processes'>Kill Server Processes</button>
     </div>
+  </div>
 
 
-    <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js"></script>
-  </body>
+  <!-- You can also require other files to run in this process -->
+  <script src="./renderer.js"></script>
+</body>
+
 </html>

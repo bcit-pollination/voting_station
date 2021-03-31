@@ -17,3 +17,11 @@ button{
   margin: 15px;
 }
 
+select{
+  font-size: larger;
+}
+
+.texture{
+  max-width: 100%;
+  max-height: 100%;
+}

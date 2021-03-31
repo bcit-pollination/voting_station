@@ -1,0 +1,14 @@
+img{
+    max-height: 100%;
+    height:10vh
+}
+
+#logo-div{
+    max-height: 15vh; 
+    margin-bottom: 10px;
+    background-color: rgb(255, 221, 0);
+}
+
+#content{
+    margin-top: 10px;
+}

@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Voting Station</title>
     <link rel="stylesheet" href='../css/voting.css' />
     <link rel="stylesheet" href='../css/buttons.css' />
     <link rel="stylesheet" href='../css/forms.css' />
 </head>
 
 <body>
+
+    
     <div>
         <button id='go-back' onclick="goBack()">Go Back</button>
         <div id='step-I' className='steps'>
@@ -56,7 +58,7 @@
             <!-- step II-2 Start Server Buttons -->
             <div id='step-II-2'>
                 <div>
-                    <button id='start-BLE-button' onclick="startBLEServerProcess()">Start BLE server</button>
+                    <button id='start-BLE-button' onclick="BLEbuttonHandler()">Start BLE server</button>
                 </div>
             </div>
 
@@ -84,6 +86,7 @@
         </div>
 
         <div id='step-vote'>
+            <!-- renders questions -->
             <div id='step-vote-question-div'>
             
             </div>
@@ -97,6 +100,7 @@
             <button id='submit-verifier-password2' onclick='checkVerifierPassword2(document.getElementById("verifier-password-input2").value)'>
                 Submit Verifier Password
             </button>
+            <button onclick=" loadPoll(questJSON)">Back to Vote</button>
         </div>
 
         <div id='step-export-votes' class="steps">
@@ -104,8 +108,9 @@
             <h4>Usb list</h4>
 
             <div id='usbs_export'></div>
-
-            <button onclick="showUsbs()">refresh</button>
+            <h4>Usb list</h4>
+            <div id='usbs2'>Please load USBs</div>
+            <button onclick="showUsbs2()">show USB Devices</button>
             <button onclick="exportData()">Export Vote Data</button>
         </div>
 

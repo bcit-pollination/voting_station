@@ -43,11 +43,14 @@ function votingLoginButtonHandler() {
         document.getElementById('step-II').style.display = 'block'
         document.getElementById('step-II-0').style.display = 'block'
         document.getElementById('step-II-1').style.display = 'none'
-        document.getElementById('step-II-2').style.display = 'none' 
+        document.getElementById('step-II-2').style.display = 'none'
         // document.getElementById('step-II-3').style.display = 'none'       
     });
 }
-
+function BLEbuttonHandler(){
+    startBLEServerProcess();
+    document.getElementById('start-BLE-button').style.display='none';
+}
 async function checkVerifierPassword() {
     // let loginPromise = new Promise(async(resolve,reject)=>{
     //   resolve(password)
@@ -63,26 +66,26 @@ async function checkVerifierPassword() {
     // })
 
     let query = ElectionPackageModel.where({});
-    ElectionPackageModel.find({},function (err, election) {
+    ElectionPackageModel.find({}, function (err, election) {
         if (err) return console.log(err);
         console.log(election[0]);
 
         if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
-            alert('verify successful')
+            alert('verification successful')
 
             // Let the Verifier add the location. Submit button uses submitLocation.
             let loginForm = document.getElementById('step-I');
             loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
             // loginForm.style.visibility = 'visible';
-            
+
             // let verifierPrompt = document.getElementById('step-II-0');
             document.getElementById('step-II-0').style.display = 'none';
             document.getElementById('step-II-1').style.display = 'none';
             document.getElementById('step-II-2').style.display = 'block';
             document.getElementById('step-III').style.display = 'block';
         }
-        else{
-            console.log('verify failed')
+        else {
+            alert('verify failed')
         }
     })
 }
@@ -102,26 +105,19 @@ async function checkVerifierPassword2(verifier_password) {
     // })
 
     let query = ElectionPackageModel.where({});
-    ElectionPackageModel.find({},function (err, election) {
+    ElectionPackageModel.find({}, function (err, election) {
         if (err) return console.log(err);
         console.log(election[0]);
 
         if (checkPassword(verifier_password, decodeBase64(election[0]['verifier_password']))) {
             alert('verify successful')
+            hideEndVoteSection()
+            showExportSection()
 
-            // Let the Verifier add the location. Submit button uses submitLocation.
-            let loginForm = document.getElementById('step-I');
-            loginForm.innerHTML = "<center><h2>Please enter the location of<br>this polling station.</h2><br><br><input type='text' id='rpi-location-id' /><br><br><button onclick = 'submitLocation()'>Submit</button></center>";
-            // loginForm.style.visibility = 'visible';
             
-            // let verifierPrompt = document.getElementById('step-II-0');
-            document.getElementById('step-II-0').style.display = 'none';
-            document.getElementById('step-II-1').style.display = 'none';
-            document.getElementById('step-II-2').style.display = 'block';
-            document.getElementById('step-III').style.display = 'block';
         }
-        else{
-            console.log('verify failed')
+        else {
+            alert('verify failed')
         }
     })
 }
@@ -161,20 +157,24 @@ function submitVotingToken() {
     console.log(voting_token_check);
 
     if (voting_token_check.includes(this_voting_token)) {
+        alert('Verification Successful, Proceed to Vote')
         loadPoll(questJSON);
         // hideExportSection();
     } else {
+        alert('Invalid Voting Token')
         promptVotingToken();
     }
 }
 
-function EndElection(){
-   alert('Enter Password to Proceed')
+function EndElection() {
+    alert('Enter Password to Proceed')
 }
 
 function loadPoll(questJSON) {
     document.getElementById('step-vote').style.display = 'block'
     document.getElementById('step-IV').style.display = 'none'
+    document.getElementById('step-check-verifier-password-before-ending').style.display = 'none'
+
     // let loginForm = document.getElementById('step-I');
     // loginForm.innerHTML = "";
 
@@ -234,7 +234,7 @@ function loadPoll(questJSON) {
                 questDiv.appendChild(inpt);
                 questDiv.appendChild(document.createElement("br"));
             }
-            
+
         }
         document.getElementById("step-vote-question-div").appendChild(questDiv);
         console.log(questArray[i]);
@@ -244,13 +244,14 @@ function loadPoll(questJSON) {
     // submitButton.style.width = "10%";
     // submitButton.style.height = "10%";
     // submitButton.appendChild(document.createTextNode("Submit Votes"));
-    
+
     // Submit the Vote.
     submitButton.onclick = async function () {
+        alert('Vote Submitted')
 
-    document.getElementById('step-vote').style.display = 'none'
+        document.getElementById('step-vote').style.display = 'none'
 
-    document.getElementById('step-IV').style.display = 'block'
+        document.getElementById('step-IV').style.display = 'block'
 
         console.log(submitButton)
         let votingSelections = [];
@@ -261,8 +262,8 @@ function loadPoll(questJSON) {
                 let num = j + 1;
                 let values = document.getElementsByName("q" + num);
                 for (let k = 0; k < questArray[j].options.length; k++) {
-                    let questionNumber = j+1;
-                    let questionAnswerNumber = k+1;
+                    let questionNumber = j + 1;
+                    let questionAnswerNumber = k + 1;
                     let question = document.getElementById("q" + questionNumber + questionAnswerNumber);
                     let result = question.options[question.selectedIndex].value;
                     let result2 = question.options[question.selectedIndex].optionVal;
@@ -280,14 +281,14 @@ function loadPoll(questJSON) {
                 let values = document.getElementsByName("q" + num);
                 let checkVal = null;
 
-                    //REVIEW:
+                //REVIEW:
                 // If user selected more than just one
                 //  a brand new object needs to be there, with the same option_id
                 // eg:
                 // {question_id:19, option_id:17, order_position: 0}
                 // {question_id:19, option_id:18, order_position: 0}
                 // {question_id:19, option_id:19, order_position: 0}
-                
+
                 for (let k = 0; k < values.length; k++) {
                     if (values[k].checked) {
                         checkVal = values[k].value;
@@ -302,7 +303,7 @@ function loadPoll(questJSON) {
                 }
             }
         }
-       
+
         console.log(votingSelections);
         // votingSelections = new
 
@@ -320,8 +321,8 @@ function loadPoll(questJSON) {
         console.log(vote);
 
         vote = new VoteModel(vote)
-        vote.save({},(err,res)=>{
-            err&& console.log(err)
+        vote.save({}, (err, res) => {
+            err && console.log(err)
             res && console.log(res)
         })
 
@@ -334,8 +335,8 @@ function loadPoll(questJSON) {
         // let vote_div = document.getElementById("step-IV");
         // vote_div.appendChild(submitButton);
         // vote_div.style.visibility = "hidden";
-        
-        
+
+
 
     };
     // appending the submit button , make it visible
@@ -343,23 +344,23 @@ function loadPoll(questJSON) {
     // vote_div.appendChild(submitButton);
     // vote_div.style.visibility = "visible";
 
-// document.getElementById("voting-token-button").addEventListener("click", () => {
-//         console.log('clicked "voting-token-input"');
+    // document.getElementById("voting-token-button").addEventListener("click", () => {
+    //         console.log('clicked "voting-token-input"');
 
-//         let updateQuestionApi;
-//         let xhttp = new XMLHttpRequest();
+    //         let updateQuestionApi;
+    //         let xhttp = new XMLHttpRequest();
 
-//         let response = "";
+    //         let response = "";
 
-//         console.log("q_list");
-//         console.log(q_list);
-//         xhttp.open("POST", updateQuestionApi, true);
-//         xhttp.setRequestHeader("Content-type", "application/json");
+    //         console.log("q_list");
+    //         console.log(q_list);
+    //         xhttp.open("POST", updateQuestionApi, true);
+    //         xhttp.setRequestHeader("Content-type", "application/json");
 
-//         let post_obj = { allowVote: true };
-//         console.log(JSON.stringify(post_obj));
-//         xhttp.send(JSON.stringify(post_obj));
-//     });
+    //         let post_obj = { allowVote: true };
+    //         console.log(JSON.stringify(post_obj));
+    //         xhttp.send(JSON.stringify(post_obj));
+    //     });
 
     // showExportSection();
 }
@@ -375,12 +376,14 @@ function generateValidTokenList(questJSON) {
 }
 
 function showEndVoteSection() {
-    document.getElementById('step-vote').style.display= 'none'
-    document.getElementById('step-check-verifier-password-before-ending').style.display='block'
+    alert('Enter Password to End the Election')
+    document.getElementById('step-vote').style.display = 'none'
+    document.getElementById('step-check-verifier-password-before-ending').style.display = 'block'
+    
 }
 
 function hideEndVoteSection() {
-    document.getElementById('step-check-verifier-password-before-ending').style.display='block'
+    document.getElementById('step-check-verifier-password-before-ending').style.display = 'none'
 }
 
 
@@ -402,15 +405,16 @@ function exportData() {
 
     const url = new URL("http://localhost:3000/dataExport");
     const params = { pathName: path };
-    
-    
-    
+
+
+
 
     url.search = new URLSearchParams(params).toString();
     fetch(url)
         .then((response) => response.json())
         .then((body) => {
             console.log(body);
+            alert('Data Exported to Selected USB Device.')
         });
 }
 
@@ -456,7 +460,7 @@ function importData() {
             //   document.getElementById("start-BLE-button").style.visibility = "visible";
             // })
             // document.getElementById("start-BLE-button").style.visibility = "visible"; //FIXME : Remove this line
-        
+
         });
 
     // // Start BLE server:
@@ -471,17 +475,17 @@ function importData() {
 function save_election_package_and_questions(questJSON) {
     const electionPackage = new ElectionPackageModel(questJSON);
 
-    ElectionPackageModel.remove({ }, (err, res) => {
+    ElectionPackageModel.remove({}, (err, res) => {
         electionPackage.save((err, doc) => {
             console.log('saving')
             err && console.log(err);
             console.log('saved package')
             console.log(doc)
-        }) 
+        })
     })
 
     console.log('removing questions');
-    mongoose.connection.db.dropCollection('questions',(err,res)=>{
+    mongoose.connection.db.dropCollection('questions', (err, res) => {
         err && console.log(err);
         console.log('saving questions')
         for (let question of electionPackage.election_info.questions) {
@@ -505,7 +509,37 @@ function showUsbs() {
             data = JSON.parse(data);
             console.log(data);
             let usbsDiv = document.getElementById("usbs");
-            
+
+            usbsDiv.innerHTML = "";
+            for (const usb of data.usbs) {
+                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
+                let div = document.createElement("div");
+                let input = document.createElement("input");
+                let label = document.createElement("label");
+                input.setAttribute("type", "radio");
+                input.setAttribute("id", usb.path);
+                input.setAttribute("name", "usb");
+                input.setAttribute("value", usb.path);
+                input.setAttribute("class", "radio");
+                input.checked = false;
+                label.innerText = usb.path;
+                div.appendChild(input);
+                div.appendChild(label);
+                usbsDiv.appendChild(div);
+                // usbsDiv.style.visibility ='visible'
+            }
+
+        })
+}
+
+function showUsbs2() {
+    fetch('http://localhost:3000/usbs')
+        .then(response => response.json())
+        .then(data => {
+            data = JSON.parse(data);
+            console.log(data);
+            let usbsDiv = document.getElementById("usbs2");
+
             usbsDiv.innerHTML = "";
             for (const usb of data.usbs) {
                 if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
