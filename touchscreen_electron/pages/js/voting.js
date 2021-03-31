@@ -12,6 +12,7 @@ const QuestionModel = require("../../../utils/mongo/models/question");
 const VotesCastSchema = require("../../../utils/mongo/models/question");
 const VoteModel = require('../../../utils/mongo/models/vote')
 const axios = require("axios");
+const options = require("../../../utils/mongo/models/options");
 
 let rpi_location = "";
 let voting_token_check = [];
@@ -101,7 +102,7 @@ function submitLocation() {
 
 function promptVotingToken() {
     showExportSection();
-
+    
     let loginForm = document.getElementById("step-I");
     loginForm.innerHTML = "";
     loginForm.innerHTML =
@@ -134,6 +135,8 @@ function loadPoll(questJSON) {
 
     document.getElementById("step-IV").innerHTML = "";
 
+    console.log(questArray);
+
     for (let i = 0; i < questArray.length; i++) {
         let number = i + 1;
         let name = "q" + number;
@@ -145,24 +148,45 @@ function loadPoll(questJSON) {
         questDiv.appendChild(document.createTextNode(questArray[i].question_description));
         for (let j = 0; j < questOps.length; j++) {
             let number2 = j + 1;
-            let inpt = document.createElement("input");
             let label = document.createElement("label");
             questDiv.appendChild(document.createElement("br"));
             label.style.fontSize = "1em";
             label.appendChild(document.createTextNode(questOps[j].option_description));
             questDiv.appendChild(label);
-            if (questJSON.max_selection_count == 1 && questJSON.min_selection_count == 1) {
-                inpt.type = "radio";
+
+            if (questArray[i].ordered_choices == true) {
+                let inpt = document.createElement("select");
+                inpt.name = name;
+                inpt.id = name + number2;
+                console.log(inpt.id);
+                inpt.style.height = "2vw";
+                inpt.style.width = "8vh";
+                for (let k = 0; k < questOps.length; k++) {
+                    let option = document.createElement("option");
+                    option.optionVal = questArray[i].options[k].option_id;
+                    console.log(option.optionVal);
+                    option.value = k + 1;
+                    option.text = k + 1;
+                    inpt.add(option);
+                }
+                questDiv.appendChild(inpt);
+                questDiv.appendChild(document.createElement("br"));
             } else {
-                inpt.type = "checkbox";
+                let inpt = document.createElement("input");
+                if (questArray[i].max_selection_count == 1 && questArray[i].min_selection_count == 1) {
+                    inpt.type = "radio";
+                } else {
+                    inpt.type = "checkbox";
+                }
+                inpt.name = name;
+                inpt.id = name + number2;
+                inpt.value = questOps[j].option_id;
+                inpt.style.height = "2vw";
+                inpt.style.width = "2vh";
+                questDiv.appendChild(inpt);
+                questDiv.appendChild(document.createElement("br"));
             }
-            inpt.name = name;
-            inpt.id = name + number2;
-            inpt.value = questOps[j].option_id;
-            inpt.style.height = "2vw";
-            inpt.style.width = "2vh";
-            questDiv.appendChild(inpt);
-            questDiv.appendChild(document.createElement("br"));
+            
         }
         document.getElementById("step-IV").appendChild(questDiv);
         console.log(questArray[i]);
@@ -177,36 +201,54 @@ function loadPoll(questJSON) {
     submitButton.onclick = async function () {
         let votingSelections = [];
         // looping through
+
         for (let j = 0; j < questArray.length; j++) {
-            let num = j + 1;
-            let values = document.getElementsByName("q" + num);
-            let checkVal = null;
-
-             //REVIEW:
-
-            // If user selected more than just one
-            //  a brand new object needs to be there, with the same option_id
-            // eg:
-
-            // {question_id:19, option_id:17, order_position: 0}
-            // {question_id:19, option_id:18, order_position: 0}
-            // {question_id:19, option_id:19, order_position: 0}
-           
-            for (let k = 0; k < values.length; k++) {
-                if (values[k].checked) {
-                    checkVal = values[k].value;
+            if (questArray[j].ordered_choices == true) {
+                let num = j + 1;
+                let values = document.getElementsByName("q" + num);
+                for (let k = 0; k < questArray[j].options.length; k++) {
+                    let questionNumber = j+1;
+                    let questionAnswerNumber = k+1;
+                    let question = document.getElementById("q" + questionNumber + questionAnswerNumber);
+                    let result = question.options[question.selectedIndex].value;
+                    let result2 = question.options[question.selectedIndex].optionVal;
+                    console.log(result2);
                     let choiceObject = {
-                        option_id: parseInt(checkVal),
+                        option_id: result2,
                         // HACK:  Leaving as 0 for now.
-                        order_position: 0,
+                        order_position: parseInt(result),
                         question_id: questArray[j].question_id,
                     };
                     await votingSelections.push(choiceObject);
                 }
+            } else {
+                let num = j + 1;
+                let values = document.getElementsByName("q" + num);
+                let checkVal = null;
 
+                    //REVIEW:
+                // If user selected more than just one
+                //  a brand new object needs to be there, with the same option_id
+                // eg:
+                // {question_id:19, option_id:17, order_position: 0}
+                // {question_id:19, option_id:18, order_position: 0}
+                // {question_id:19, option_id:19, order_position: 0}
+                
+                for (let k = 0; k < values.length; k++) {
+                    if (values[k].checked) {
+                        checkVal = values[k].value;
+                        let choiceObject = {
+                            option_id: parseInt(checkVal),
+                            // HACK:  Leaving as 0 for now.
+                            order_position: 0,
+                            question_id: questArray[j].question_id,
+                        };
+                        await votingSelections.push(choiceObject);
+                    }
+                }
             }
-
         }
+
         console.log(votingSelections);
         // votingSelections = new
 
@@ -294,6 +336,9 @@ function exportData() {
 
     const url = new URL("http://localhost:3000/dataExport");
     const params = { pathName: path };
+    
+    
+    
 
     url.search = new URLSearchParams(params).toString();
     fetch(url)
@@ -406,33 +451,7 @@ function showUsbs() {
                 div.appendChild(label);
                 usbsDiv.appendChild(div);
             }
-        })
-}
 
-function showUsbsExport() {
-    fetch('http://localhost:3000/usbs')
-        .then(response => response.json())
-        .then(data => {
-            data = JSON.parse(data);
-            console.log(data);
-            let usbsDiv = document.getElementById("usbs_export");
-            usbsDiv.innerHTML = "";
-            for (const usb of data.usbs) {
-                if (usb.path == "/" || usb.path == "/boot/efi") continue; // HACK should not show these
-                let div = document.createElement("div");
-                let input = document.createElement("input");
-                let label = document.createElement("label");
-                input.setAttribute("type", "radio");
-                input.setAttribute("id", usb.path);
-                input.setAttribute("name", "usb");
-                input.setAttribute("value", usb.path);
-                input.setAttribute("class", "radio");
-                input.checked = false;
-                label.innerText = usb.path;
-                div.appendChild(input);
-                div.appendChild(label);
-                usbsDiv.appendChild(div);
-            }
         })
 }
 
